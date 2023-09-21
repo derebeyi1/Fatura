@@ -1,0 +1,142 @@
+﻿@model Fatura.Entity.cari_adres
+
+<h2>@ViewBag.Baslik</h2>
+@using (Html.BeginForm("AdresKaydet", "Cari", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+    <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+    <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+    <input type="hidden" id="id" name="id" value="@Model.id" />
+    <input type="hidden" id="cari_id" name="cari_id" value="@Model.cari_id" />
+    <input type="hidden" id="ulke_adi" name="ulke_adi" value="@Model.ulke_adi" />
+    <input type="hidden" id="il_adi" name="il_adi" value="@Model.il_adi" />
+    <input type="hidden" id="ilce_adi" name="ilce_adi" value="@Model.ilce_adi" />
+    <table class="table table-bordered" width="100%" cellspacing="0">
+        @*@Html.HiddenFor(m => m.id)
+        @Html.HiddenFor(m => m.cari_id)
+        @Html.HiddenFor(m => m.ulke_adi)
+        @Html.HiddenFor(m => m.il_adi)
+        @Html.HiddenFor(m => m.ilce_adi)*@
+        <tr>
+            <td>Adresi</td>
+            <td>
+                @Html.TextBoxFor(m => m.adres, new { @class = "form-control ", placeholder = "Adresi" })
+                @Html.ValidationMessageFor(m => m.adres)
+            </td>
+        </tr>
+        <tr>
+            <td>Ülke</td>
+            <td>
+                @Html.DropDownListFor(m => m.ulke_kodu, Model.DropDownListForUlke)
+                @Html.ValidationMessageFor(m => m.ulke_kodu)
+            </td>
+        </tr>
+        <tr>
+            <td>İl Kodu</td>
+            <td>
+                @Html.DropDownListFor(m => m.il_kodu, Model.DropDownListForIl)
+                @Html.ValidationMessageFor(m => m.ilce_kodu)
+            </td>
+        </tr>
+        <tr>
+            <td>İlçe Kodu</td>
+            <td>
+                @Html.DropDownListFor(m => m.ilce_kodu, Model.DropDownListForIlce)
+                @Html.ValidationMessageFor(m => m.ilce_kodu)
+            </td>
+        </tr>
+        <tr>
+            <td>Cep No / Tel No / Fax No</td>
+            <td>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12">
+                        <div class="form-group form-inline">
+                            @Html.TextBoxFor(m => m.cep_no, new { @class = "form-control ", style = "width:120px;", placeholder = "Cep No" })
+                            @Html.ValidationMessageFor(m => m.cep_no)
+                            @Html.TextBoxFor(m => m.telefon_no, new { @class = "form-control ", style = "width:120px;", placeholder = "Tel No" })
+                            @Html.ValidationMessageFor(m => m.telefon_no)
+                            @Html.TextBoxFor(m => m.fax, new { @class = "form-control ", style = "width:120px;", placeholder = "Fax" })
+                            @Html.ValidationMessageFor(m => m.fax)
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>E-Mail Adresi</td>
+            <td>
+                @Html.TextBoxFor(m => m.email, new { @class = "form-control ", placeholder = "E-Mail Adresi" })
+                @Html.ValidationMessageFor(m => m.email)
+            </td>
+        </tr>
+        <tr>
+            <td>Fatura Adresi mi?</td>
+            <td>
+                @Html.DropDownListFor(m => m.faturaadresimi, Model.DropDownListForAdr)
+                @Html.ValidationMessageFor(m => m.faturaadresimi)
+            </td>
+        </tr>
+        <tr>
+            <td>Sevk Adresi mi?</td>
+            <td>
+                @Html.DropDownListFor(m => m.sevkadresimi, Model.DropDownListForSevk)
+                @Html.ValidationMessageFor(m => m.sevkadresimi)
+            </td>
+        </tr>
+    </table>
+    <button type="submit" class="btn btn-info">Kaydet / Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+    <br />
+    @ViewBag.Mesaj
+    <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+
+    <div id='myModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'></div>
+            </div>
+        </div>
+
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $('select').change(function () {
+            //alert("id: " + $(this).attr('name') + " value: " + $(this).val() + "   Text: " + $(this).find('option:selected').text());
+            if ($(this).attr('name') == "ulke_kodu") {
+                debugger;
+                $("#ulke_adi").val($("#ulke_kodu option:selected").text());
+                debugger;
+                AckGetir("il_kodu", $(this).val());
+            } else if ($(this).attr('name') == "il_kodu") {
+                $("#il_adi").val($("#il_kodu option:selected").text());
+                debugger;
+                AckGetir("ilce_kodu", $(this).val());
+            } else if ($(this).attr('name') == "ilce_kodu") {
+                $("#ilce_adi").val($("#ilce_kodu option:selected").text());
+                debugger;
+            }
+        });
+    })
+    function AckGetir(name, ustkod)
+    {
+        //alert("AckGetir:" + name + ustkod);
+        var url = '@Url.Action("AckGetir", "Cari")';
+        //alert("AckGetir url:" + url);
+        var PDD = $("#" + name);
+        //alert("AckGetir PDD:" + PDD);
+        //var ODD= $("#ODD").val();
+        var ODD= ustkod;
+        $.getJSON(url, { ustkod: ODD}, function (response) {
+            PDD.empty();
+            //alert("AckGetir response:" + response);
+            debugger;
+            $.each(response, function (index, item) {
+                //debugger;
+                var p = new Option(item.Display, item.Key);
+                PDD.append(p);
+            });
+        });
+}
+</script>
+

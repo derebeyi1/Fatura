@@ -1,0 +1,229 @@
+﻿@using Fatura.Entity
+@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<fatura_ayarlari>
+@using Fatura.BLL
+
+<BR>
+@{
+    ViewBag.Title = "AyarListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<div id="dvAyarListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+
+
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="30%">
+                    <span style="font-size:x-large;font-weight:bold">Fatura Ayarları Listesi</span><a href="javascript:void(0);" class="AyarEkle btn btn-success mx-3" data-id="0">Yeni Fatura Ayarı Ekle</a>
+                </td>
+                <td width="30%">
+                    Sayfada
+                    @*@Html.TextBox("SayfaKayitSayisi", null, new { style = "width: 50px;" })*@
+                    <select id="SayfaKayitSayisi" name="SayfaKayitSayisi">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    kayıt göster.
+                </td>
+                <td width="30%">
+                    @Html.TextBox("SearchString", null, new { style = "width: 100px;" })
+                    <input type="submit" class=" btn btn-info" value="Ara" />
+                </td>
+            </tr>
+        </table>
+    }
+    <table class="table table-bordered align-baseline" id="dataTable">
+        <thead>
+            <tr>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">VKN/TCKN</th>
+                    <th style="color:Highlight">Kullanıcı</th>
+                }
+                <th style="color:Highlight">Fatura Tipi</th>
+                <th style="color:Highlight">Giden Fatura Türü</th>
+                <th style="color:Highlight">Fatura Serisi / Kullanılsın mı?</th>
+                <th style="color:Highlight">Test mi?</th>
+                <th style="color:Highlight">Entegratör Adı</th>
+                <th style="color:Highlight">Gönderen Test VKN</th>
+                <th style="color:Highlight">Alıcı Test VKN</th>
+                <th style="color:Highlight">Kullanıcı Adı</th>
+                <th style="color:Highlight">Parola</th>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">Silinmiş mi?</th>
+                }
+                <th style="color:Highlight">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fatura_ayarlari in Model)
+            {
+                faturaEntities db = new faturaEntities();
+            <tr id="row_@fatura_ayarlari.id">
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <td>@fatura_ayarlari.vkn_tckn</td>
+                    <td>@fatura_ayarlari.kullanici_adsoyad</td>
+                }
+                <td>@fatura_ayarlari.fatura_tipi_ack</td>
+                <td>@fatura_ayarlari.giden_fatura_tipi</td>
+                <td>
+                    @fatura_ayarlari.seri /
+                    @if (fatura_ayarlari.seri_kullanilsinmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>
+                    @if (fatura_ayarlari.testmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>@fatura_ayarlari.entegrator_tipi_ack</td>
+                <td>@fatura_ayarlari.test_gndrn_vkn.ToString()</td>
+                <td>@fatura_ayarlari.test_alici_vkn.ToString()</td>
+                <td>@fatura_ayarlari.kullanici_adi</td>
+                <td>@fatura_ayarlari.sifre</td>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <td>
+                        @if (fatura_ayarlari.isdeleted == true)
+                        {
+                            @:<label style="color:red">Evet</label>
+                        }
+                        else
+                        {
+                            @:Hayır
+                        }
+                    </td>
+                }
+                <td>
+                    <div class="row" style="width:200px;">
+                        <div class="col-md-6">
+                            <a href="javascript:void(0);" class="AyarEkle btn btn-success mx-3" data-id="@fatura_ayarlari.id">Güncelle</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@fatura_ayarlari.id">
+                                Sil
+                            </button>
+                            <div class="modal" id="Sil_@fatura_ayarlari.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Fatura Ayarını Sil</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>Fatura ayarını silmek istiyor musunuz?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                            @Html.ActionLink("Sil", "AyarSil", new { id = fatura_ayarlari.id }, new { @class = "btn btn-info mx-4" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("AyarListesi", "Fatura", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+    <BR>
+</div>
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"></h4>
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>*@
+                <a href="javascript:void(0);" class="close btn btn-info" data-dismiss="modal">&times;</a>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".AyarEkle").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '/Fatura/AyarEkle',
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id, },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+    //var ConfirmDelete = function (id) {
+    //    $("#hidden_id").val(id);
+    //    $("#myModal").show();
+    //}
+    //var StokSil = function () {
+    //    $("#loaderDiv").show();
+    //    var stok_id = $("#hidden_id").val();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Fatura/Sil",
+    //        data: { id: id },
+    //        success: function () {
+    //            $("#loaderDiv").hide();
+    //            $("#myModal").modal("hide");
+    //        }
+    //    })
+    //}
+
+</script>
+@*<script src="~/Scripts/sweetalert.min.js" type="text/javascript"></script>*@

@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "SiparisListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<BR>
+<h2>Kategori Listesi</h2>
+<input type="hidden" id="categoryname" name="categoryname" value="" />
+<input type="hidden" id="subcategoryname" name="subcategoryname" value="" />
+<input type="hidden" id="subsubcategoryname" name="subsubcategoryname" value="" />
+<table>
+    <tr>
+        <td>Kategoriler</td>
+        <td>
+            @Html.DropDownList("categoryid", new SelectList(ViewBag.CategoryList, "Value", "Text"))
+        </td>
+    </tr>
+    <tr>
+        <td>Alt Kategoriler</td>
+        <td>
+            @Html.DropDownList("subcategoryid", new SelectList(ViewBag.SubCategoryList, "Value", "Text"))
+        </td>
+    </tr>
+    <tr>
+        <td>Alt Kategoriler</td>
+        <td>
+            @Html.DropDownList("subsubcategoryid", new SelectList(ViewBag.SubSubCategoryList, "Value", "Text"))
+        </td>
+    </tr>
+</table>
+<h2>SiparisListesi</h2>
+<script>
+    $(document).ready(function () {
+        $('select').change(function () {
+            //alert("id: " + $(this).attr('name') + " value: " + $(this).val() + "   Text: " + $(this).find('option:selected').text());
+            if ($(this).attr('name') == "categoryid") {
+                debugger;
+                $("#categoryname").val($("#categoryid option:selected").text());
+                debugger;
+                AckGetir("subcategoryid", $(this).val());
+            } else if ($(this).attr('name') == "subcategoryid") {
+                $("#subcategoryname").val($("#subcategoryid option:selected").text());
+                debugger;
+                AckGetir("subsubcategoryid", $(this).val());
+            } else if ($(this).attr('name') == "subsubcategoryid") {
+                $("#subsubcategoryname").val($("#subsubcategoryid option:selected").text());
+                debugger;
+            }
+        });
+    })
+    function AckGetir(name, CategoryId)
+    {
+        //alert("AckGetir:" + name + ustkod);
+        var url = '@Url.Action("AckGetir", "Siparis")';
+        //alert("AckGetir url:" + url);
+        var PDD = $("#" + name);
+        //alert("AckGetir PDD:" + PDD);
+        //var ODD= $("#ODD").val();
+        var ODD = CategoryId;
+        $.getJSON(url, { CategoryId: ODD}, function (response) {
+            PDD.empty();
+            //alert("AckGetir response:" + response);
+            debugger;
+            $.each(response, function (index, item) {
+                //debugger;
+                var p = new Option(item.Text, item.Value);
+                PDD.append(p);
+            });
+        });
+}
+</script>

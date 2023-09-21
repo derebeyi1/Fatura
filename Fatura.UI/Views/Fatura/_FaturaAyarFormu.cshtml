@@ -1,0 +1,112 @@
+﻿@model Fatura.Entity.fatura_ayarlari
+
+<h2>@ViewBag.Baslik</h2>
+@using (Html.BeginForm("AyarKaydet", "Fatura", FormMethod.Post, new { @enctype = "multipart/form-data", id = "ayarForm" }))
+{
+    <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+    <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+    <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+    <input type="hidden" name="id" id="id" value="@Model.id" />
+    <input type="hidden" name="vkn_tckn" id="vkn_tckn" value="@Model.vkn_tckn" />
+    <input type="hidden" name="kullanici_id" id="kullanici_id" value="@Model.kullanici_id" />
+    <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+            <td style="color:Highlight">Fatura Tipi</td>
+            <td>
+                @Html.DropDownListFor(m => m.fatura_tipi, Model.DropDownListForFaturaTipi, new { @class = "form-control ", style = "width:200px" })
+                @Html.ValidationMessageFor(m => m.fatura_tipi)
+            </td>
+        </tr>
+        <tr>
+            <td>Giden Fatura Türü</td>
+            <td>
+                <select data-type="string" id="giden_fatura_tipi" name="giden_fatura_tipi" value="@Model.giden_fatura_tipi" class="form-control select2" style="width:200px">
+                    <option value="TEMELFATURA">Temel Fatura</option>
+                    <option value="TICARIFATURA">Ticari Fatura</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="color:Highlight">Test mi?</td>
+            <td>
+                @Html.DropDownListFor(m => m.testmi, Model.DropDownListForTestmi, new { @class = "form-control ", style = "width:140px" })
+                @Html.ValidationMessageFor(m => m.testmi)
+            </td>
+        </tr>
+        <tr>
+            <td style="color:Highlight">Entegratör Tipi</td>
+            <td>
+                @Html.DropDownListFor(m => m.entegrator_tipi, Model.DropDownListForEntegratorTipi, new { @class = "form-control ", style = "width:200px" })
+                @Html.ValidationMessageFor(m => m.entegrator_tipi)
+            </td>
+        </tr>
+        <tr>
+            <td style="color:Highlight">Gönderen Test VKN</td>
+            <td>
+                @Html.TextBoxFor(m => m.test_gndrn_vkn, new { @class = "form-control ", placeholder = "VKN/TCKN Giriniz*", @required = "required" })
+                @Html.ValidationMessageFor(m => m.test_gndrn_vkn)
+            </td>
+        </tr>
+        <tr>
+            <td style="color:Highlight">Alıcı Test VKN</td>
+            <td>
+                @Html.TextBoxFor(m => m.test_alici_vkn, new { @class = "form-control ", placeholder = "VKN/TCKN Giriniz*", @required = "required" })
+                @Html.ValidationMessageFor(m => m.test_alici_vkn)
+            </td>
+        </tr>
+        <tr>
+            <td>Kullanıcı Adı</td>
+            <td>
+                @Html.TextBoxFor(m => m.kullanici_adi, new { @class = "form-control ", style = "width:180px;", placeholder = "Kullanıcı adını giriniz.", @required = "required" })
+                @Html.ValidationMessageFor(m => m.kullanici_adi)
+            </td>
+        </tr>
+        <tr>
+            <td>Parola</td>
+            <td>
+                @Html.TextBoxFor(m => m.sifre, new { @class = "form-control ", style = "width:180px;", placeholder = "Parola giriniz.", @required = "required" })
+                @Html.ValidationMessageFor(m => m.sifre)
+            </td>
+        </tr>
+        <tr>
+            <td>Seri</td>
+            <td>
+                @Html.TextBoxFor(m => m.seri, new { @class = "form-control", style = "width:70px;", placeholder = "Seri" })
+                @Html.ValidationMessageFor(m => m.seri)
+            </td>
+        </tr>
+        <tr>
+            <td style="color:Highlight">Seri Kullanılsın mı?</td>
+            <td>
+                @Html.DropDownListFor(m => m.seri_kullanilsinmi, Model.DropDownListForSeriKullanilsinmi, new { @class = "form-control ", style = "width:140px" })
+                @Html.ValidationMessageFor(m => m.seri_kullanilsinmi)
+            </td>
+        </tr>
+    </table>
+    <button type="submit" class="ayarKaydet btn btn-info">Kaydet / Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+    <br />
+    @ViewBag.Mesaj
+    <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+}
+<script>
+    $(document).ready(function () {        
+        $('.ayarKaydet').click(function (e) {
+            debugger;
+            var kullanici_adi = $("#kullanici_adi").val();
+            var sifre = $("#sifre").val();
+            var seri = $("#seri").val();
+            if (kullanici_adi != "" && sifre != "" && seri != "" && seri.length == 3) {
+                $('#ayarForm').submit();
+            } else {
+                if (seri.length != 3) {
+                    toastr_mesaj('Seri alanı 3 karakter olmalıdır.', "warning", 3000);
+                    return false;
+                } else {
+                    toastr_mesaj('Kullanıcı adı, şifre ve seri bilgilerini giriniz.', "warning", 3000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>

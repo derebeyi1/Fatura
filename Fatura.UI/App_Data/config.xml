@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <cookieName>workgroup_local</cookieName>  
+  <database>
+    <sqlConnection company="6666666666" year="2020">
+      <server>.</server>
+      <dbname>DB6666666666</dbname>
+      <dbuser>sa</dbuser>
+      <dbpassword>.Password.1</dbpassword>
+      <timeout>2400</timeout>
+      <providername>System.Data.SqlClient</providername>
+    </sqlConnection>  
+  </database>  
+</siteConfig>

@@ -1,0 +1,56 @@
+﻿@model Fatura.Entity.birimler
+@{
+    ViewBag.Title = "BirimGuncelle";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<br />
+<br />
+<h2>Birim Guncelle</h2>
+@using (Html.BeginForm("Kaydet", "Birimler", FormMethod.Post))
+{
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            @Html.LabelFor(m => m.kod)
+        </div>
+        <div class="form-group col-md-6">
+            @Html.TextBoxFor(m => m.kod, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            @Html.LabelFor(m => m.donusum_kodu)
+        </div>
+        <div class="form-group col-md-6">
+            @Html.TextBoxFor(m => m.donusum_kodu, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            @Html.LabelFor(m => m.adi)
+        </div>
+        <div class="form-group col-md-6">
+            @Html.TextBoxFor(m => m.adi, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            Kullanıcı Durumu
+        </div>
+        <div class="form-group col-md-6">
+            <label>
+                @Html.RadioButtonFor(m => m.isdeleted, false) Aktif
+            </label>
+            <label>
+                @Html.RadioButtonFor(m => m.isdeleted, true) Pasif
+            </label>
+        </div>
+    </div>
+
+    @*@Html.HiddenFor(m => m.id)*@
+    <input type="hidden" id="id" name="id" value="@Model.id">
+    <button type="submit" class="btn btn-info "> Kaydet</button>
+    @Html.ActionLink("  İptal  ", "BirimListele", "Birimler", new { @class = "btn btn-danger" })
+}
+
+
+

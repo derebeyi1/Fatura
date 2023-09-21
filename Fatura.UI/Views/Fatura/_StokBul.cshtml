@@ -1,0 +1,216 @@
+﻿@using Fatura.Entity
+@*@model List<stok_birim_fiyat>*@
+@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<stok_birim_fiyat>
+@using Fatura.BLL
+
+<h3>Stok Bul</h3>
+<div id="dvStokListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="30%">
+                    Stok adına göre: <input type="text" id="stok_adi1" name="stok_adi1" />
+                    <a href="javascript:void(0);" class="stokBul1 btn btn-info fa fa-search"></a>
+                </td>
+            </tr>
+        </table>
+        <span style="color:red">@ViewBag.Mesaj</span>
+    }
+    <input type="hidden" id="fatura_tipi2" name="fatura_tipi2" />
+    <table class="table table-bordered table-striped table-hover table-condensed" border="1" id="dataTable">
+        <thead>
+            <tr>
+                <th>İşlem</th>
+                <th style="color:Highlight">Stok Adı</th>
+                <th style="color:Highlight">Birimi</th>
+                <th style="color:Highlight">Döviz Cinsi</th>
+                <th style="color:Highlight">Fiyatı</th>
+                <th style="color:Highlight">KDV Oranı</th>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">Ürün VKN/TCKN</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stok_birim_fiyat in Model)
+            {
+                faturaEntities db = new faturaEntities();
+                string birim_ack = db.birimlers.Find(stok_birim_fiyat.birim_id_son).adi;
+                string doviz_cinsi_ack = db.dovizlers.Find(stok_birim_fiyat.doviz_id_son).kod;
+                <tr id="row_@stok_birim_fiyat.id">
+                    <td>
+                        <a href="javascript:void(0);" class="stokSec btn btn-info" data-id="@stok_birim_fiyat.id||||@stok_birim_fiyat.adi||||@stok_birim_fiyat.birim_id_son||||@stok_birim_fiyat.doviz_id_son||||@stok_birim_fiyat.fiyat_son||||@stok_birim_fiyat.kdv_son||||@stok_birim_fiyat.otv_son||||@stok_birim_fiyat.oiv_son||||@stok_birim_fiyat.gvs_son||||@stok_birim_fiyat.sgk_son||||@stok_birim_fiyat.mfv_son||||@stok_birim_fiyat.btu_son||||@stok_birim_fiyat.gtip_no">Seç</a>
+                    </td>
+                    <td>@stok_birim_fiyat.adi</td>
+                    <td>@birim_ack</td>
+                    <td>@doviz_cinsi_ack</td>
+                    <td>@stok_birim_fiyat.fiyat_son</td>
+                    <td>@stok_birim_fiyat.kdv_son</td>
+                    @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                    {
+                        <td>@stok_birim_fiyat.vkn_tckn</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="myPager" class="row">
+        <div class="col-sm-8">
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("StokBul", "Fatura",
+                new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }),
+                PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "myModal1Content" }))
+
+        </div>
+        <div class="col-md-4">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+    @*@if (@Model.Count < 3)
+        {
+            <BR>
+            <BR>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        }*@
+</div>
+<script>
+    var sayi = 0;
+    $(document).ready(function () {
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+        $(".stokBul1").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            //var stok_adi = $("#stok_adi1").val();
+            var searchString = $("#stok_adi1").val();
+            var fatura_tipi = $("#fatura_tipi").val();
+            //if (stok_adi.trim().length > 0)
+            //{
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "POST",
+                url: "/Fatura/StokBul",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "searchString": searchString, "fatura_tipi": fatura_tipi }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("#stok_adi1").val("");
+                    $('#myModal1Content').html(data);
+                    $('#myModal1').modal(options);
+                    $('#myModal1').modal('show');
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. CariFormu");
+                }
+            });
+            //}
+            //else
+            //    toastr_mesaj('Stok adı alanına en az 3 harf giriniz.', "warning", 3000);
+        });
+        $(".stokSec").click(function () { // TODO hesap kontrol et tutar NaN geliyor
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var res = id.split("||||");
+            debugger;
+            $("#stok_id").val(res[0]);
+            $("#stok_adi").val(res[1]);
+            $("#birim_id").val(res[2]);
+            $("#doviz_id1").val(res[3]);
+            DovizKuruGetir("doviz_id1", $("#doviz_id1").val());
+            $("#birim_fiyati").val(res[4]);
+            if ($("#fatura_tipi").val() == 5) //mustahsil ise
+            { //mustahsil ise
+                $("#gvs_orani").val(res[8]);
+                $("#sgk_orani").val(res[9]);
+                $("#mfv_orani").val(res[10]);
+                $("#btu_orani").val(res[11]);
+            }
+            else if ($("#fatura_tipi").val() == 7) //ihracat ise
+            {
+                $("#gtip").val(res[12]);
+            }
+            else if ($("#fatura_tipi").val() == 8) //smm ise
+            {
+                $("#kdv_orani").val(res[5]);
+                $("#gvs_orani").val(res[8]);
+            }
+            else {
+                $("#kdv_orani").val(res[5]);
+                $("#otv_orani").val(res[6]);
+                $("#oiv_orani").val(res[7]);
+            }
+            debugger;
+            var iskonto_orani = parseFloat($("#iskonto_1").val());
+            var satir_tutar = 0;
+            var miktari = parseFloat($("#miktari").val());
+            if (Number.isNaN(miktari))
+                miktari = 0;
+            var birim_fiyati = parseFloat($("#birim_fiyati").val());
+            if (Number.isNaN(birim_fiyati))
+                birim_fiyati = 0;
+            var kdv_orani = parseFloat($("#kdv_orani").val());
+            if (Number.isNaN(kdv_orani))
+                kdv_orani = 0;
+            var otv_orani = parseFloat($("#otv_orani").val());
+            if (Number.isNaN(otv_orani))
+                otv_orani = 0;
+            var oiv_orani = parseFloat($("#oiv_orani").val());
+            if (Number.isNaN(oiv_orani))
+                oiv_orani = 0;
+            var tevkifat_orani = parseFloat($("#tevkifat_orani").val());
+            if (Number.isNaN(tevkifat_orani))
+                tevkifat_orani = 0;
+
+            if (iskonto_orani != "undefined" && iskonto_orani != null)
+                satir_tutar = miktari * birim_fiyati * ((100 - iskonto_orani) / 100);
+            else
+                satir_tutar = miktari * birim_fiyati;
+
+            var satir_kdv_tutar = satir_tutar * (kdv_orani / 100);
+            var satir_otv_tutar = satir_tutar * (otv_orani / 100);
+            var satir_oiv_tutar = satir_tutar * (oiv_orani / 100);
+            $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4));
+            $("#otv_tutar").val(satir_otv_tutar.toFixed(4));
+            $("#oiv_tutar").val(satir_oiv_tutar.toFixed(4));
+            var satir_tevkifat_tutar = satir_kdv_tutar * (tevkifat_orani / 100);
+            $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+            //var satir_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ((100 - iskonto_orani) / 100)).toFixed(3);
+            var net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar);
+            //var fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar));
+            //$("#fiyat").val(fiyat.toFixed(4));
+            if ($('#birim_fiyati') > 0)
+                $('#miktari').focus();
+            else
+                $('#birim_fiyati').focus();
+            $('#myModal1').modal('hide');
+            //$('#myModal').modal('hide');
+            return false;
+        });
+        $(".close").click(function () {
+            debugger;
+            $('#myModal1').modal('hide');
+        });
+    });
+</script>
+

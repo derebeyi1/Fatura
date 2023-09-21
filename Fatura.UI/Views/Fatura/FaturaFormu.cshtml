@@ -1,0 +1,925 @@
+﻿@model Fatura.Entity.fatura
+@using PagedList
+@using PagedList.Mvc
+@using Fatura.BLL
+@using Fatura.Entity
+@using System.Web.Optimization
+
+@{
+    ViewBag.Title = "Fatura Formu";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<br>
+<br>
+<br>
+<h3>@ViewBag.Baslik</h3>
+<div id="dvFaturaListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm("Kaydet", "Fatura", FormMethod.Post, new { @enctype = "multipart/form-data", id = "faturaForm" }))
+    {
+        string role_yetki = "";
+        if (Session["kullanici"] != null)
+        {
+            role_yetki = ((kullanici)Session["kullanici"]).rol_yetki;
+        }
+        <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+        <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+        <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+        <input class="form-control" type="hidden" name="id" id="id" value="@Model.id" />
+        <input type="hidden" name="vkn_tckn" id="vkn_tckn" value="@Model.vkn_tckn" />
+        <input type="hidden" name="kullanici_id" id="kullanici_id" value="@Model.kullanici_id" />
+        <input type="hidden" name="role_yetki" id="role_yetki" value="@role_yetki" />
+        <input class="form-control" type="hidden" name="cari_id" id="cari_id" value="@Model.cari_id" />
+        <table class="table fat1 table-bordered" width="100%" cellspacing="0">
+            <tr>
+                <td style="color:Highlight">Cari Adı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.TextBoxFor(m => m.cari_adi, new { @class = "form-control", style = "width:250px;", placeholder = "Cari adını giriniz." })
+                                <a href="javascript:void(0);" class="cariBul btn btn-success mx-2 fa fa-search"></a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color:Highlight">Fatura Tipi</td>
+                <td>
+                    @Html.DropDownListFor(m => m.fatura_tipi, Model.DropDownListForFaturaTipi, new { @class = "form-control ", style = "width:200px" })
+                    @Html.ValidationMessageFor(m => m.fatura_tipi)
+                </td>
+                @if (Model.fatura_onaykontrol != null && Model.fatura_guid != null && Model.fatura_guid != "" && Model.belgeno != null && Model.belgeno != "")
+                {
+                    <td style="color:Highlight">Belge No</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.belgeno, new { @class = "form-control", style = "width:160px;", placeholder = "Belge No" })
+                        @Html.ValidationMessageFor(m => m.belgeno)
+                    </td>
+                }
+                <td style="color:Highlight">Seri-Sıra</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.TextBoxFor(m => m.seri, new { @class = "form-control", style = "width:70px;", placeholder = "Seri" })
+                                @Html.ValidationMessageFor(m => m.seri)
+                                @Html.TextBoxFor(m => m.sira_no, new { @class = "form-control", style = "width:70px;", placeholder = "Sıra" })
+                                @Html.ValidationMessageFor(m => m.sira_no)
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="color:Highlight">Fatura Tarihi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.fatura_tarihi, new { @class = "form-control date-picker", style = "width:200px;", placeholder = "Fatura Tarihi", autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.fatura_tarihi)
+                </td>
+                <td style="color:Highlight">Fatura Alias</td>
+                <td>
+                    @Html.DropDownListFor(m => m.fatura_alias, Model.DropDownListForFaturaAlias, new { @class = "form-control ", style = "width:400px" })
+                    @Html.ValidationMessageFor(m => m.fatura_alias)
+                </td>
+                <td style="color:Highlight">Satış Tipi</td>
+                <td>
+                    @Html.DropDownListFor(m => m.islem_tipi, Model.DropDownListForIslemTipi, new { @class = "form-control ", style = "width:140px" })
+                    @Html.ValidationMessageFor(m => m.islem_tipi)
+                </td>
+            </tr>
+            <tr>
+                <td style="color:Highlight">Döviz Cinsi/Kuru</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.doviz_id, Model.DropDownListForDoviz, new { @class = "form-control ", style = "width:140px" })
+                                @Html.ValidationMessageFor(m => m.doviz_id)
+                                @Html.TextBoxFor(m => m.doviz_kuru, new { @class = "form-control", style = "width:80px;", placeholder = "Döviz Kuru" })
+                                @Html.ValidationMessageFor(m => m.doviz_kuru)
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color:Highlight">Satış Iban No</td>
+                <td>
+                    @Html.DropDownListFor(m => m.satis_iban, Model.DropDownListForSatisIban, new { @class = "form-control ", style = "width:300px" })
+                    @Html.ValidationMessageFor(m => m.satis_iban)
+                </td>
+                <td style="color:Highlight">Açıklama</td>
+                <td>
+                    @Html.TextBoxFor(m => m.aciklama, new { @class = "form-control", style = "width:400px;", placeholder = "Açıklama giriniz." })
+                    @Html.ValidationMessageFor(m => m.aciklama)
+                </td>
+            </tr>
+        </table>
+        //if (Model.id > 0)
+        //{
+        <div id="dvFaturaDetayListesi" style="height:430px;overflow-y:scroll" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+            <table>
+                <tr>
+                    <td width="30%">
+                        <span style="font-size:x-large;font-weight:bold">Satır Listesi</span><a href="javascript:void(0);" class="SatirEkle btn btn-success mx-2 fa fa-plus" title= "Yeni Satır Ekle" data-id="0"></a>
+                    </td>
+                </tr>
+            </table>
+            <table class="table detay table-bordered table-striped table-hover table-condensed" id="dataTable">
+                <thead>
+                    <tr>
+                        <th style="color:Highlight">Stok Adı</th>
+                        <th style="color:Highlight">Döviz</th>
+                        <th style="color:Highlight">Birimi</th>
+                        <th style="color:Highlight">Birim Fiyatı</th>
+                        <th style="color:Highlight">Miktarı</th>
+                        <th style="color:Highlight">İskonto</th>
+                        @if (Model.fatura_tipi.Equals(Utilities.EMustahsil)) //müstahsil  ise
+                        {
+                            <th style="color:Highlight"><a href="#" data-toggle="tooltip" title="Gelir Vergisi Stopajı">GVS</a></th>
+                            <th style="color:Highlight"><a href="#" data-toggle="tooltip" title="SGK Prim Kesintisi ">SGK</a></th>
+                            <th style="color:Highlight"><a href="#" data-toggle="tooltip" title="Mera Fonu Vergisi">MFV</a></th>
+                            <th style="color:Highlight"><a href="#" data-toggle="tooltip" title="Borsa Tescil Ücreti">BTU</a></th>
+                        }
+                        else if (Model.fatura_tipi.Equals(Utilities.EIhracat)) //ihracat ise
+                        {
+                            <th style="color:Highlight">Teslim Şartı</th>
+                            <th style="color:Highlight">Kap Cinsi</th>
+                            <th style="color:Highlight">Kap No</th>
+                            <th style="color:Highlight">Kap Adedi</th>
+                            <th style="color:Highlight">Gönderilme Şekli</th>
+                            <th style="color:Highlight">GTIP No</th>
+                        }
+                        else if (Model.fatura_tipi.Equals(Utilities.ESMM)) //smm ise
+                        {
+                            <th style="color:Highlight">KDV</th>
+                            <th style="color:Highlight">Tevkifat</th>
+                            <th style="color:Highlight"><a href="#" data-toggle="tooltip" title="Gelir Vergisi Stopajı">GVS</a></th>
+                        }
+                        else
+                        {
+                            <th style="color:Highlight">KDV</th>
+                            <th style="color:Highlight">Tevkifat</th>
+                            <th style="color:Highlight">ÖTV</th>
+                            <th style="color:Highlight">ÖİV</th>
+                        }
+                        <th style="color:Highlight">Toplam</th>
+                        <th style="color:Highlight">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fatura_satir in Model.detays)
+                    {
+                        faturaEntities db = new faturaEntities();
+                        fatura_satir.birim_ack = db.birimlers.Find(fatura_satir.birim_id).adi;
+                        fatura_satir.doviz_cinsi_ack = db.dovizlers.Find(fatura_satir.doviz_id1).kod;
+
+                        <tr id="row_@fatura_satir.id">
+                            <td>@fatura_satir.stok_adi</td>
+                            <td>@fatura_satir.doviz_cinsi_ack - @fatura_satir.doviz_kuru1</td>
+                            <td>@fatura_satir.birim_ack</td>
+                            <td>@fatura_satir.birim_fiyati</td>
+                            <td>@fatura_satir.miktari</td>
+                            @if ((fatura_satir.iskonto_1 ?? 0) != 0)
+                            {
+                                <td>@fatura_satir.iskonto_toplam (%@fatura_satir.iskonto_1)</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            @if (Model.fatura_tipi == Utilities.EMustahsil) //müstahsil ise
+                            {
+                                if ((fatura_satir.gvs_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.gvs_tutar (%@fatura_satir.gvs_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.sgk_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.sgk_tutar (%@fatura_satir.sgk_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.mfv_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.mfv_tutar (%@fatura_satir.mfv_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.btu_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.btu_tutar (%@fatura_satir.btu_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                            else if (Model.fatura_tipi == Utilities.EIhracat) //ihracat ise
+                            {
+                                Utilities util = new Utilities(Request.Url.Host.Split('.')[0]);
+                                var teslim_ack = util.getTeslimSekliAck(fatura_satir.teslim_sarti);
+                                var kap_cinsi_ack = util.getKapCinsiAck(fatura_satir.kap_cinsi);
+                                var gonderilme_ack = util.getGonderilmeSekliAck((int)fatura_satir.gonderilme_sekli);
+
+                                <td>@teslim_ack</td>
+                                <td>@kap_cinsi_ack</td>
+                                <td>@fatura_satir.kap_no</td>
+                                <td>@fatura_satir.kap_adedi</td>
+                                <td>@gonderilme_ack</td>
+                                <td>@fatura_satir.gtip</td>
+                            }
+                            else if (Model.fatura_tipi == Utilities.ESMM) //smm ise
+                            {
+                                if ((fatura_satir.kdv_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.kdv_tutar (%@fatura_satir.kdv_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.tevkifat_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.tevkifat (%@fatura_satir.tevkifat_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.gvs_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.gvs_tutar (%@fatura_satir.gvs_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                            else
+                            {
+                                if ((fatura_satir.kdv_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.kdv_tutar (%@fatura_satir.kdv_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.tevkifat_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.tevkifat (%@fatura_satir.tevkifat_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.otv_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.otv_tutar (%@fatura_satir.otv_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                if ((fatura_satir.oiv_orani ?? 0) != 0)
+                                {
+                                    <td>@fatura_satir.oiv_tutar (%@fatura_satir.oiv_orani)</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                            <td>@fatura_satir.fiyat</td>
+                            <td>
+                                <div class="row">
+                                    <div>
+                                        <a href="javascript:void(0);" class="SatirEkle btn btn-success mx-2 fa fa-pencil", title = "Satır Güncelle" data-id="@fatura_satir.id"></a>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-danger fa fa-trash" data-toggle="modal" title="Satır Sil" data-target="#Sil_@fatura_satir.id">
+                                        </button>
+                                        <div class="modal fade" id="Sil_@fatura_satir.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Stok Sil</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h4>Faturadan stoğu silmek istiyor musunuz?</h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                        @Html.ActionLink("Sil", "SatirSil", new { id = fatura_satir.id, fatura_id = fatura_satir.fatura_id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    @Html.PagedListPager(Model.detays, _sayfaNo => Url.Action("Guncelle", "Fatura", new { Model.id, SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight" kayit_sayisi="@ViewBag.KayitSayisi">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+                </div>
+            </div>
+        </div>
+        //}
+        <table class="table fat2 table-bordered" width="100%" cellspacing="0">
+            <tr class="vergi" style="height: 5px;">
+                <td style="color:Highlight">Toplam KDV</td>
+                <td>
+                    <input type="hidden" id="toplam_kdvtutar" name="toplam_kdvtutar" value="@Model.toplam_kdvtutar" />
+                    <label id="toplam_kdvtutarLabel" style="font-size:large" toplam_kdvtutar="@Model.toplam_kdvtutar">@Model.toplam_kdvtutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Toplam Tevkifat</td>
+                <td>
+                    <input type="hidden" id="toplam_tevkifat" name="toplam_tevkifat" value="@Model.toplam_tevkifat" />
+                    <label id="toplam_tevkifatLabel" style="font-size:large" toplam_tevkifat="@Model.toplam_tevkifat">@Model.toplam_tevkifat</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Toplam ÖTV</td>
+                <td>
+                    <input type="hidden" id="toplam_otvtutar" name="toplam_otvtutar" value="@Model.toplam_otvtutar" />
+                    <label id="toplam_otvtutarLabel" style="font-size:large" toplam_otvtutar="@Model.toplam_otvtutar">@Model.toplam_otvtutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Toplam ÖİV</td>
+                <td>
+                    <input type="hidden" id="toplam_oivtutar" name="toplam_oivtutar" value="@Model.toplam_oivtutar" />
+                    <label id="toplam_oivtutarLabel" style="font-size:large" toplam_oivtutar="@Model.toplam_oivtutar">@Model.toplam_oivtutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+            </tr>
+            <tr class="mustahsil">
+                <td style="color:Highlight">Toplam GVS</td>
+                <td>
+                    <input type="hidden" id="toplam_gvstutar" name="toplam_gvstutar" value="@Model.toplam_gvstutar" />
+                    <label id="toplam_gvstutarLabel" style="font-size:large" toplam_gvstutar="@Model.toplam_gvstutar">@Model.toplam_gvstutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">SGK Matrah / Tutar</td>
+                <td>
+                    <input type="hidden" id="toplam_sgktutar" name="toplam_sgktutar" value="@Model.toplam_sgktutar" />
+                    <label id="toplam_sgktutarLabel" style="font-size:large" toplam_sgktutar="@Model.toplam_sgktutar">@Model.toplam_sgktutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">MFV Matrah / Tutar</td>
+                <td>
+                    <input type="hidden" id="toplam_mfvtutar" name="toplam_mfvtutar" value="@Model.toplam_mfvtutar" />
+                    <label id="toplam_mfvtutarLabel" style="font-size:large" toplam_mfvtutar="@Model.toplam_mfvtutar">@Model.toplam_mfvtutar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Toplam BTU</td>
+                <td>
+                    <input type="hidden" id="toplam_btututar" name="toplam_btututar" value="@Model.toplam_btututar" />
+                    <label id="toplam_btututarLabel" style="font-size:large" toplam_btututar="@Model.toplam_btututar">@Model.toplam_btututar</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+            </tr>
+            <tr>
+                <td style="color:Highlight">Toplam İskonto</td>
+                <td>
+                    <input type="hidden" id="toplam_iskonto" name="toplam_iskonto" value="@Model.toplam_iskonto" />
+                    <label id="toplam_iskontoLabel" style="font-size:large" toplam_iskonto="@Model.toplam_iskonto">@Model.toplam_iskonto</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Ara Toplam</td>
+                <td>
+                    <input type="hidden" id="aratoplam" name="aratoplam" value="@Model.aratoplam" />
+                    <label id="aratoplamLabel" style="font-size:large" aratoplam="@Model.aratoplam">@Model.aratoplam</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+                <td style="color:Highlight">Toplam Fiyat</td>
+                <td>
+                    <input type="hidden" id="toplam_fiyat" name="toplam_fiyat" value="@Model.toplam_fiyat" />
+                    <label id="toplam_fiyatLabel" style="font-size:large; font-weight:bold" toplam_fiyat="@Model.toplam_fiyat">@Model.toplam_fiyat</label>
+                    <label class="dovizLabel" style="font-size:large; font-weight:bold"></label>
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="faturaKaydet btn btn-info">Kaydet / Güncelle</button>
+        @Html.ActionLink("Fatura Listesine Git", "FaturaListesi", "Fatura", new { SayfaNo = ViewBag.SayfaNo, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-primary mx-4" });
+        <br />
+        @ViewBag.Mesaj
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+    }
+</div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"></h4>
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>*@
+                <a href="javascript:void(0);" class="close btn btn-info" data-dismiss="modal">&times;</a>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function init() {
+        debugger;
+        var mesaj = "@TempData["mesaj"]";
+        if (mesaj != "") {
+            var mesaj1 = mesaj.split("||||");
+            toastr_mesaj(mesaj1[0], mesaj1[1], 3000);
+        }
+        if ($("#id").val() > 0) {
+            $('#dvFaturaDetayListesi').show();
+        } else {
+            $('#dvFaturaDetayListesi').hide();
+        }
+        if ($("#fatura_tipi").val() == 5) { //müstahsil ise
+            $('.mustahsil').show();
+            $('.vergi').hide();
+
+        }
+        else if ($("#fatura_tipi").val() == 7) { //ihracat ise
+            $('.mustahsil').hide();
+            $('.vergi').hide();
+        }
+        else if ($("#fatura_tipi").val() == 8) { //smm ise
+            //$('.mustahsil').hide();
+            //$('.vergi').hide();
+        }
+        else {
+            $('.mustahsil').hide();
+            $('.vergi').show();
+        }
+
+        debugger;
+        var doviz_id = $('#doviz_id').val();
+        var toplam_fiyat = $('#toplam_fiyat').val();
+        if (toplam_fiyat > 0) {
+            if (doviz_id == 1)
+                $(".dovizLabel").text("₺");
+            if (doviz_id == 2)
+                $(".dovizLabel").text("$");
+            if (doviz_id == 3)
+                $(".dovizLabel").text("€");
+        }
+    }
+    $(document).ready(function () {
+        init();
+        var islem_tipi_select = $('#islem_tipi');
+        var doviz_id_select = $('#doviz_id');
+        var fatura_tipi_select = $('#fatura_tipi');
+        debugger;
+        jQuery.datetimepicker.setLocale('tr');
+        $('.date-picker').datetimepicker({
+            format: 'd.m.Y H:i',
+        });
+        $(".faturaKaydet").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            event.preventDefault();
+            var id = $("#id").val();
+            var cari_id = $("#cari_id").val();
+            var cari_adi = $("#cari_adi").val();
+            var fatura_tipi = $("#fatura_tipi").val();
+            var fatura_tarihi = $("#fatura_tarihi").val();
+            var doviz_id = $("#doviz_id").val();
+            var doviz_kuru = $("#doviz_kuru").val();
+            var kayitsayisi = $('#kayitsayisi');
+            var role_yetki = $('#role_yetki').val();
+            var fatura_tipi_ack = $(this).find(":selected").text();
+            if (fatura_tipi_ack == "") {
+                switch (fatura_tipi) {
+                    case "1":
+                        fatura_tipi_ack = "E-Arşiv"
+                        break;
+                    case "2":
+                        fatura_tipi_ack = "E-Fatura"
+                        break;
+                    case "3":
+                        fatura_tipi_ack = "E-Arşiv"
+                        break;
+                    case "4":
+                        fatura_tipi_ack = "E-Fatura"
+                        break;
+                    case "5":
+                        fatura_tipi_ack = "E-Müstahsil"
+                        break;
+                    case "6":
+                        fatura_tipi_ack = "E-İrsaliye"
+                        break;
+                    case "7":
+                        fatura_tipi_ack = "E-İhracat"
+                        break;
+                    case "8":
+                        fatura_tipi_ack = "E-SMM"
+                        break;
+                    default:
+                        fatura_tipi_ack = "Bu ";
+                }
+            }
+            var kayit_sayisi = kayitsayisi.attr('kayit_sayisi');
+
+                debugger;
+                var role = "";
+                if (fatura_tipi == 1 || fatura_tipi == 3)
+                    role = "2";
+                else if (fatura_tipi == 2 || fatura_tipi == 4)
+                    role = "3";
+                else if (fatura_tipi == 5)
+                    role = "4";
+                else if (fatura_tipi == 6)
+                    role = "5";
+                else if (fatura_tipi == 7)
+                    role = "6";
+                else if (fatura_tipi == 8)
+                    role = "7";
+                debugger;
+                if (role_yetki.indexOf(role) > 0)
+                {
+                    if (cari_id != "" && cari_adi != "" && fatura_tipi != "" && fatura_tarihi != "" && doviz_id != "" && doviz_kuru != "" && (id == 0 || kayit_sayisi > 0))
+                    {
+                        $('#faturaForm').submit();
+                        $buttonClicked.attr('disabled', false);
+                    }
+                    else
+                    {
+                        if (cari_id != "" && cari_adi != "") {
+                            if (doviz_id != "" && doviz_kuru != "") {
+                                if (fatura_tipi != "") {
+                                    if (fatura_tarihi != "")
+                                        if (id > 0 && kayit_sayisi == 0) {
+                                            toastr_mesaj('Faturaya stok ekleyiniz.', "error", 3000);
+                                            $buttonClicked.attr('disabled', false);
+                                        }
+                                        else
+                                            toastr_mesaj('Fatura tarihini giriniz.', "error", 3000);
+                                } else
+                                    toastr_mesaj('Fatura tipini seçiniz.', "error", 3000);
+                            } else
+                                toastr_mesaj('Fatura döviz cinsini seçiniz.', "error", 3000);
+                        } else
+                            toastr_mesaj('Fatura carisini seçiniz.', "error", 3000);
+                        $buttonClicked.attr('disabled', false);
+                        return false;
+                    }
+                }
+                else
+                {
+                    toastr_mesaj(fatura_tipi_ack + ' fatura türü için yetkiniz yok. Bu fatura türü ile işlem yapmak için lütfen satış birimimizi arayınız.', "error", 3000);
+                }
+            debugger;
+            $buttonClicked.attr('disabled', false);
+        });
+        $("input").change(function () {
+            if (this.id == "cari_adi") {
+                debugger;
+                var cari_adi = this.value;
+                if (cari_adi != "") {
+                    CariBul(this);
+                }
+                else {
+                    CariBul(this);
+                    //toastr_mesaj('Cari seçiniz.', "warning", 3000);
+                }
+            }
+        });
+        $(".cariBul").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var searchString = $("#cari_adi").val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "POST",
+                url: "/Fatura/CariBul",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "searchString": searchString }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. CariFormu");
+                }
+            });
+        });
+        $('#cari_adi').keydown(function (event) {
+            if (event.keyCode == 13) {
+                debugger;
+                CariBul(this);
+            }
+        });
+        var doviz_kuru_current = 0;
+        doviz_id_select.click(function () {
+            $(this).data("eskiDeger", this.value);
+            doviz_kuru_current = parseFloat($("#doviz_kuru").val());
+        }).change(function () {
+            debugger;
+            var id = $("#id").val();
+            var doviz_id_ack = $(this).find(":selected").text();
+            var mesaj = "Fatura vergisi " + doviz_id_ack + " kuruna göre yeniden hesaplanacak.";
+            if (id != null && id != 0 && window.confirm(mesaj)) {
+                debugger;
+                DovizKuruGetir(this.id, this.value);
+                var doviz_kuru_son = parseFloat($("#doviz_kuru").val());
+                var kayitsayisi = $('#kayitsayisi');
+                var kayit_sayisi = kayitsayisi.attr('kayit_sayisi');
+                var toplam_fiyat = parseFloat($("#toplam_fiyat").val());
+                var aratoplam = parseFloat($("#aratoplam").val());
+                var toplam_kdvtutar = parseFloat($("#toplam_kdvtutar").val());
+                var toplam_otvtutar = parseFloat($("#toplam_otvtutar").val());
+                var toplam_oivtutar = parseFloat($("#toplam_oivtutar").val());
+                var toplam_tevkifat = parseFloat($("#toplam_tevkifat").val());
+                if (toplam_fiyat > 0 && kayit_sayisi > 0) {
+                    var katsayi = doviz_kuru_current / doviz_kuru_son;
+                    //var toplam_vergi = (parseFloat($("#toplam_kdvtutar").val()) - parseFloat($("#toplam_tevkifat").val())) + parseFloat($("#toplam_otvtutar").val()) + parseFloat($("#toplam_oivtutar").val());
+                    var tfiyat = (toplam_fiyat * katsayi).toFixed(8);
+                    $("#toplam_fiyat").val(tfiyat);
+                    $("#toplam_fiyatLabel").text(tfiyat);
+                    $("#toplam_fiyatLabel").attr('toplam_fiyatLabel', tfiyat)
+                    var atoplam = (aratoplam * katsayi).toFixed(8);
+                    $("#aratoplam").val(atoplam);
+                    $("#aratoplamLabel").text(atoplam);
+                    var tkdv = (toplam_kdvtutar * katsayi).toFixed(8);
+                    $("#toplam_kdvtutar").val(tkdv);
+                    $("#toplam_kdvtutarLabel").text(tkdv);
+                    var totv = (toplam_otvtutar * katsayi).toFixed(8);
+                    $("#toplam_otvtutar").val(totv);
+                    $("#toplam_otvtutarLabel").text(totv);
+                    var toiv = (toplam_oivtutar * katsayi).toFixed(8);
+                    $("#toplam_oivtutar").val(toiv);
+                    $("#toplam_oivtutarLabel").text(toiv);
+                    var ttev = (toplam_tevkifat * katsayi).toFixed(8);
+                    $("#toplam_tevkifat").val(ttev);
+                    $("#toplam_tevkifatLabel").text(ttev);
+                    debugger;
+                    if (this.value == 1)
+                        $(".dovizLabel").text("₺");
+                    if (this.value == 2)
+                        $(".dovizLabel").text("$");
+                    if (this.value == 3)
+                        $(".dovizLabel").text("€");
+                }
+                toastr_mesaj("Vergiler güncellendi. Faturayı kaydetmeyi unutmayınız.", "warning", 3000);
+            }
+            else {
+                $(this).val($(this).data("eskiDeger"));
+            }
+        })
+        fatura_tipi_select.click(function () {
+            $(this).data("eskiDeger", this.value);
+        }).change(function () {
+            debugger;
+            var id = $("#id").val();
+            var cari_id = $("#cari_id").val();
+            var cari_adi = $("#cari_adi").val();
+            var fatura_tipi = $("#fatura_tipi").val();
+            var fatura_tarihi = $("#fatura_tarihi").val();
+            var doviz_id = $("#doviz_id").val();
+            var doviz_kuru = $("#doviz_kuru").val();
+            var kayitsayisi = $('#kayitsayisi');
+            var role_yetki = $('#role_yetki').val();
+            var kayit_sayisi = kayitsayisi.attr('kayit_sayisi');
+            var fatura_tipi_ack = $(this).find(":selected").text();
+            var mesaj = "Fatura vergisi " + fatura_tipi_ack + " tipine göre yeniden hesaplanacak.";
+            //if (id != null && id != 0 && this.value > 0 && window.confirm(mesaj)) {
+            var role_yetki = $('#role_yetki').val();
+            var role = "";
+            if (fatura_tipi == 1 || fatura_tipi == 3)
+                role = "2";
+            else if (fatura_tipi == 2 || fatura_tipi == 4)
+                role = "3";
+            else if (fatura_tipi == 5)
+                role = "4";
+            else if (fatura_tipi == 6)
+                role = "5";
+            else if (fatura_tipi == 7)
+                role = "6";
+            else if (fatura_tipi == 8)
+                role = "7";
+            debugger;
+            if (role_yetki.indexOf(role) > 0) {
+                if (cari_id != "" && cari_adi != "" && fatura_tipi != "" && fatura_tarihi != "" && doviz_id != "" && doviz_kuru != "" && (id == 0 || kayit_sayisi > 0)) {
+                    if (window.confirm(mesaj)) {
+                        debugger;
+                        var kayitsayisi = $('#kayitsayisi');
+                        var kayit_sayisi = kayitsayisi.attr('kayit_sayisi');
+                        var toplam_fiyat = $("#toplam_fiyat").val();
+                        //if (toplam_fiyat > 0 && kayit_sayisi > 0) {
+                        $('#faturaForm').submit();
+                        //}
+                    }
+                    else {
+                        $(this).val($(this).data("eskiDeger"));
+                    }
+                }
+                else
+                {
+                    $(this).val($(this).data("eskiDeger"));
+                    if (cari_id != "" && cari_adi != "") {
+                        if (doviz_id != "" && doviz_kuru != "") {
+                            if (fatura_tipi != "") {
+                                if (fatura_tarihi != "")
+                                    if (id > 0 && kayit_sayisi == 0) {
+                                        toastr_mesaj('Faturaya stok ekleyiniz.', "error", 3000);
+                                    }
+                                    else
+                                        toastr_mesaj('Fatura tarihini giriniz.', "error", 3000);
+                            } else
+                                toastr_mesaj('Fatura tipini seçiniz.', "error", 3000);
+                        } else
+                            toastr_mesaj('Fatura döviz cinsini seçiniz.', "error", 3000);
+                    } else
+                        toastr_mesaj('Fatura carisini seçiniz.', "error", 3000);
+                    return false;
+                }
+            }
+            else {
+                $(this).val($(this).data("eskiDeger"));
+                toastr_mesaj(fatura_tipi_ack + ' fatura türü için yetkiniz yok. Bu fatura türü ile işlem yapmak için lütfen satış birimimizi arayınız.', "error", 3000);
+            }
+        })
+        islem_tipi_select.click(function () {
+            $(this).data("eskiDeger", this.value);
+        }).change(function () {
+            debugger;
+            var islem_tipi = $(this).val();
+            var id = $("#id").val();
+            var islem_tipi_ack = $(this).find(":selected").text();
+            var mesaj = "Fatura vergisi " + islem_tipi_ack + " tipine göre yeniden hesaplanacak.";
+            if (id != null && id != 0 && window.confirm(mesaj)) {
+                debugger;
+                var kayitsayisi = $('#kayitsayisi');
+                var kayit_sayisi = kayitsayisi.attr('kayit_sayisi');
+                var toplam_fiyat = parseFloat($("#toplam_fiyat").val());
+                var aratoplam = parseFloat($("#aratoplam").val());
+                if (toplam_fiyat > 0 && kayit_sayisi > 0) {
+                    if (islem_tipi == 1) //toptan ise
+                    {
+                        var toplam_vergi = (parseFloat($("#toplam_kdvtutar").val()) - parseFloat($("#toplam_tevkifat").val())) + parseFloat($("#toplam_otvtutar").val()) + parseFloat($("#toplam_oivtutar").val());
+                        var tfiyat = (toplam_fiyat + toplam_vergi).toFixed(8);
+                        $("#toplam_fiyat").val(tfiyat);
+                        $("#toplam_fiyatLabel").text(tfiyat);
+                        $("#toplam_fiyatLabel").attr('toplam_fiyatLabel', tfiyat);
+                        var atoplam = (aratoplam + toplam_vergi).toFixed(8);
+                        $("#aratoplam").val(atoplam);
+                        $("#aratoplamLabel").text(atoplam);
+                    }
+                    else //perakende ise
+                    {
+                        var toplam_vergi = (parseFloat($("#toplam_kdvtutar").val()) - parseFloat($("#toplam_tevkifat").val())) + parseFloat($("#toplam_otvtutar").val()) + parseFloat($("#toplam_oivtutar").val());
+                        var tfiyat = (toplam_fiyat - toplam_vergi).toFixed(8);
+                        $("#toplam_fiyat").val(tfiyat);
+                        $('#toplam_fiyatLabel').attr('toplam_fiyatLabel', tfiyat)
+                        $("#toplam_fiyatLabel").text(tfiyat);
+                        var atoplam = (aratoplam - toplam_vergi).toFixed(8);
+                        $("#aratoplam").val(atoplam);
+                        $("#aratoplamLabel").text(atoplam);
+                    }
+                    toastr_mesaj("Vergiler güncellendi. Faturayı kaydetmeyi unutmayınız.", "warning", 3000);
+                }
+            }
+            else {
+                $(this).val($(this).data("eskiDeger"));
+            }
+        })
+        $(".SatirEkle").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var fatura_id = $("#id").val();
+            var fatura_tipi = $("#fatura_tipi").val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '/Fatura/SatirEkle',
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id, "fatura_id": fatura_id, "fatura_tipi": fatura_tipi },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $(".close").click(function () {
+            debugger;
+            $('#myModal').modal('hide');
+        });
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+        //$('select').on('change', function () {
+        //    if (this.id.startsWith("doviz_id")) {
+
+        //        // TODO $('#toplam_kdvtutar').val($('#toplam_kdvtutar').val(). );
+        //    }
+        //});
+    });
+
+    function CariBul(x) {
+        debugger;
+        var searchString = x.value;
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "POST",
+            url: "/Fatura/CariBulBir",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ "searchString": searchString }),
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                if (data.length == 1) { //sadece bir cari döndüyse forma yazıyoruz.
+                    $("#cari_adi").val(data[0].ad);
+                    $("#cari_id").val(data[0].id);
+                    var cari_vkn = data[0].vergi_numarasi;
+                    AliasDoldur("fatura_alias", cari_vkn);
+                    if (data[0].tip == 1)//cari tipi 1 (müstahsil carisi) ise fatura tipi müstahsil set ediliyor.
+                    {
+                        $("#fatura_tipi").val(5); //müstahsil
+                        $('.mustahsil').show();
+                        $('.vergi').hide();
+                        toastr_mesaj('Müstahsil carisi seçtiniz. Faturanın tipi E-Müstahsil olarak ayarlandı.', "warning", 3000);
+                    }
+                    else
+                    {
+                        if (data[0].mukellefmi == 1) {
+                            $("#fatura_tipi").val(2); //normal efatura
+                            toastr_mesaj('Mukellef cari seçtiniz. Faturanın tipi E-Fatura olarak ayarlandı.', "warning", 3000);
+                        }
+                        else {
+                            $("#fatura_tipi").val(1); //normal earsiv
+                            toastr_mesaj('Ticari cari seçtiniz. Faturanın tipi E-Arşiv olarak ayarlandı.', "warning", 3000);
+                        }
+                        $('.vergi').show();
+                        $('.mustahsil').hide();
+                    }
+                } else { //hiç cari yok veya birden fazla cari varsa modal açıp seçtiriyoruz. //TODO gelen data yı modalda direk gösterelim.
+                    //$('#myModalContent').html(data);
+                    //$('#myModal').modal(options);
+                    //$('#myModal').modal('show');
+                    $(".cariBul").trigger("click");
+                }
+                $('#aciklama').focus();
+            },
+            error: function () {
+                alert("Beklenmedik hata oluştu. FaturaFormu");
+            }
+        });
+    }
+    function AliasDoldur(name, cari_vkn)
+    {
+        debugger;
+        //alert("AckGetir:" + name + ustkod);
+        var url = '@Url.Action("AliasDoldur", "Fatura")';
+        //alert("AckGetir url:" + url);
+        var PDD = $("#" + name);
+        //alert("AckGetir PDD:" + PDD);
+        //var ODD= $("#ODD").val();
+        var ODD= cari_vkn;
+        $.getJSON(url, { cari_vkn: ODD }, function (response) {
+            PDD.empty();
+            //alert("AckGetir response:" + response);
+            debugger;
+            $.each(response, function (index, item) {
+                //debugger;
+                var p = new Option(item.Display, item.Key);
+                PDD.append(p);
+            });
+        });
+    }
+</script>

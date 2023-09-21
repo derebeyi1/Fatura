@@ -1,0 +1,77 @@
+﻿/*body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #E4E4E4;
+}
+
+
+/* tooltip*/
+
+.hint {
+    width: 258px;
+    background: red;
+    position: relative;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    position: absolute;
+    left: 0px;
+    border: 1px solid #CC9933;
+    background-color: #FFFFCC;
+    display: none;
+    padding: 20px;
+    font-size: 11px;
+}
+
+    .hint:before {
+        content: "";
+        position: absolute;
+        left: 100%;
+        top: 24px;
+        width: 0;
+        height: 0;
+        border-top: 17px solid transparent;
+        border-bottom: 1px solid transparent;
+        border-left: 22px solid #CC9933;
+    }
+
+    .hint:after {
+        content: "";
+        position: absolute;
+        left: 100%;
+        top: 26px;
+        width: 0;
+        height: 0;
+        border-top: 14px solid transparent;
+        border-bottom: 1px solid transparent;
+        border-left: 20px solid #FFFFCC;
+    }
+
+.parent {
+    position: relative;
+}
+
+.progress {
+    height: 17px;
+}
+
+#progres {
+    display: block;
+}
+
+p {
+    margin: 0px;
+    font-weight: 500;
+}
+input.largerCheckbox {
+    width: 20px;
+    height: 20px;
+}
+
+
+/*.form-control {
+    width: auto;
+    margin-left: 260px;
+    margin-top: 25px;
+    width: 200px;
+}*/
+

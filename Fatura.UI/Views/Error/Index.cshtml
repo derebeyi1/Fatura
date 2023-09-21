@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Hata</title>
+</head>
+<body>
+    <hgroup>
+        <h1>Hata</h1>
+
+        @model System.Web.Mvc.HandleErrorInfo
+
+        @if (Model != null)
+        {
+            <h2 style="color: red">
+                <BR>
+                @Model.Exception.Message
+                <BR>
+                @*@if (Model.Exception.InnerException != null)
+                {*@ 
+                    @Model.Exception.InnerException.InnerException.Message
+               @* }*@
+                <br>
+                @Model.ControllerName  @Model.ActionName
+            </h2>
+        }
+
+    </hgroup>
+</body>
+</html> 

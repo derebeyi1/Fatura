@@ -1,0 +1,10 @@
+﻿@model Fatura.Entity.TransformationModel
+@using Fatura.UI.CustomHtmlHelper
+@*@{
+    ViewBag.Title = "GetFaturaForPrint";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}*@
+@*@HttpUtility.HtmlEncode(ViewBag.HTMLData)*@
+<div data-role="content">
+    @CustomHTMLHelper.RenderXml(Model.XMLFilename, Model.StylesheetFilename)
+</div>

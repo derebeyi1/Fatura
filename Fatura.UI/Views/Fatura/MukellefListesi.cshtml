@@ -1,0 +1,124 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using Fatura.Entity
+@model PagedList.IPagedList<mukellef>
+@using Fatura.BLL
+
+<BR>
+@{
+    ViewBag.Title = "MukellefListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<div id="dvMukellefListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="30%">
+                    <span style="font-size:x-large;font-weight:bold">Mükellef Listesi</span>
+                    @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                    {
+                        <input type="button" class="MukellefCek btn btn-success mx-3" data-id="1" value="Mükellef Listesini Güncelle">
+                        @*<a href="javascript:void(0);" class="MukellefCek btn btn-success mx-3" data-id="1">Mükellef Listesini Güncelle</a>*@
+                        @*@Html.ActionLink("Mükellef Listesini Güncelle", "MukellefListesi", new { id = 1, sortOrder = ViewBag.BelgeNoParm, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-success mx-3" })*@
+                    }
+                </td>
+                <td width="30%">
+                    Sayfada
+                    @*@Html.TextBox("SayfaKayitSayisi", null, new { style = "width: 50px;" })*@
+                    <select id="SayfaKayitSayisi" name="SayfaKayitSayisi">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    kayıt göster.
+                </td>
+                <td width="30%">
+                    @Html.TextBox("SearchString", null, new { style = "width: 100px;" })
+                    <input type="submit" class=" btn btn-info" value="Ara" />
+                </td>
+            </tr>
+        </table>
+    }
+    <table class="table table-bordered align-baseline" id="dataTable">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("Cari VKN/TCKN", "MukellefListesi", new { id = 0, sortOrder = ViewBag.VKNSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Ünvanı", "MukellefListesi", new { id = 0, sortOrder = ViewBag.UnvanSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("E-Posta", "MukellefListesi", new { id = 0, sortOrder = ViewBag.EPostaSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">E-Posta</th>
+                <th style="color:Highlight">Tipi</th>
+                <th>@Html.ActionLink("Oluşturma Tarihi", "MukellefListesi", new { id = 0, sortOrder = ViewBag.TarihSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mukellef in Model)
+            {
+                <tr>
+                    <td>@mukellef.VergiKimlikNo</td>
+                    <td>@mukellef.Title</td>
+                    <td>@mukellef.PostBoxAlias</td>
+                    <td>@mukellef.SenderBoxAlias</td>
+                    <td>@mukellef.Tipi</td>
+                    <td>@mukellef.OlusturmaTarihi</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("MukellefListesi", "Fatura", new { id = 0, SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+    <BR>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Guncellendi")
+            toastr_mesaj("Mükellef listesi başarıyla güncellendi.", "success", 3000);
+        else if (mesaj == "Guncel")
+            toastr_mesaj("Mükellef listesi güncel.", "success", 3000);
+        else if (mesaj != "") {
+            toastr_mesaj(mesaj, "error", 3000);
+        }
+        $(".MukellefCek").click(function () {
+            debugger;
+            toastr_mesaj("Mükellef listesi güncelleniyor. Biraz zaman alacak, lütfen bekleyiniz.", "success", 10000);
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            //$buttonClicked.attr('class', 'disabled');
+            var id = $buttonClicked.attr('data-id');
+            //var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "POST",
+                url: '/Fatura/MukellefListesi',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "id": id, }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("body").html(data);
+                    //$buttonClicked.attr('class', 'disabled');
+                    $buttonClicked.attr('disabled', false);
+                    //if (data.status) {
+                    //    alert("kayit sayisi=>" + data.returnvalue);
+                    //}
+                },
+                error: function () {
+                    $buttonClicked.attr('disabled', false);
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });        
+    });
+</script>

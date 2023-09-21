@@ -1,0 +1,528 @@
+﻿@model Fatura.Entity.fatura_gelen
+@using Fatura.BLL
+@{
+    ViewBag.Title = "GelenIrsaliyeYanitlaUpdate";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<br>
+<br>
+<br>
+<br>
+<h4>İrsaliye Yanıtla</h4>
+<div class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm("GelenIrsaliyeYanitlaUpdate", "Fatura", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @*<input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+            <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />*@
+        <input type="hidden" id="fgid" name="id" value="@Model.id" />
+        <table class="table table-bordered" width="100%" cellspacing="0">
+            @*@Html.HiddenFor(m => m.id)*@
+            <tr>
+                <td style="color:Highlight">Gönderen Ünvanı</td>
+                <td>
+                    @Model.gonderen_unvan
+                </td>
+                <td style="color:Highlight">VKN/TCKN</td>
+                <td>
+                    @Model.gonderen_vkn
+                </td>
+                <td style="color:Highlight">Şehir</td>
+                <td>
+                    @Model.gonderen_sehir
+                </td>
+                <td style="color:Highlight">Fatura Tarihi</td>
+                <td>
+                    @Model.faturatarihi
+                </td>
+            </tr>
+            <tr>
+                <td style="color:Highlight">Fatura Türü</td>
+                <td>
+                    @Model.fatura_turu
+                </td>
+                <td style="color:Highlight">Ara Toplam</td>
+                <td>
+                    @Model.aratoplam
+                </td>
+                <td style="color:Highlight">Vergi</td>
+                <td>
+                    @Model.vergitutar
+                </td>
+                <td style="color:Highlight">Meblağ</td>
+                <td>
+                    @Model.meblag
+                </td>
+            </tr>
+            <tr>
+                <td style="color:Highlight">Fatura Notu</td>
+                <td colspan="7">
+                    @Model.fatura_notu
+                </td>
+            </tr>
+            <tr style="border:outset">
+                <td style="color:Highlight">Teslim Alan *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.teslim_alan, new { @class = "form-control", style = "width:250px;", placeholder = "Teslim Alan" })
+                    @Html.ValidationMessageFor(m => m.teslim_alan)
+                </td>
+                <td style="color:Highlight">Teslim Eden *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.teslim_eden, new { @class = "form-control", style = "width:250px;", placeholder = "Teslim Eden" })
+                    @Html.ValidationMessageFor(m => m.teslim_eden)
+                </td>
+                <td style="color:Highlight">Teslim Tarihi *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.teslim_tarihi, new { @class = "form-control date-picker", style = "width:180px;", placeholder = "Teslim Tarihi", autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.teslim_tarihi)
+                </td>
+                <td style="color:Highlight">Not</td>
+                <td>
+                    @Html.TextBoxFor(m => m.not, new { @class = "form-control", style = "width:500px;", placeholder = "Not yazınız." })
+                    @Html.ValidationMessageFor(m => m.not)
+                </td>
+            </tr>
+        </table>
+        @*<button type="submit" class="btn btn-info">Kaydet / Güncelle</button>*@
+        <br />
+        @ViewBag.Mesaj
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+    }
+
+    <h4>Stok Listesi</h4>
+    <div id="dvUrunListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+        @if (Model.id > 0)
+        {
+            @*<table>
+                    <tr>
+                        <td width="30%">
+                            <a href="javascript:void(0);" class="anchorDetail btn btn-success mx-3" data-id="0">Yeni Adres Ekle</a>
+                        </td>
+                    </tr>
+                </table>*@
+
+            <table class="table table-bordered table-striped table-hover table-condensed" id="dataTable">
+                <thead>
+                    <tr>
+                        <th style="color:Highlight">Id</th>
+                        <th style="color:Highlight">Stok Adı</th>
+                        <th style="color:Highlight">Birimi</th>
+                        <th style="color:Highlight">Miktarı</th>
+                        @*<th style="color:Highlight">Doviz Cinsi</th>
+                            <th style="color:Highlight">Doviz Kuru</th>*@
+                        @*<th style="color:Highlight">Kdv Oranı / Tutarı</th>
+                            <th style="color:Highlight">Tevkifat Oranı / Tutarı</th>
+                            <th style="color:Highlight">Otv Oranı / Tutarı</th>
+                            <th style="color:Highlight">İskonto Oranı / Tutarı</th>
+                            <th style="color:Highlight">Birim Fiyatı</th>*@
+                        <th style="color:Highlight">Satır No</th>
+                        <th style="color:Highlight">Şikayet</th>
+                        <th style="color:Highlight">Teslim Alınan Miktar</th>
+                        <th style="color:Highlight">Reddedilen Miktar</th>
+                        <th style="color:Highlight">Red Kodu</th>
+                        <th style="color:Highlight">Red Açıklaması</th>
+                        <th style="color:Highlight">Eksik Miktar</th>
+                        <th style="color:Highlight">Fazla Miktar</th>
+                        <th style="color:Highlight">İşlemler</th>
+                        <th style="visibility: hidden;width: 1px">Stok ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Fatura.Entity.fatura_gelen_satir fgs in Model.fgs)
+                    {
+                        <tr id="row_@fgs.id">
+                            <td class="fgsid"><span>@fgs.id</span></td>
+                            <td>@fgs.stok_adi</td>
+                            <td>@fgs.birimi</td>
+                            <td>@fgs.miktari</td>
+                            @*<td>@fgs.doviz_cinsi</td>
+                                <td>@fgs.doviz_kuru</td>
+                                <td>@fgs.kdv_orani-@fgs.kdv_tutar</td>
+                                <td>@fgs.tevkifat_orani-@fgs.tevkifat_tutar</td>
+                                <td>@fgs.otv_orani-@fgs.otv_tutar</td>
+                                <td>@fgs.iskonto_orani-@fgs.iskonto_tutar</td>
+                                <td>@fgs.fiyat</td>*@
+                            <td class="satirno"><span>@fgs.satirno</span></td>
+                            <td class="sikayet">
+                                <span>@fgs.sikayet</span>
+                                <input type="text" value="@fgs.sikayet" style="display:none" />
+                            </td>
+                            <td class="teslim_adet">
+                                <span>@fgs.teslim_adet</span>
+                                <input type="text" size="5" value="@fgs.teslim_adet" style="display:none" />
+                            </td>
+                            <td class="red_adet">
+                                <span>@fgs.red_adet</span>
+                                <input type="text" size="5" value="@fgs.red_adet" style="display:none" />
+                            </td>
+                            <td class="red_kodu">
+                                <span>@fgs.red_kodu</span>
+                                <input type="text" size="5" value="@fgs.red_kodu" style="display:none" />
+                            </td>
+                            <td class="red_ack">
+                                <span>@fgs.red_ack</span>
+                                <input type="text" value="@fgs.red_ack" style="display:none" />
+                            </td>
+                            <td class="eksik_adet">
+                                <span>@fgs.eksik_adet</span>
+                                <input type="text" size="5" value="@fgs.eksik_adet" style="display:none" />
+                            </td>
+                            <td class="fazla_adet">
+                                <span>@fgs.fazla_adet</span>
+                                <input type="text" size="5" value="@fgs.fazla_adet" style="display:none" />
+                            </td>
+                            <td>
+                                <a class="Edit" href="javascript:;">Güncelle</a>
+                                <a class="Update" href="javascript:;" style="display:none">Güncelle</a>
+                                <a class="Cancel" href="javascript:;" style="display:none">İptal</a>
+                                @*<a class="Delete" href="javascript:;">Delete</a>*@
+                                @*<div class="row" style="width:200px;">
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" class="anchorDetail btn btn-success mx-3" data-id="@fatura_gelen_satir.guid">Güncelle</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_fatura_gelen_satir.guid">
+                                                Sil
+                                            </button>
+                                            <div class="modal fade" id="Sil_fatura_gelen_satir.guid" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">Cari Adresi Sil</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h4>Cari adresi silmek istiyor musunuz?</h4>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                            @Html.ActionLink("Onayla", "Onayla", new { guid = fatura_gelen_satir.guid, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        @Html.PagedListPager(Model.fgs, _sayfaNo => Url.Action("Guncelle", "Cari", new { Model.id, SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <BR>
+                        Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+                    </div>
+                </div>*@
+        }
+    </div>
+</div>
+<br />
+<div class="row justify-content-center">
+    <div>
+        <button type="button" class="Onay_@Model.id btn btn-info" data-toggle="modal" data-target="#Onay_@Model.id">
+            Kaydet ve Onayla
+        </button>
+        <div class="modal" id="Onay_@Model.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Gelen İrsaliye Yanıtla</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Gelen irsaliyeyi onaylamak / reddetmek istiyor musunuz?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                        <a href="javascript:void(0);" class="KaydetYanitla btn btn-success mx-3" data-id="@Model.id">Kaydet ve Yanıtla</a>
+                        @*@Html.ActionLink("Kaydet ve Yanıtla", "GelenIrsaliyeYanıtlaUpdate", new { guid = fatura_gelen.guid, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        @Html.ActionLink("Geri", "GelenIrsaliye", "Fatura", new { SayfaNo = ViewBag.SayfaNo, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-primary mx-4" })
+    </div>
+</div>
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Baslik</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ---
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //var TeamDetailPostBackURL = '/Cari/AdresGuncelle';
+    //$(function () {
+    //    $(".anchorDetail").click(function () {
+    //        debugger;
+    //        var $buttonClicked = $(this);
+    //        var id = $buttonClicked.attr('data-id');
+    //        var cari_id = $("#id").val();
+    //        var options = { "backdrop": "static", keyboard: true };
+    //        $.ajax({
+    //            type: "GET",
+    //            url: TeamDetailPostBackURL,
+    //            contentType: "application/json; charset=utf-8",
+    //            data: { "id": id, "cari_id": cari_id },
+    //            datatype: "json",
+    //            success: function (data) {
+    //                debugger;
+    //                $('#myModalContent').html(data);
+    //                $('#myModal').modal(options);
+    //                $('#myModal').modal('show');
+
+    //            },
+    //            error: function () {
+    //                alert("Beklenmedik hata oluştu. CariFormu");
+    //            }
+    //        });
+    //    });
+    //    //$("#closebtn").on('click',function(){
+    //    //    $('#myModal').modal('hide');
+    //    $("#closbtn").click(function () {
+    //        $('#myModal').modal('hide');
+    //    });
+    //});
+    $(function () {
+        debugger;
+        jQuery.datetimepicker.setLocale('tr');
+        $('.date-picker').datetimepicker({
+            format: 'd.m.Y H:i',
+        });
+        //Remove the dummy row if data present.
+        //var sil = $("#dataTable tr").length;
+        //if ($("#dataTable tr").length > 2) {
+        //    $("#dataTable tr:eq(1)").remove();
+        //} else {
+        //    var row = $("#dataTable tr:last-child");
+        //    row.find(".Edit").hide();
+        //    row.find(".Delete").hide();
+        //    row.find("span").html('&nbsp;');
+        //}
+    });
+
+    function AppendRow(row, id, sikayet, teslim_adet, red_adet, red_kodu, red_ack, eksik_adet, fazla_adet) {
+        //Bind CustomerId.
+        $(".id", row).find("span").html(id);
+
+        //Bind sikayet.
+        $(".sikayet", row).find("span").html(sikayet);
+        $(".sikayet", row).find("input").val(sikayet);
+
+        //Bind teslim_adet.
+        $(".teslim_adet", row).find("span").html(teslim_adet);
+        $(".teslim_adet", row).find("input").val(teslim_adet);
+
+        $(".red_adet", row).find("span").html(red_adet);
+        $(".red_adet", row).find("input").val(red_adet);
+
+        $(".red_kodu", row).find("span").html(red_kodu);
+        $(".red_kodu", row).find("input").val(red_kodu);
+
+        $(".red_ack", row).find("span").html(red_ack);
+        $(".red_ack", row).find("input").val(red_ack);
+
+        $(".eksik_adet", row).find("span").html(eksik_adet);
+        $(".eksik_adet", row).find("input").val(eksik_adet);
+
+        $(".fazla_adet", row).find("span").html(fazla_adet);
+        $(".fazla_adet", row).find("input").val(fazla_adet);
+
+        row.find(".Edit").show();
+        //row.find(".Delete").show();
+        $("#dataTable").append(row);
+    };
+
+    //Add event handler.
+    $("body").on("click", "#btnAdd", function () {
+        var txtName = $("#txtName");
+        var txtCountry = $("#txtCountry");
+        $.ajax({
+            type: "POST",
+            url: "/Home/InsertCustomer",
+            data: '{name: "' + txtName.val() + '", country: "' + txtCountry.val() + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                var row = $("#tblCustomers tr:last-child");
+                if ($("#tblCustomers tr:last-child span").eq(0).html() != "&nbsp;") {
+                    row = row.clone();
+                }
+                AppendRow(row, r.CustomerId, r.Name, r.Country);
+                txtName.val("");
+                txtCountry.val("");
+            }
+        });
+    });
+
+    //Edit event handler.
+    $("body").on("click", "#dataTable .Edit", function () {
+        debugger;
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+            }
+        });
+        row.find(".Update").show();
+        row.find(".Cancel").show();
+        row.find(".Delete").hide();
+        $(this).hide();
+    });
+
+    $("body").on("click", "#dataTable .Update", function () {
+        debugger;
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        //row.find(".Delete").show();
+        row.find(".Cancel").hide();
+        $(this).hide();
+
+        var model = {};
+        model.id = row.find(".fgsid").find("span").html();
+        model.sikayet = row.find(".sikayet").find("span").html();
+        model.teslim_adet = row.find(".teslim_adet").find("span").html();
+        model.red_adet = row.find(".red_adet").find("span").html();
+        model.red_kodu = row.find(".red_kodu").find("span").html();
+        model.red_ack = row.find(".red_ack").find("span").html();
+        model.eksik_adet = row.find(".eksik_adet").find("span").html();
+        model.fazla_adet = row.find(".fazla_adet").find("span").html();
+
+        $.ajax({
+            type: "POST",
+            url: "/Fatura/GelenIrsaliyeYanitlaSatirUpdate",
+            data: '{ fgs:' + JSON.stringify(model) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+    $(".KaydetYanitla").click(function () {
+        debugger;
+        //$('.modal').close();
+
+        //var row = $(this).closest("tr");
+        //$("td", row).each(function () {
+        //    if ($(this).find("input").length > 0) {
+        //        var span = $(this).find("span");
+        //        var input = $(this).find("input");
+        //        span.html(input.val());
+        //        span.show();
+        //        input.hide();
+        //    }
+        //});
+        //row.find(".Edit").show();
+        ////row.find(".Delete").show();
+        //row.find(".Cancel").hide();
+        //$(this).hide();
+
+        var model = {};
+        model.id = $("#fgid").val();
+        model.teslim_alan = $("#teslim_alan").val();
+        model.teslim_eden = $("#teslim_eden").val();
+        model.teslim_tarihi = $("#teslim_tarihi").val();
+        model.not = $("#not").val();
+        if (model.teslim_alan != "" && model.teslim_eden != "" && model.teslim_tarihi != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Fatura/GelenIrsaliyeYanitlaUpdate1",
+                data: '{ fg:' + JSON.stringify(model) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    $("#Onay_" + model.id).modal("hide");
+                    if (data.status == false) {
+                        toastr_mesaj(data.errordescription, "warning", 3000);
+                    }
+                    if (data.status == true) {
+                        toastr_mesaj(data.errordescription, "warning", 3000);
+                    }
+                    //if ($("#tblCustomers tr").length > 2) {
+                    //    row.remove();
+                    //} else {
+                    //    row.find(".Edit").hide();
+                    //    row.find(".Delete").hide();
+                    //    row.find("span").html('&nbsp;');
+                    //}
+                }
+            });
+        }
+        else {
+            toastr_mesaj("Lütfen teslim bilgilerini giriniz.", "warning", 2000);
+        }
+    });
+    $("body").on("click", "#dataTable .Cancel", function () {
+        debugger;
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                input.val(span.html());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        row.find(".Update").hide();
+        $(this).hide();
+    });
+
+    //Delete event handler.
+    $("body").on("click", "#tblCustomers .Delete", function () {
+        if (confirm("Do you want to delete this row?")) {
+            var row = $(this).closest("tr");
+            var customerId = row.find("span").html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/DeleteCustomer",
+                data: '{customerId: ' + customerId + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if ($("#tblCustomers tr").length > 2) {
+                        row.remove();
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                }
+            });
+        }
+    });
+</script>

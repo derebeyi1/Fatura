@@ -1,0 +1,292 @@
+﻿@model Fatura.Entity.firma
+@using Fatura.BLL
+<br>
+@{
+    ViewBag.Title = "FirmaFormu";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<br>
+<br>
+<br>
+@if (ViewBag.YeniFirmaMesaji != null && ViewBag.YeniFirmaMesaji != "")
+{
+    <h2>@ViewBag.YeniFirmaMesaji</h2>
+}
+else
+{
+    <h2>Şirket Bilgileri</h2>
+}
+<div id="dvCariListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm("Kaydet", "Firma", FormMethod.Post, new { @enctype = "multipart/form-data", id = "firmaForm" }))
+    {
+        <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+        <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+        <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+        <input type="hidden" id="id" name="id" value="@Model.id" />
+        <input type="hidden" id="vkn_tckn" name="vkn_tckn" value="@Model.vkn_tckn" />
+        <input type="hidden" id="logo" name="logo" value="@Model.logo" />
+        <input type="hidden" id="kase" name="kase" value="@Model.kase" />
+        <input type="hidden" id="lisans_bitis_tarihi" name="lisans_bitis_tarihi" value="@Model.lisans_bitis_tarihi" />
+        <input type="hidden" id="ulke_adi" name="ulke_adi" value="@Model.ulke_adi" />
+        <input type="hidden" id="il_adi" name="il_adi" value="@Model.il_adi" />
+        <input type="hidden" id="ilce_adi" name="ilce_adi" value="@Model.ilce_adi" />
+        <table class="table table-bordered" width="100%" cellspacing="0">
+            <tr>
+                <td>Firma Ünvanı *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.unvan, new { @class = "form-control ", placeholder = "Firma Ünvanını Giriniz." })
+                    @Html.ValidationMessageFor(m => m.unvan, null, new { @class = "text-danger" })
+                </td>
+                <td>VKN / TCKN *</td>
+                <td>
+                    @*@Html.TextBoxFor(m => m.vkn_tckn, new { @class = "form-control ", placeholder = "VKN veya TCKN Giriniz." })
+                        @Html.LabelFor(m => m.vkn_tckn)
+                        @Html.ValidationMessageFor(m => m.vkn_tckn)*@
+                    @Model.vkn_tckn
+                </td>
+                <td>Lisans Bitiş Tarihi *</td>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <td>
+                        @*@Html.TextBoxFor(m => m.lisans_bitis_tarihi, new { @class = "form-control date-picker", type = "date" })*@
+                        @Html.TextBoxFor(m => m.lisans_bitis_tarihi, new { @class = "form-control date-picker", style = "width:200px;", placeholder = "Fatura Tarihi", autocomplete = "off" })
+                        @Html.ValidationMessageFor(m => m.lisans_bitis_tarihi)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Model.lisans_bitis_tarihi
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>Adresi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.adres, new { @class = "form-control ", placeholder = "Adresi Giriniz" })
+                    @Html.ValidationMessageFor(m => m.adres)
+                </td>
+                <td>Vergi Dairesi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.vergi_dairesi, new { @class = "form-control ", placeholder = "Vergi Dairesi Giriniz" })
+                    @Html.ValidationMessageFor(m => m.vergi_dairesi, null, new { @class = "text-danger" })
+                </td>
+                <td>Ticaret Sicil No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.ticaret_sicil_no, new { @class = "form-control ", placeholder = "Ticaret Sicil Numarasını Giriniz" })
+                    @Html.ValidationMessageFor(m => m.ticaret_sicil_no)
+                </td>
+            </tr>
+            <tr>
+            <tr>
+                <td>Ülke</td>
+                <td>
+                    @Html.DropDownListFor(m => m.ulke_kodu, Model.DropDownListForUlke)
+                    @Html.ValidationMessageFor(m => m.ulke_kodu)
+                </td>
+                <td>İl Kodu</td>
+                <td>
+                    @Html.DropDownListFor(m => m.il_kodu, Model.DropDownListForIl)
+                    @Html.ValidationMessageFor(m => m.ilce_kodu)
+                </td>
+                <td>İlçe Kodu</td>
+                <td>
+                    @Html.DropDownListFor(m => m.ilce_kodu, Model.DropDownListForIlce)
+                    @Html.ValidationMessageFor(m => m.ilce_kodu)
+                </td>
+            </tr>
+            <tr>
+                <td>Telefon</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.TextBoxFor(m => m.telefon, new { @class = "form-control ", placeholder = "Telefonu Giriniz" })
+                                @Html.ValidationMessageFor(m => m.telefon)
+                                &nbsp;&nbsp;Fax&nbsp;@Html.TextBoxFor(m => m.fax, new { @class = "form-control ", placeholder = "Fax Giriniz" })
+                                @Html.ValidationMessageFor(m => m.fax)
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>Web Sitesi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.web_sitesi, new { @class = "form-control ", placeholder = "Web Sitesini Giriniz" })
+                    @Html.ValidationMessageFor(m => m.web_sitesi)
+                </td>
+                <td>E-Posta</td>
+                <td>
+                    @Html.TextBoxFor(m => m.email, new { @class = "form-control ", placeholder = "E-Posta Adresini Giriniz" })
+                    @Html.ValidationMessageFor(m => m.email, null, new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>Notlar</td>
+                <td>
+                    @Html.TextAreaFor(m => m.notlar, new { @class = "form-control ", placeholder = "E-Fatura Notlarını Giriniz." })
+                    @Html.ValidationMessageFor(m => m.notlar)
+                </td>
+                <td>Firma Logosu</td>
+                <td>
+                    @if (Model.logo != null)
+                    {
+                        <img src="~/Content/@Model.vkn_tckn/@Model.logo" width="250" /> <br />
+                    }
+                    @Html.TextBoxFor(m => m.logoFile, new { type = "file", placeholder = "Firma Logo Resmi Seçiniz." })
+                    @Html.ValidationMessageFor(m => m.logoFile)
+                    @if (ViewBag.HataLogoResim != null)
+                    {
+                        <span class="field-validation-error" data-valmsg-for="ustBaslik" data-valmsg-replace="true"> @ViewBag.HataLogoResim</span>
+
+                    }
+                </td>
+                <td>Firma Kaşesi</td>
+                <td>
+                    @if (Model.kase != null)
+                    {
+                        <img src="~/Content/@Model.vkn_tckn/@Model.kase" width="250" /> <br />
+                    }
+                    @Html.TextBoxFor(m => m.kaseFile, new { type = "file", placeholder = "Firma Kaşe Resmi Seçiniz." })
+                    @Html.ValidationMessageFor(m => m.kaseFile)
+                    @if (ViewBag.HataKaseResim != null)
+                    {
+                        <span class="field-validation-error" data-valmsg-for="ustBaslik" data-valmsg-replace="true"> @ViewBag.HataKaseResim</span>
+
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>SMTP E-Mail Adresi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.emailUserName, new { @class = "form-control ", placeholder = "SMTP E-Mail Adresi Giriniz" })
+                    @Html.ValidationMessageFor(m => m.emailUserName)
+                </td>
+                <td>SMTP E-Mail Şifresi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.emailUserPassword, new { @class = "form-control ", placeholder = "SMTP E-Mail Şifresi Giriniz" })
+                    @Html.ValidationMessageFor(m => m.emailUserPassword)
+                </td>
+                <td>SMTP E-Mail Görünen Adı</td>
+                <td>
+                    @Html.TextBoxFor(m => m.emailDisplayName, new { @class = "form-control ", placeholder = "SMTP E-Mail Görünen Adı Giriniz" })
+                    @Html.ValidationMessageFor(m => m.emailDisplayName)
+                </td>
+            </tr>
+            <tr>
+                <td>SMTP Sunucu Adı</td>
+                <td>
+                    @Html.TextBoxFor(m => m.smtpServerName, new { @class = "form-control ", placeholder = "SMTP Sunucu Adı Giriniz" })
+                    @Html.ValidationMessageFor(m => m.smtpServerName)
+                </td>
+                <td>SMTP Sunucu Port No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.smtpServerPort, new { @class = "form-control ", placeholder = "SMTP Sunucu Port No Giriniz" })
+                    @Html.ValidationMessageFor(m => m.smtpServerPort)
+                </td>
+                <td>SMTP SSL Aktif mi</td>
+                <td>
+                    @Html.DropDownListFor(m => m.smtpServerSSLEnable, Model.DropDownList)
+                    @Html.ValidationMessageFor(m => m.smtpServerSSLEnable)
+                </td>
+            </tr>
+            <tr>
+                <td>IBAN No 1</td>
+                <td>
+                    @Html.TextBoxFor(m => m.iban1, new { @class = "form-control ", placeholder = "Iban No Giriniz" })
+                    @Html.ValidationMessageFor(m => m.iban1)
+                </td>
+                <td>IBAN No 2</td>
+                <td>
+                    @Html.TextBoxFor(m => m.iban2, new { @class = "form-control ", placeholder = "Iban No Giriniz" })
+                    @Html.ValidationMessageFor(m => m.iban2)
+                </td>
+                <td>IBAN No 3</td>
+                <td>
+                    @Html.TextBoxFor(m => m.iban3, new { @class = "form-control ", placeholder = "Iban No Giriniz" })
+                    @Html.ValidationMessageFor(m => m.iban3)
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-info">Kaydet / Güncelle</button>
+        @Html.ActionLink("Geri", "FirmaListesi", "Firma", new { SayfaNo = ViewBag.SayfaNo, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-primary mx-4" });
+        <br />
+        @ViewBag.Mesaj
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj != null && mesaj != "")
+            toastr_mesaj(mesaj, "success", 2000);
+        var hatamesaj = "@ViewBag.HataMesaj";
+        if (hatamesaj != null && hatamesaj != "")
+            toastr_mesaj(hatamesaj, "error", 3000);
+        jQuery.datetimepicker.setLocale('tr');
+        $('.date-picker').datetimepicker({
+            format: 'd.m.Y H:i',
+        });
+        $('select').change(function () {
+            //alert("id: " + $(this).attr('name') + " value: " + $(this).val() + "   Text: " + $(this).find('option:selected').text());
+            if ($(this).attr('name') == "ulke_kodu") {
+                debugger;
+                $("#ulke_adi").val($("#ulke_kodu option:selected").text());
+                debugger;
+                AckGetir("il_kodu", $(this).val());
+            } else if ($(this).attr('name') == "il_kodu") {
+                $("#il_adi").val($("#il_kodu option:selected").text());
+                debugger;
+                AckGetir("ilce_kodu", $(this).val());
+            } else if ($(this).attr('name') == "ilce_kodu") {
+                $("#ilce_adi").val($("#ilce_kodu option:selected").text());
+                debugger;
+            }
+        });
+        $(".firmaKaydet").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            event.preventDefault();
+            var unvan = $("#unvan").val();
+            var vergi_numarasi = $("#vkn_tckn").val();
+            var email = $("#email").val();
+            debugger;
+            //var adiParcala = adi.trim().split(" ");
+            //var sil = adiParcala.length;
+            if (unvan != "") {
+                if (vergi_numarasi != "" && vergi_numarasi != "" && vergi_numarasi.trim().length > 9 && vergi_numarasi.trim().length < 12) {
+                    if (email != "" && validateEmail(email)) {
+                        $('#firmaForm').submit();
+                        debugger;
+                    } else
+                        toastr_mesaj('Lütfen geçerli bir e-posta adresi giriniz.', "error", 3000);
+                } else
+                    toastr_mesaj('Lütfen VKN/TCKN giriniz.', "error", 3000);
+            } else
+                toastr_mesaj('Lütfen firma ünvanını giriniz.', "error", 3000);
+            $buttonClicked.attr('disabled', false);
+            return false;
+        });
+    })
+    function AckGetir(name, ustkod)
+    {
+        //alert("AckGetir:" + name + ustkod);
+        var url = '@Url.Action("AckGetir", "Cari")';
+        //alert("AckGetir url:" + url);
+        var PDD = $("#" + name);
+        //alert("AckGetir PDD:" + PDD);
+        //var ODD= $("#ODD").val();
+        var ODD= ustkod;
+        $.getJSON(url, { ustkod: ODD}, function (response) {
+            PDD.empty();
+            //alert("AckGetir response:" + response);
+            debugger;
+            $.each(response, function (index, item) {
+                //debugger;
+                var p = new Option(item.Display, item.Key);
+                PDD.append(p);
+            });
+        });
+    }
+</script>

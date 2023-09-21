@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ee666cf3-20c9-4820-9006-413a724c97b0" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://earsivtransfertest.veriban.com.tr/AppConnectService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AppConnectService.disco" MetadataType="Disco" ID="e6271ca3-dec5-42d5-8ae9-2e20f2c0044f" SourceId="1" SourceUrl="http://earsivtransfertest.veriban.com.tr/AppConnectService.svc?disco" />
+    <MetadataFile FileName="AppConnectService.xsd" MetadataType="Schema" ID="56a2cb0b-6c4f-47d6-8c71-b1a40d2629c0" SourceId="1" SourceUrl="http://earsivtransfertest.veriban.com.tr/AppConnectService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AppConnectService.wsdl" MetadataType="Wsdl" ID="68e71813-7188-456a-8489-f313f5fe342c" SourceId="1" SourceUrl="http://earsivtransfertest.veriban.com.tr/AppConnectService.svc?wsdl" />
+    <MetadataFile FileName="AppConnectService1.xsd" MetadataType="Schema" ID="115b576b-f2f3-4b9c-95f4-0dbed41ef4f3" SourceId="1" SourceUrl="http://earsivtransfertest.veriban.com.tr/AppConnectService.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

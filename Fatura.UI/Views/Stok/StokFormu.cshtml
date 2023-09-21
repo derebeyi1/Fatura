@@ -1,0 +1,348 @@
+﻿@model Fatura.Entity.stok
+@using Fatura.Entity;
+@using PagedList
+@using PagedList.Mvc
+@using Fatura.BLL
+@{
+    ViewBag.Title = "StokListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<br />
+<br />
+<br />
+<h3>@ViewBag.IslemTipi</h3>
+<div class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm("Kaydet", "Stok", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+        <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+        <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+        <input type="hidden" id="id" name="id" value="@Model.id" />
+        <input type="hidden" id="resimler" name="resimler" value="@Model.resimler" />
+        <table class="table table-bordered" width="100%" cellspacing="0">
+            @*@Html.HiddenFor(m => m.id)
+            @Html.HiddenFor(m => m.resimler)*@
+            <tr>
+                <td>Stok Kodu</td>
+                <td>
+                    @Html.TextBoxFor(m => m.kodu, new { @class = "form-control ", placeholder = "Stok Kodu", style = "width:120px" })
+                    @Html.ValidationMessageFor(m => m.kodu)
+                </td>
+                <td>Stok Adı</td>
+                <td>
+                    @Html.TextBoxFor(m => m.adi, new { @class = "form-control ", placeholder = "Stok Adı" })
+                    @Html.ValidationMessageFor(m => m.adi)
+                </td>
+                <td>Tedarik Yeri</td>
+                <td colspan="3">
+                    @Html.DropDownListFor(m => m.tedarik_yer_kodu, Model.DropDownListForMensei)
+                    @Html.ValidationMessageFor(m => m.tedarik_yer_adi)
+                </td>
+                <td rowspan="3">
+                    Stok Resmi
+                    @if (Model.resimler != null)
+                    {
+                        <img src="~/Content/@Model.vkn_tckn/@Model.resimler.Split(',')[0]" width="150" /> <br />
+                    }
+                    @Html.TextBoxFor(m => m.resimFile, new { type = "file", placeholder = "Stok Resmi" })
+                    @Html.ValidationMessageFor(m => m.resimler)
+                    @if (ViewBag.HataResim != null)
+                    {
+                        <span class="field-validation-error" data-valmsg-for="ustBaslik" data-valmsg-replace="true"> @ViewBag.HataResim</span>
+
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>KDV Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.kdv_orani, Model.DropDownListForKdv)
+                </td>
+                <td>ÖTV Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.otv_orani, Model.DropDownListForOtv)
+                </td>
+                <td>ÖİV Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.oiv_orani, Model.DropDownListForOiv)
+                </td>
+                <td>GTİP Numarası</td>
+                <td>
+                    @Html.TextBoxFor(m => m.gtip_no, new { @class = "form-control ", placeholder = "GTİP No Giriniz", style = "width:135px" })
+                    @Html.ValidationMessageFor(m => m.gtip_no)
+                </td>
+            </tr>
+            <tr>
+                <td>GVS Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.gvs_orani, Model.DropDownListForGvs)
+                </td>
+                <td>BTU Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.btu_orani, Model.DropDownListForBtu)
+                </td>
+                <td>MFV Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.mfv_orani, Model.DropDownListForMfv)
+                </td>
+                <td>SGK Oranı</td>
+                <td>
+                    @Html.DropDownListFor(m => m.sgk_orani, Model.DropDownListForSgk)
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-info">Kaydet / Güncelle</button>
+        @Html.ActionLink("Geri", "StokListesi", "Stok", new { SayfaNo = ViewBag.SayfaNo, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-primary mx-4" });
+        <br />
+        @ViewBag.Mesaj
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+    }
+    <h4>Stok Birimleri ve Fiyatları</h4>
+    <div id="dvCariAdresListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+        @if (Model.id > 0)
+        {
+            <table>
+                <tr>
+                    <td width="30%">
+                        <span style="color:black;font-weight:bold">Birimler</span> <a href="javascript:void(0);" class="anchorDetail btn btn-primary mx-3" data-id="0">Yeni Birim Ekle</a>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered table-striped table-hover table-condensed" id="dataTable">
+                <thead>
+                    <tr>
+                        <th style="color:Highlight">Birimi</th>
+                        <th style="color:Highlight">Katsayisi</th>
+                        <th style="color:Highlight">Ağırlığı</th>
+                        @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                        {
+                            <th style="color:Highlight">Silinmiş mi?</th>
+                        }
+                        <th style="color:Highlight">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stok_birim in Model.stok_birimler)
+                    {
+                        faturaEntities db = new faturaEntities();
+                        stok_birim.birim_ack = db.birimlers.Find(stok_birim.birim_id).adi;
+                        <tr id="row_@stok_birim.id">
+                            <td><span style="color:black;font-weight:bold">@stok_birim.birim_ack</span></td>
+                            <td><span style="color:black;font-weight:bold">@stok_birim.katsayi</span></td>
+                            <td><span style="color:black;font-weight:bold">@stok_birim.agirlik</span></td>
+                            @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                            {
+                                <td>
+                                    @if (stok_birim.isdeleted == true)
+                                    {
+                                        @:<label style="color:red;font-weight:bold">Evet</label>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:black;font-weight:bold">Hayır</span>
+                                    }
+                                </td>
+                            }
+                            <td>
+                                <div class="row" style="width:200px;">
+                                    <div class="col-md-6">
+                                        <a href="javascript:void(0);" class="anchorDetail btn btn-primary mx-3" data-id="@stok_birim.id">Güncelle</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@stok_birim.id">
+                                            Sil
+                                        </button>
+                                        <div class="modal" id="Sil_@stok_birim.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Birim Sil</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h4>Birimi silmek istiyor musunuz?</h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                        @Html.ActionLink("Sil", "BirimSil", new { id = stok_birim.id, stok_id = Model.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="border:2pt solid black;">
+                            @{
+                                var sayi = stok_birim.stok_fiyatlar.Count() + 1;
+                            }
+                            <th rowspan="@sayi" width="30%">Fiyatlar <a href="javascript:void(0);" class="anchorDetail1 btn btn-success mx-3" data-id="0||||@stok_birim.id||||@Model.id">Yeni Fiyat Ekle</a></th>
+                            <th style="color:Highlight">Fiyatı</th>
+                            <th style="color:Highlight">Fiyat Tipi</th>
+                            @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                            {
+                                <th style="color:Highlight">Silinmiş mi?</th>
+                            }
+                            <th style="color:Highlight">İşlemler</th>
+                        </tr>
+                        foreach (var stok_fiyat in stok_birim.stok_fiyatlar)
+                        {
+                            stok_fiyat.doviz_kodu = db.dovizlers.Find(stok_fiyat.doviz_id).kod;
+                            fiyat_tipleri ft = db.fiyat_tipleri.Find(stok_fiyat.fiyat_tip);
+                            var kdvDahilMi = ft.kdv_dahilmi == true ? "KDV Dahil" : "KDV Dahil Değil";
+                            stok_fiyat.fiyat_tip_ack = ft.adi + " (" + kdvDahilMi + ")";
+                            <tr id="row_@stok_fiyat.id" style="border:2pt solid black;">
+                                <td>@stok_fiyat.fiyat @stok_fiyat.doviz_kodu</td>
+                                <td>@stok_fiyat.fiyat_tip_ack</td>
+                                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                                {
+                                    <td>
+                                        @if (stok_birim.isdeleted == true)
+                                        {
+                                            @:<label style="color:red">Evet</label>
+                                        }
+                                        else
+                                        {
+                                            @:Hayır
+                                        }
+                                    </td>
+                                }
+                                <td>
+                                    <div class="row" style="width:200px;">
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" class="anchorDetail1 btn btn-success mx-3" data-id="@stok_fiyat.id||||@stok_birim.id||||@Model.id">Güncelle</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@stok_fiyat.id">
+                                                Sil
+                                            </button>
+                                            <div class="modal" id="Sil_@stok_fiyat.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">Fiyat Sil</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h4>Fiyatı silmek istiyor musunuz?</h4>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                            @Html.ActionLink("Sil", "FiyatSil", new { id = stok_fiyat.id, stok_birim_id = stok_birim.id, stok_id = Model.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+<br>
+<br>
+<br>
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Baslik</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ---
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var TeamDetailPostBackURL = '/Stok/BirimGuncelle';
+    $(function () {
+        $(".anchorDetail").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var stok_id = $("#id").val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id, "stok_id": stok_id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. StokFormu");
+                }
+            });
+        });
+        //$("#closebtn").on('click',function(){
+        //    $('#myModal').modal('hide');
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    //var TeamDetailPostBackURL = '/Stok/FiyatGuncelle';
+    $(function () {
+        $(".anchorDetail1").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var data_id = $buttonClicked.attr('data-id');
+            var res = data_id.split("||||");
+            var id = res[0];
+            var stok_birim_id = res[1];
+            var stok_id = res[2];
+            $("#stok_id").val(res[1]);
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: "/Stok/FiyatGuncelle",
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id, "stok_birim_id": stok_birim_id, "stok_id": stok_id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. StokFormu");
+                }
+            });
+        });
+        //$("#closebtn").on('click',function(){
+        //    $('#myModal').modal('hide');
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c9b64b64-f853-422e-a72f-8733c09ed4c4" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://efatura-test.uyumsoft.com.tr/services/Integration" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Integration.xsd" MetadataType="Schema" ID="2e804c54-b203-44bf-a378-e49970a35801" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd5" />
+    <MetadataFile FileName="Integration1.xsd" MetadataType="Schema" ID="3787cdb5-5192-46f0-98d7-ded64d94b44a" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd7" />
+    <MetadataFile FileName="Integration2.xsd" MetadataType="Schema" ID="23c18182-a6b0-4833-9f2d-3946a3ba31f5" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd0" />
+    <MetadataFile FileName="Integration3.xsd" MetadataType="Schema" ID="1ad95631-76ab-4925-a2ae-b1b1b7c1bd08" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd1" />
+    <MetadataFile FileName="Integration4.xsd" MetadataType="Schema" ID="7b448055-f45b-4c4a-a4be-86520bd1d4b9" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd2" />
+    <MetadataFile FileName="Integration5.xsd" MetadataType="Schema" ID="f746efd9-a791-4532-ac22-5bca30a6ac91" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd3" />
+    <MetadataFile FileName="Integration6.xsd" MetadataType="Schema" ID="7b9cb8ee-62ac-4950-954b-d074f2704f7e" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd4" />
+    <MetadataFile FileName="Integration.wsdl" MetadataType="Wsdl" ID="2f4b31a8-9f5b-4505-9adf-8743a4f5c6ba" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?wsdl" />
+    <MetadataFile FileName="Integration7.xsd" MetadataType="Schema" ID="c80b6196-0be7-4f4e-a3b3-b3cdb1645a6a" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd6" />
+    <MetadataFile FileName="Integration.disco" MetadataType="Disco" ID="8755ee3d-9849-47dc-a253-20ec10bb4f9d" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?disco" />
+    <MetadataFile FileName="Integration8.xsd" MetadataType="Schema" ID="a8edaa70-c5ce-43fe-a772-a72aaddf170c" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/Integration?xsd=xsd8" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

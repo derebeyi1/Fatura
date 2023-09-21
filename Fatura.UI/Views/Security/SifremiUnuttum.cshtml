@@ -1,0 +1,89 @@
+﻿@model Fatura.Entity.kullanici
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div id="passreset">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="" method="post">
+                            <br>
+                            <br>
+                            <br>
+                            <h3 class="text-info">Şifremi Unuttum</h3>
+                            <div class="form-group">
+                                <label for="Email" class="text-info">Mail adresiniz</label>
+                                @Html.TextBoxFor(m => m.kullanici_mail, new { @class = "form-control ", placeholder = "Mail Adresinizi Giriniz...", @required = "required" })
+                            </div>
+                            <h3 class="text-center text-danger">@ViewBag.Mesaj</h3>
+                            <h3 class="text-center text-danger">@ViewBag.mailMesaj</h3>
+                            <h3 class="text-center text-danger">@ViewBag.sifreMesaj</h3>
+                            <h3 class="text-center text-danger">@ViewBag.sifreDegistiMesaj</h3>
+                            @if (ViewBag.captchaResmi != null && ViewBag.captchaResmi != "")
+                            {
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="~/Content/temp/@ViewBag.captchaResmi" width="70" id="captchaFileName" name="captchaFileName" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" placeholder="İşlemin sonucunu giriniz." class="form-control" id="captcha" name="captcha" required="required" />
+                                        <input type="hidden" id="captchaFileName" name="captchaFileName" value="@ViewBag.captchaResmi" />
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.mailMesaj != null && ViewBag.mailMesaj != "")
+                            {
+                                <div class="form-group">
+                                    <label class="text-info">Şifre Sıfırlama Kodu</label>
+                                    @Html.TextBoxFor(m => m.resetpasscode, new { @class = "form-control ", placeholder = "Şifre sıfırlama kodunu giriniz.", @required = "required" })
+                                </div>
+                            }
+                            @if (ViewBag.sifreMesaj != null && ViewBag.sifreMesaj != "")
+                            {
+                                <div class="form-group">
+                                    <label class="text-info">Yeni Şifre</label>
+                                    @Html.PasswordFor(m => m.sifre, new { @class = "form-control ", placeholder = "Yeni şifrenizi giriniz.", @required = "required" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-info">Yeni Şifre Tekrar</label>
+                                    <input type="password" placeholder="Yeni şifrenizi tekrar giriniz." class="form-control" id="sifre2" name="sifre2" required="required" />
+                                </div>
+                            }
+                            @if (ViewBag.sifreDegistiMesaj == null || ViewBag.sifreDegistiMesaj == "")
+                            {
+                                <div class="form-row p-1">
+                                    <button type="submit" class="btn btn-success  pl-3 m-3">Tamam</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-row p-1">
+                                    <a class="btn btn-success pl-3 m-3" href="/Security/Login">Giriş Sayfası</a>
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>*@
+
+</body>
+</html>
+

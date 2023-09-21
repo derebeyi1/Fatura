@@ -1,0 +1,138 @@
+﻿@using Fatura.Entity;
+@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<kullanici>
+@using Fatura.BLL
+
+<br />
+@{
+    ViewBag.Title = "KullaniciListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+
+<br />
+<br />
+<br />
+
+<div id="dvCariListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    <div class="row">
+        <div class="col-md-1">
+            <h3>Kullanıcılar</h3>
+        </div>
+        <div class="col-md-4">
+            @{
+                if ((long)Session["vkn_tckn"] == Utilities.vknAdmin)
+                {
+                    @Html.ActionLink("Yeni Kullanıcı Ekle", "KullaniciKayit", "Security", new { id = 0 }, new { @class = "btn btn-success" })
+                }                
+            }
+
+        </div>
+        <div class="col-md-5">
+            <p>
+                @using (Html.BeginForm("KullaniciListesi", "Security", FormMethod.Get))
+                {
+                    <b>Kullanıcı Bul</b> @Html.TextBox("p");
+                    <input type="submit" value="Arama" />
+                }
+
+            </p>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover table-condensed" border="1" id="tblDatatable">
+        <thead>
+            <tr>
+                <th>Adı</th>
+                <th>Soyadı</th>
+                <th>TC/VKN Numarası</th>
+                <th>Kullanıcı Adı</th>
+                <th>Cep Telefonu</th>
+                <th>Aktivasyon?</th>
+                <th>Silindi mi?</th>
+                <th>Yetkisi</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.ad</td>
+                    <td>@user.soyad</td>
+                    <td>@user.vkn_tckn</td>
+                    <td>@user.kullanici_mail</td>
+                    <td>@user.cep_no</td>
+                    <td>
+                        @if (user.isactivated == true)
+                        {
+                            @:Evet
+                        }
+                        else
+                        {
+                            @:<label style="color:red">Hayır</label>
+                            @Html.ActionLink("Aktivasyon Yap", "Dogrula", "Security", user, new { @class = "btn btn-info" })
+                        }
+                    </td>
+                    <td>
+                        @if (user.isdeleted == true)
+                        {
+                            @:<label style="color:red">Evet</label>
+                        }
+                        else
+                        {
+                            @:Hayır
+                        }
+                    </td>
+                    <td>
+                        @user.rol_yetki_str
+                        @*@{
+                                string yetki_str = "";
+                                long vkn = (long)Session["vkn_tckn"];
+                                long vknAdmin = Utilities.vknAdmin;
+                                if (user.vkn_tckn != vknAdmin && user.vkn_tckn == vkn && user.rol_yetki.Contains("1"))
+                                {
+                                    yetki_str = user.rol_yetki_musteri_str;
+                                }
+                            }*@
+                    </td>
+                    <td>
+                        @{
+                            long vkn = (long)Session["vkn_tckn"];
+                            long vknAdmin = Utilities.vknAdmin;
+                            if (vkn == vknAdmin)
+                            {
+                                @Html.ActionLink("Güncelle", "KullaniciKayit", "Security", new { id = user.id }, new { @class = "btn btn-success" })
+                                if (user.isdeleted == false)
+                                {
+                                    <a class=" btn btn-danger bntKullaniciSil" data-id="@user.id">Sil</a>
+                                }
+                            }
+                            else if (user.vkn_tckn == vkn)
+                            {
+                                @Html.ActionLink("Güncelle", "KullaniciKayit", "Security", new { id = user.id }, new { @class = "btn btn-success" })
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.PagedListPager((IPagedList)Model, sayfa => Url.Action("KullaniciListesi", new { sayfa }))
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Silindi")
+            toastr_mesaj("Kullanıcı başarıyla silindi.", "success", 3000);
+        else if (mesaj == "Eklendi")
+            toastr_mesaj("Kullanıcı başarıyla eklendi.", "success", 3000);
+        else if (mesaj == "Guncellendi")
+            toastr_mesaj("Kullanıcı başarıyla güncellendi.", "success", 3000);
+        else if (mesaj != "") {
+            toastr_mesaj(mesaj, "error", 3000);
+        }
+    });
+</script>
+

@@ -1,0 +1,212 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using Fatura.Entity
+@model PagedList.IPagedList<cari>
+@using Fatura.BLL
+
+<BR>
+@{
+    ViewBag.Title = "CariListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<div id="dvCariListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="10%"><h3>Cari Listesi</h3></td>
+                <td width="30%">
+                    @Html.ActionLink("Yeni Cari Ekle", "Yeni", null, new { @class = "btn btn-success mx-3" })
+                </td>
+                <td width="40%">
+                    Sayfada
+                    @*@Html.TextBox("SayfaKayitSayisi", null, new { style = "width: 50px;" })*@
+                    <select id="SayfaKayitSayisi" name="SayfaKayitSayisi">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    kayıt göster.
+                </td>
+                <td width="40%">
+                    Cari Bul @Html.TextBox("SearchString", null, new { style = "width: 100px;" })
+                    <input type="submit" class=" btn btn-info" value="Ara" />
+                </td>
+            </tr>
+        </table>
+    }
+    <table class="table table-bordered table-striped table-hover table-condensed" border="1" id="dataTable">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("Cari Adı", "CariListesi", new { sortOrder = ViewBag.CariAdiSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Cari VKN/TCKN", "CariListesi", new { sortOrder = ViewBag.VKNSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">Cari Tipi</th>
+                <th style="color:Highlight">Kilitli mi?</th>
+                <th style="color:Highlight">Açık Hesap mı?</th>
+                <th style="color:Highlight">E-Mükellef mi?</th>
+                <th style="color:Highlight">E-Mail Adresi</th>
+                <th style="color:Highlight">Web Adresi</th>
+                <th style="color:Highlight">Cep No</th>
+                <th style="color:Highlight">Tel No</th>
+                <th style="color:Highlight">SGK No</th>
+                <th style="color:Highlight">Bağkur No</th>
+                <th>@Html.ActionLink("Güncelleme Tarihi", "CariListesi", new { sortOrder = ViewBag.LastUpdateSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">Silinmiş mi?</th>
+                }
+                <th style="color:Highlight">İşlemler</th>
+                <th style="visibility: hidden;width: 1px">Stok ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cari in Model)
+            {
+            <tr id="row_@cari.id">
+                <td>@cari.ad @cari.soyad</td>
+                <td>@cari.vergi_numarasi</td>
+                <td>
+                    @{ switch ((int)cari.tip)
+                        {
+                            case 0: <label>Ticari</label>
+                                break;
+                            case 1: <label style="color:blue">Müstahsil</label>
+                                break;
+                        }
+                    }
+                </td>
+                <td>
+                    @if (cari.kilitlimi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>
+                    @if (cari.acikhesapmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>
+                    @if (cari.mukellefmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>@cari.cari_mail</td>
+                <td>@cari.webadresi</td>
+                <td>@cari.cep_no</td>
+                <td>@cari.telefon_no</td>
+                <td>@cari.sgk_no</td>
+                <td>@cari.bagkur_no</td>
+                <td>@cari.last_update.Value.ToShortDateString()</td>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <td>
+                        @if (cari.isdeleted == true)
+                        {
+                            @:<label style="color:red">Evet</label>
+                        }
+                        else
+                        {
+                            @:Hayır
+                        }
+                    </td>
+                }
+                <td>
+                    <div class="row" style="width:200px;">
+                        <div class="col-md-6">
+                            @Html.ActionLink("Güncelle", "Guncelle", new { id = cari.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-success mx-2" })
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@cari.id">
+                                Sil
+                            </button>
+                            <div class="modal" id="Sil_@cari.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Stok Sil</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>Stoğu silmek istiyor musunuz?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                            @Html.ActionLink("Sil", "Sil", new { id = cari.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    @*@Html.PagedListPager((IPagedList)Model, page => Url.Action("StokListesi", "Stok", new { page }))*@
+    @*@Html.PagedListPager((IPagedList)Model, _sayfaNo => Url.Action("StokListesi", new { SayfaNo = _sayfaNo }))*@
+    @*@Html.PagedListPager(Model, _sayfaNo => Url.Action("StokListesi", "Stok", new { SayfaNo = _sayfaNo }), new PagedListRenderOptions { LinkToFirstPageFormat = "<< İlk", LinkToPreviousPageFormat = "< Önceki", LinkToNextPageFormat = "Sonraki >", LinkToLastPageFormat = "Son >>" })*@
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @*@Html.PagedListPager(Model, _sayfaNo => Url.Action("StokListesi", "Stok", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { UpdateTargetId = "dvStokListesi1" }))*@
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("CariListesi", "Cari", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Silindi") 
+            toastr_mesaj("Cari başarıyla silindi.", "success", 3000);
+        else if (mesaj == "Eklendi")
+            toastr_mesaj("Cari başarıyla eklendi.", "success", 3000);
+        else if (mesaj == "Guncellendi")
+            toastr_mesaj("Cari başarıyla guncellendi.", "success", 3000);
+        //var ConfirmDelete = function (id) {
+        //    $("#hidden_id").val(id);
+        //    $("#myModal").show();
+        //}
+        //var CariSil = function () {
+        //    $("#loaderDiv").show();
+        //    var cari_id = $("#hidden_id").val();
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/Cari/Sil",
+        //        data: { id: id },
+        //        success: function () {
+        //            $("#loaderDiv").hide();
+        //            $("#myModal").modal("hide");
+        //        }
+        //    })
+        //}
+    });
+</script>
+@*<script src="~/Scripts/sweetalert.min.js" type="text/javascript"></script>*@
+

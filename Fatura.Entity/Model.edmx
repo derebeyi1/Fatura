@@ -1,0 +1,1786 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="faturaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="barkodlar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kodu" Type="nvarchar" MaxLength="50" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="deger" Type="int" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="birimler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kod" Type="nvarchar" MaxLength="10" />
+          <Property Name="donusum_kodu" Type="varchar" MaxLength="10" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="cari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="kullanici_id" Type="bigint" />
+          <Property Name="cari_mail" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="sifre" Type="nvarchar" MaxLength="100" />
+          <Property Name="cari_vkn_tckn" Type="bigint" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="soyad" Type="nvarchar" MaxLength="50" />
+          <Property Name="webadresi" Type="nvarchar" MaxLength="250" />
+          <Property Name="cep_no" Type="nvarchar" MaxLength="50" />
+          <Property Name="telefon_no" Type="nvarchar" MaxLength="50" />
+          <Property Name="dogum_yeri" Type="nvarchar" MaxLength="50" />
+          <Property Name="dogum_tarihi" Type="datetime" />
+          <Property Name="activationcode1" Type="nvarchar" MaxLength="50" />
+          <Property Name="activationcode2" Type="nvarchar" MaxLength="50" />
+          <Property Name="isactivated" Type="bit" />
+          <Property Name="resetpasscode" Type="nvarchar" MaxLength="5" />
+          <Property Name="passattempts" Type="int" />
+          <Property Name="tip" Type="int" />
+          <Property Name="kilitlimi" Type="bit" />
+          <Property Name="acikhesapmi" Type="bit" />
+          <Property Name="mukellefmi" Type="bit" />
+          <Property Name="vergi_dairesi" Type="nvarchar" MaxLength="50" />
+          <Property Name="vergi_numarasi" Type="bigint" />
+          <Property Name="ticaret_sicil_no" Type="nvarchar" MaxLength="10" />
+          <Property Name="not" Type="nvarchar" MaxLength="4000" />
+          <Property Name="sgk_no" Type="nvarchar" MaxLength="150" />
+          <Property Name="bagkur_no" Type="int" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="cari_adres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cari_id" Type="int" />
+          <Property Name="adres" Type="nvarchar" MaxLength="200" />
+          <Property Name="ulke_kodu" Type="int" />
+          <Property Name="ulke_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="il_kodu" Type="int" />
+          <Property Name="il_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="ilce_kodu" Type="int" />
+          <Property Name="ilce_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="cep_no" Type="nvarchar" MaxLength="40" />
+          <Property Name="telefon_no" Type="nvarchar" MaxLength="40" />
+          <Property Name="fax" Type="nvarchar" MaxLength="40" />
+          <Property Name="email" Type="nvarchar" MaxLength="250" />
+          <Property Name="faturaadresimi" Type="bit" />
+          <Property Name="sevkadresimi" Type="bit" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="depolar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kodu" Type="nvarchar" MaxLength="50" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="ana_depomu" Type="bit" />
+          <Property Name="fiyatno" Type="int" />
+          <Property Name="ind_orani" Type="int" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="dil_cevirileri">
+          <Key>
+            <PropertyRef Name="dil_kodu" />
+            <PropertyRef Name="anahtarkelime" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dil_kodu" Type="int" Nullable="false" />
+          <Property Name="anahtarkelime" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ceviri" Type="nvarchar" MaxLength="500" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="diller">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kod" Type="varchar" MaxLength="10" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="yazim_yonu" Type="varchar" MaxLength="10" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="dovizler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kod" Type="nvarchar" MaxLength="50" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kur_carpani" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="ana_birimmi" Type="bit" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="fatura">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="kullanici_id" Type="int" />
+          <Property Name="cari_id" Type="int" />
+          <Property Name="doviz_id" Type="int" />
+          <Property Name="doviz_kuru" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="islem_tipi" Type="int" />
+          <Property Name="aratoplam" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_iskonto" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_kdvtutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_tevkifat" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_otvtutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_oivtutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_fiyat" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="seri" Type="varchar" MaxLength="20" />
+          <Property Name="sira_no" Type="int" />
+          <Property Name="belgeno" Type="varchar" MaxLength="20" />
+          <Property Name="fatura_tarihi" Type="datetime" />
+          <Property Name="sevk_tarihi" Type="datetime" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="fatura_onaykontrol" Type="int" />
+          <Property Name="aciklama" Type="nvarchar(max)" />
+          <Property Name="fatura_guid" Type="varchar" MaxLength="50" />
+          <Property Name="fatura_alias" Type="varchar" MaxLength="250" />
+          <Property Name="mail_gittimi" Type="bit" />
+          <Property Name="fatura_durum" Type="varchar" MaxLength="50" />
+          <Property Name="satis_iban" Type="varchar" MaxLength="100" />
+          <Property Name="entegrator_tipi" Type="int" />
+          <Property Name="fatura_tipi" Type="int" />
+          <Property Name="toplam_gvsmatrah" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_gvstutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_btumatrah" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_btututar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_mfvmatrah" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_mfvtutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_sgkmatrah" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_sgktutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_smmgvsmatrah" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_smmgvstutar" Type="decimal" Precision="18" Scale="8" />
+          <Property Name="not" Type="nvarchar(max)" />
+          <Property Name="teslim_alan" Type="nvarchar" MaxLength="200" />
+          <Property Name="teslim_eden" Type="nvarchar" MaxLength="200" />
+          <Property Name="teslim_tarihi" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="fatura_ayarlari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="kullanici_id" Type="int" />
+          <Property Name="fatura_tipi" Type="int" />
+          <Property Name="testmi" Type="bit" />
+          <Property Name="test_gndrn_vkn" Type="bigint" />
+          <Property Name="test_alici_vkn" Type="bigint" />
+          <Property Name="entegrator_tipi" Type="int" />
+          <Property Name="kullanici_adi" Type="varchar" MaxLength="50" />
+          <Property Name="sifre" Type="varchar" MaxLength="50" />
+          <Property Name="seri" Type="varchar" MaxLength="50" />
+          <Property Name="seri_kullanilsinmi" Type="bit" />
+          <Property Name="giden_fatura_tipi" Type="varchar" MaxLength="50" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="fatura_gelen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gonderen_vkn" Type="bigint" />
+          <Property Name="gonderen_unvan" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="gonderen_sehir" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="fatura_turu" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="olusturma_tarihi" Type="datetime" Nullable="false" />
+          <Property Name="invoicetypecodetype" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="faturatarihi" Type="datetime" Nullable="false" />
+          <Property Name="faturano" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="belgeno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="entegrator_tipi" Type="int" Nullable="false" />
+          <Property Name="fatura_tipi" Type="int" Nullable="false" />
+          <Property Name="doviz" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="kur_carpani" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="meblag" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="aratoplam" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="vergitutar" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="iskontotutar" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="guid" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="fatura_notu" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="aktarimmesaji" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="issucceded" Type="bit" Nullable="false" />
+          <Property Name="otvtutar" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="alicimusteriobj" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="gonderenmusteriobj" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="kdvtoplamobj" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="hareketsatirlariobj" Type="text" Nullable="false" />
+          <Property Name="durum" Type="int" />
+          <Property Name="mesaj" Type="nvarchar(max)" />
+          <Property Name="not" Type="nvarchar(max)" />
+          <Property Name="teslim_alan" Type="nvarchar" MaxLength="200" />
+          <Property Name="teslim_eden" Type="nvarchar" MaxLength="200" />
+          <Property Name="teslim_tarihi" Type="datetime" Nullable="false" />
+          <Property Name="recorddate" Type="datetime" Nullable="false" />
+          <Property Name="last_update" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="fatura_gelen_satir">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="guid" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="stok_adi" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="birimi" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="miktari" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="doviz_cinsi" Type="nvarchar" MaxLength="10" />
+          <Property Name="doviz_kuru" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="kdv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="otv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="otv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="tevkifat_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="tevkifat_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="iskonto_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="fiyat" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="satirno" Type="nvarchar" MaxLength="10" />
+          <Property Name="sikayet" Type="nvarchar" MaxLength="500" />
+          <Property Name="teslim_adet" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="red_adet" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="red_kodu" Type="nvarchar" MaxLength="50" />
+          <Property Name="red_ack" Type="nvarchar" MaxLength="500" />
+          <Property Name="eksik_adet" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="fazla_adet" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="last_update" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="fatura_satir">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fatura_id" Type="int" />
+          <Property Name="stok_id" Type="int" />
+          <Property Name="stok_adi" Type="nvarchar" MaxLength="200" />
+          <Property Name="birim_id" Type="int" />
+          <Property Name="birim_fiyati" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="miktari" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="doviz_id1" Type="int" />
+          <Property Name="doviz_kuru1" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="kdv_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="otv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="otv_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="otv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="tevkifat_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="tevkifat" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="iskonto_1" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_2" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_3" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_4" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_5" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_toplam" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="fiyat" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="gvs_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="gvs_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="gvs_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="btu_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="btu_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="btu_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="mfv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="mfv_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="mfv_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="sgk_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="sgk_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="sgk_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="smm_gvs_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="smm_gvs_matrah" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="smm_gvs_tutar" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="teslim_sarti" Type="nvarchar" MaxLength="10" />
+          <Property Name="kap_cinsi" Type="nvarchar" MaxLength="10" />
+          <Property Name="kap_no" Type="nvarchar" MaxLength="100" />
+          <Property Name="kap_adedi" Type="int" />
+          <Property Name="gonderilme_sekli" Type="int" />
+          <Property Name="gtip" Type="bigint" />
+          <Property Name="satirno" Type="nvarchar" MaxLength="10" />
+          <Property Name="sikayet" Type="nvarchar" MaxLength="500" />
+          <Property Name="teslim_adet" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="red_adet" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="red_kodu" Type="nvarchar" MaxLength="50" />
+          <Property Name="red_ack" Type="nvarchar" MaxLength="500" />
+          <Property Name="eksik_adet" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="fazla_adet" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="firma">
+          <Key>
+            <PropertyRef Name="vkn_tckn" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" Nullable="false" />
+          <Property Name="unvan" Type="nvarchar" MaxLength="250" />
+          <Property Name="vergi_dairesi" Type="nvarchar" MaxLength="50" />
+          <Property Name="ticaret_sicil_no" Type="nvarchar" MaxLength="50" />
+          <Property Name="adres" Type="nvarchar" MaxLength="250" />
+          <Property Name="ulke_kodu" Type="int" />
+          <Property Name="ulke_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="il_kodu" Type="int" />
+          <Property Name="il_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="ilce_kodu" Type="int" />
+          <Property Name="ilce_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="email" Type="nvarchar" MaxLength="250" />
+          <Property Name="web_sitesi" Type="nvarchar" MaxLength="50" />
+          <Property Name="subdomain" Type="nvarchar" MaxLength="50" />
+          <Property Name="telefon" Type="nvarchar" MaxLength="50" />
+          <Property Name="fax" Type="nvarchar" MaxLength="50" />
+          <Property Name="iban1" Type="nvarchar" MaxLength="100" />
+          <Property Name="iban2" Type="nvarchar" MaxLength="100" />
+          <Property Name="iban3" Type="nvarchar" MaxLength="100" />
+          <Property Name="notlar" Type="nvarchar(max)" />
+          <Property Name="lisans_bitis_tarihi" Type="datetime" />
+          <Property Name="emailUserName" Type="nvarchar" MaxLength="250" />
+          <Property Name="emailUserPassword" Type="nvarchar" MaxLength="100" />
+          <Property Name="emailDisplayName" Type="nvarchar" MaxLength="250" />
+          <Property Name="smtpServerName" Type="nvarchar" MaxLength="100" />
+          <Property Name="smtpServerPort" Type="int" />
+          <Property Name="smtpServerSSLEnable" Type="bit" />
+          <Property Name="logo" Type="nvarchar" MaxLength="100" />
+          <Property Name="kase" Type="nvarchar" MaxLength="100" />
+          <Property Name="last_update" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="fiyat_tipleri">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kod" Type="nvarchar" MaxLength="10" />
+          <Property Name="adi" Type="nvarchar" MaxLength="25" />
+          <Property Name="kdv_dahilmi" Type="bit" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="kodlar">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kod" Type="int" Nullable="false" />
+          <Property Name="adi" Type="nvarchar" MaxLength="250" />
+          <Property Name="ustkod" Type="int" />
+          <Property Name="recorddate" Type="datetime" />
+          <Property Name="isdeleted" Type="int" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="kullanici">
+          <Key>
+            <PropertyRef Name="kullanici_mail" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_mail" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="sifre" Type="nvarchar" MaxLength="100" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="rol_yetki" Type="nvarchar" MaxLength="250" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="soyad" Type="nvarchar" MaxLength="50" />
+          <Property Name="cep_no" Type="nvarchar" MaxLength="50" />
+          <Property Name="telefon_no" Type="nvarchar" MaxLength="50" />
+          <Property Name="dogum_tarihi" Type="datetime" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+          <Property Name="activationcode1" Type="nvarchar" MaxLength="50" />
+          <Property Name="activationcode2" Type="nvarchar" MaxLength="50" />
+          <Property Name="isactivated" Type="bit" />
+          <Property Name="resetpasscode" Type="nvarchar" MaxLength="5" />
+          <Property Name="passattempts" Type="int" />
+          <Property Name="isdeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" Nullable="false" />
+          <Property Name="kullanici_id" Type="int" Nullable="false" />
+          <Property Name="controller" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="method" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="tablo_adi" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="url" Type="text" Nullable="false" />
+          <Property Name="hata" Type="text" Nullable="false" />
+          <Property Name="bilgi" Type="text" Nullable="false" />
+          <Property Name="ip_adresi" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="tarih" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'fatura.dbo.mukellef' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="mukellef">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="Title" Type="varchar" MaxLength="500" />
+          <Property Name="VergiKimlikNo" Type="bigint" />
+          <Property Name="PostBoxAlias" Type="varchar" MaxLength="250" />
+          <Property Name="SenderBoxAlias" Type="varchar" MaxLength="250" />
+          <Property Name="Tipi" Type="varchar" MaxLength="50" />
+          <Property Name="OlusturmaTarihi" Type="datetime" />
+          <Property Name="recorddate" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stok">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="kullanici_id" Type="int" />
+          <Property Name="kodu" Type="nvarchar" MaxLength="50" />
+          <Property Name="adi" Type="nvarchar" MaxLength="200" />
+          <Property Name="gtip_no" Type="bigint" />
+          <Property Name="resimler" Type="text" />
+          <Property Name="tedarik_yer_kodu" Type="int" />
+          <Property Name="tedarik_yer_adi" Type="nvarchar" MaxLength="100" />
+          <Property Name="kdv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="otv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="gvs_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="btu_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="mfv_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="sgk_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="smm_gvs_orani" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="stok_barkod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="barkod_id" Type="int" Nullable="false" />
+          <Property Name="barkodu" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="barkod_text" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="stok_id" Type="int" Nullable="false" />
+          <Property Name="isdeleted" Type="bit" Nullable="false" />
+          <Property Name="last_update" Type="datetime" Nullable="false" />
+          <Property Name="guid" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stok_birim">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stok_id" Type="int" />
+          <Property Name="birim_id" Type="int" />
+          <Property Name="katsayi" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="agirlik" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="stok_fiyat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="depo_id" Type="int" />
+          <Property Name="stok_birim_id" Type="int" />
+          <Property Name="doviz_id" Type="int" />
+          <Property Name="fiyat_tip" Type="int" />
+          <Property Name="fiyat" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ticaret_ayarlari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vkn_tckn" Type="bigint" />
+          <Property Name="kullanici_id" Type="int" />
+          <Property Name="testmi" Type="bit" />
+          <Property Name="test_gndrn_vkn" Type="bigint" />
+          <Property Name="test_alici_vkn" Type="bigint" />
+          <Property Name="site_tipi" Type="int" />
+          <Property Name="api_key" Type="varchar" MaxLength="200" />
+          <Property Name="sifre" Type="varchar" MaxLength="100" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ulke_il_ilce">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="kod" Type="int" Nullable="false" />
+          <Property Name="adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="ustkod" Type="int" />
+          <Property Name="kayit_tarihi" Type="datetime" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="vergi">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="kod" Type="int" Nullable="false" />
+          <Property Name="oran" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="tanim" Type="nvarchar" MaxLength="50" />
+          <Property Name="ustkod" Type="int" />
+          <Property Name="isdeleted" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityContainer Name="faturaModelStoreContainer">
+          <EntitySet Name="barkodlar" EntityType="Self.barkodlar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="birimler" EntityType="Self.birimler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cari" EntityType="Self.cari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cari_adres" EntityType="Self.cari_adres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="depolar" EntityType="Self.depolar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dil_cevirileri" EntityType="Self.dil_cevirileri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diller" EntityType="Self.diller" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dovizler" EntityType="Self.dovizler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fatura" EntityType="Self.fatura" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fatura_ayarlari" EntityType="Self.fatura_ayarlari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fatura_gelen" EntityType="Self.fatura_gelen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fatura_gelen_satir" EntityType="Self.fatura_gelen_satir" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fatura_satir" EntityType="Self.fatura_satir" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="firma" EntityType="Self.firma" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fiyat_tipleri" EntityType="Self.fiyat_tipleri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="kodlar" EntityType="Self.kodlar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="kullanici" EntityType="Self.kullanici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="log" EntityType="Self.log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stok" EntityType="Self.stok" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stok_barkod" EntityType="Self.stok_barkod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stok_birim" EntityType="Self.stok_birim" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stok_fiyat" EntityType="Self.stok_fiyat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ticaret_ayarlari" EntityType="Self.ticaret_ayarlari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ulke_il_ilce" EntityType="Self.ulke_il_ilce" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vergi" EntityType="Self.vergi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mukellef" EntityType="Self.mukellef" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [mukellef].[Title] AS [Title], 
+    [mukellef].[VergiKimlikNo] AS [VergiKimlikNo], 
+    [mukellef].[PostBoxAlias] AS [PostBoxAlias], 
+    [mukellef].[SenderBoxAlias] AS [SenderBoxAlias], 
+    [mukellef].[Tipi] AS [Tipi], 
+    [mukellef].[OlusturmaTarihi] AS [OlusturmaTarihi], 
+    [mukellef].[recorddate] AS [recorddate], 
+    [mukellef].[last_update] AS [last_update], 
+    [mukellef].[id] AS [id]
+    FROM [dbo].[mukellef] AS [mukellef]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="faturaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="faturaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="barkodlars" EntityType="faturaModel.barkodlar" />
+          <EntitySet Name="birimlers" EntityType="faturaModel.birimler" />
+          <EntitySet Name="caris" EntityType="faturaModel.cari" />
+          <EntitySet Name="cari_adres" EntityType="faturaModel.cari_adres" />
+          <EntitySet Name="depolars" EntityType="faturaModel.depolar" />
+          <EntitySet Name="dil_cevirileri" EntityType="faturaModel.dil_cevirileri" />
+          <EntitySet Name="dillers" EntityType="faturaModel.diller" />
+          <EntitySet Name="dovizlers" EntityType="faturaModel.dovizler" />
+          <EntitySet Name="faturas" EntityType="faturaModel.fatura" />
+          <EntitySet Name="fatura_ayarlari" EntityType="faturaModel.fatura_ayarlari" />
+          <EntitySet Name="fatura_gelen" EntityType="faturaModel.fatura_gelen" />
+          <EntitySet Name="fatura_gelen_satir" EntityType="faturaModel.fatura_gelen_satir" />
+          <EntitySet Name="fatura_satir" EntityType="faturaModel.fatura_satir" />
+          <EntitySet Name="firmas" EntityType="faturaModel.firma" />
+          <EntitySet Name="fiyat_tipleri" EntityType="faturaModel.fiyat_tipleri" />
+          <EntitySet Name="kodlars" EntityType="faturaModel.kodlar" />
+          <EntitySet Name="kullanicis" EntityType="faturaModel.kullanici" />
+          <EntitySet Name="logs" EntityType="faturaModel.log" />
+          <EntitySet Name="stoks" EntityType="faturaModel.stok" />
+          <EntitySet Name="stok_barkod" EntityType="faturaModel.stok_barkod" />
+          <EntitySet Name="stok_birim" EntityType="faturaModel.stok_birim" />
+          <EntitySet Name="stok_fiyat" EntityType="faturaModel.stok_fiyat" />
+          <EntitySet Name="ticaret_ayarlari" EntityType="faturaModel.ticaret_ayarlari" />
+          <EntitySet Name="ulke_il_ilce" EntityType="faturaModel.ulke_il_ilce" />
+          <EntitySet Name="vergis" EntityType="faturaModel.vergi" />
+          <EntitySet Name="mukellefs" EntityType="faturaModel.mukellef" />
+        </EntityContainer>
+        <EntityType Name="barkodlar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kodu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="deger" Type="Int32" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="birimler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kod" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="donusum_kodu" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="cari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="kullanici_id" Type="Int64" />
+          <Property Name="cari_mail" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="sifre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="cari_vkn_tckn" Type="Int64" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="webadresi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="cep_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="telefon_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dogum_yeri" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dogum_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="activationcode1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="activationcode2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isactivated" Type="Boolean" />
+          <Property Name="resetpasscode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="passattempts" Type="Int32" />
+          <Property Name="tip" Type="Int32" />
+          <Property Name="kilitlimi" Type="Boolean" />
+          <Property Name="acikhesapmi" Type="Boolean" />
+          <Property Name="mukellefmi" Type="Boolean" />
+          <Property Name="vergi_dairesi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vergi_numarasi" Type="Int64" />
+          <Property Name="ticaret_sicil_no" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="not" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="sgk_no" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="bagkur_no" Type="Int32" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="cari_adres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cari_id" Type="Int32" />
+          <Property Name="adres" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ulke_kodu" Type="Int32" />
+          <Property Name="ulke_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="il_kodu" Type="Int32" />
+          <Property Name="il_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ilce_kodu" Type="Int32" />
+          <Property Name="ilce_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="cep_no" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="telefon_no" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="fax" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="faturaadresimi" Type="Boolean" />
+          <Property Name="sevkadresimi" Type="Boolean" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="depolar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kodu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ana_depomu" Type="Boolean" />
+          <Property Name="fiyatno" Type="Int32" />
+          <Property Name="ind_orani" Type="Int32" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="dil_cevirileri">
+          <Key>
+            <PropertyRef Name="dil_kodu" />
+            <PropertyRef Name="anahtarkelime" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dil_kodu" Type="Int32" Nullable="false" />
+          <Property Name="anahtarkelime" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ceviri" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="diller">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kod" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="yazim_yonu" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="dovizler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kur_carpani" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="ana_birimmi" Type="Boolean" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="fatura">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="kullanici_id" Type="Int32" />
+          <Property Name="cari_id" Type="Int32" />
+          <Property Name="doviz_id" Type="Int32" />
+          <Property Name="doviz_kuru" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="islem_tipi" Type="Int32" />
+          <Property Name="aratoplam" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_iskonto" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_kdvtutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_tevkifat" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_otvtutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_oivtutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_fiyat" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="seri" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="sira_no" Type="Int32" />
+          <Property Name="belgeno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="fatura_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="sevk_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="fatura_onaykontrol" Type="Int32" />
+          <Property Name="aciklama" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fatura_guid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fatura_alias" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="mail_gittimi" Type="Boolean" />
+          <Property Name="fatura_durum" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="satis_iban" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="entegrator_tipi" Type="Int32" />
+          <Property Name="fatura_tipi" Type="Int32" />
+          <Property Name="toplam_gvsmatrah" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_gvstutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_btumatrah" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_btututar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_mfvmatrah" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_mfvtutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_sgkmatrah" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_sgktutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_smmgvsmatrah" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="toplam_smmgvstutar" Type="Decimal" Precision="18" Scale="8" />
+          <Property Name="not" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_alan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_eden" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="fatura_ayarlari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="kullanici_id" Type="Int32" />
+          <Property Name="fatura_tipi" Type="Int32" />
+          <Property Name="testmi" Type="Boolean" />
+          <Property Name="test_gndrn_vkn" Type="Int64" />
+          <Property Name="test_alici_vkn" Type="Int64" />
+          <Property Name="entegrator_tipi" Type="Int32" />
+          <Property Name="kullanici_adi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="sifre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="seri" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="seri_kullanilsinmi" Type="Boolean" />
+          <Property Name="giden_fatura_tipi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="fatura_gelen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gonderen_vkn" Type="Int64" />
+          <Property Name="gonderen_unvan" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="gonderen_sehir" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fatura_turu" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="olusturma_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="invoicetypecodetype" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="faturatarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="faturano" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="belgeno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="entegrator_tipi" Type="Int32" Nullable="false" />
+          <Property Name="fatura_tipi" Type="Int32" Nullable="false" />
+          <Property Name="doviz" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="kur_carpani" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="meblag" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="aratoplam" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="vergitutar" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="iskontotutar" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="guid" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fatura_notu" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="aktarimmesaji" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="issucceded" Type="Boolean" Nullable="false" />
+          <Property Name="otvtutar" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="alicimusteriobj" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gonderenmusteriobj" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="kdvtoplamobj" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="hareketsatirlariobj" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="durum" Type="Int32" />
+          <Property Name="mesaj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="not" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_alan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_eden" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="recorddate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="fatura_gelen_satir">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="guid" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="stok_adi" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="birimi" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="miktari" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="doviz_cinsi" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="doviz_kuru" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="kdv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="otv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="otv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="tevkifat_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="tevkifat_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="iskonto_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="fiyat" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="satirno" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="sikayet" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_adet" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="red_adet" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="red_kodu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="red_ack" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="eksik_adet" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="fazla_adet" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="last_update" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="fatura_satir">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fatura_id" Type="Int32" />
+          <Property Name="stok_id" Type="Int32" />
+          <Property Name="stok_adi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="birim_id" Type="Int32" />
+          <Property Name="birim_fiyati" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="miktari" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="doviz_id1" Type="Int32" />
+          <Property Name="doviz_kuru1" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="kdv_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="kdv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="otv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="otv_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="otv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="oiv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="tevkifat_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="tevkifat" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="iskonto_1" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_2" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_3" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_4" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_5" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="iskonto_toplam" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="fiyat" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="gvs_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="gvs_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="gvs_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="btu_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="btu_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="btu_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="mfv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="mfv_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="mfv_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="sgk_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="sgk_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="sgk_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="smm_gvs_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="smm_gvs_matrah" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="smm_gvs_tutar" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="teslim_sarti" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="kap_cinsi" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="kap_no" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="kap_adedi" Type="Int32" />
+          <Property Name="gonderilme_sekli" Type="Int32" />
+          <Property Name="gtip" Type="Int64" />
+          <Property Name="satirno" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="sikayet" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="teslim_adet" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="red_adet" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="red_kodu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="red_ack" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="eksik_adet" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="fazla_adet" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="firma">
+          <Key>
+            <PropertyRef Name="vkn_tckn" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" Nullable="false" />
+          <Property Name="unvan" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="vergi_dairesi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ticaret_sicil_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adres" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ulke_kodu" Type="Int32" />
+          <Property Name="ulke_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="il_kodu" Type="Int32" />
+          <Property Name="il_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ilce_kodu" Type="Int32" />
+          <Property Name="ilce_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="web_sitesi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="subdomain" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="telefon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="fax" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="iban1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="iban2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="iban3" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="notlar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="lisans_bitis_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="emailUserName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="emailUserPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="emailDisplayName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="smtpServerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="smtpServerPort" Type="Int32" />
+          <Property Name="smtpServerSSLEnable" Type="Boolean" />
+          <Property Name="logo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="kase" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="fiyat_tipleri">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kod" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="adi" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="kdv_dahilmi" Type="Boolean" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="kodlar">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kod" Type="Int32" Nullable="false" />
+          <Property Name="adi" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ustkod" Type="Int32" />
+          <Property Name="recorddate" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Int32" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="kullanici">
+          <Key>
+            <PropertyRef Name="kullanici_mail" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_mail" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="sifre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="rol_yetki" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="cep_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="telefon_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dogum_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <Property Name="activationcode1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="activationcode2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isactivated" Type="Boolean" />
+          <Property Name="resetpasscode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="passattempts" Type="Int32" />
+          <Property Name="isdeleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" Nullable="false" />
+          <Property Name="kullanici_id" Type="Int32" Nullable="false" />
+          <Property Name="controller" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="method" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tablo_adi" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="url" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="hata" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="bilgi" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ip_adresi" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tarih" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="stok">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="kullanici_id" Type="Int32" />
+          <Property Name="kodu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="adi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="gtip_no" Type="Int64" />
+          <Property Name="resimler" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="tedarik_yer_kodu" Type="Int32" />
+          <Property Name="tedarik_yer_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="kdv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="otv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="oiv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="gvs_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="btu_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="mfv_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="sgk_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="smm_gvs_orani" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="stok_barkod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="barkod_id" Type="Int32" Nullable="false" />
+          <Property Name="barkodu" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="barkod_text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="stok_id" Type="Int32" Nullable="false" />
+          <Property Name="isdeleted" Type="Boolean" Nullable="false" />
+          <Property Name="last_update" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="guid" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stok_birim">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stok_id" Type="Int32" />
+          <Property Name="birim_id" Type="Int32" />
+          <Property Name="katsayi" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="agirlik" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="stok_fiyat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="depo_id" Type="Int32" />
+          <Property Name="stok_birim_id" Type="Int32" />
+          <Property Name="doviz_id" Type="Int32" />
+          <Property Name="fiyat_tip" Type="Int32" />
+          <Property Name="fiyat" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ticaret_ayarlari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vkn_tckn" Type="Int64" />
+          <Property Name="kullanici_id" Type="Int32" />
+          <Property Name="testmi" Type="Boolean" />
+          <Property Name="test_gndrn_vkn" Type="Int64" />
+          <Property Name="test_alici_vkn" Type="Int64" />
+          <Property Name="site_tipi" Type="Int32" />
+          <Property Name="api_key" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="sifre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ulke_il_ilce">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="kod" Type="Int32" Nullable="false" />
+          <Property Name="adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ustkod" Type="Int32" />
+          <Property Name="kayit_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="vergi">
+          <Key>
+            <PropertyRef Name="kod" />
+          </Key>
+          <Property Name="kod" Type="Int32" Nullable="false" />
+          <Property Name="oran" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="tanim" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ustkod" Type="Int32" />
+          <Property Name="isdeleted" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="mukellef">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="VergiKimlikNo" Type="Int64" />
+          <Property Name="PostBoxAlias" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="SenderBoxAlias" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Tipi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OlusturmaTarihi" Type="DateTime" Precision="3" />
+          <Property Name="recorddate" Type="DateTime" Precision="3" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="faturaModelStoreContainer" CdmEntityContainer="faturaEntities">
+          <EntitySetMapping Name="barkodlars">
+            <EntityTypeMapping TypeName="faturaModel.barkodlar">
+              <MappingFragment StoreEntitySet="barkodlar">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="deger" ColumnName="deger" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kodu" ColumnName="kodu" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="birimlers">
+            <EntityTypeMapping TypeName="faturaModel.birimler">
+              <MappingFragment StoreEntitySet="birimler">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="donusum_kodu" ColumnName="donusum_kodu" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="caris">
+            <EntityTypeMapping TypeName="faturaModel.cari">
+              <MappingFragment StoreEntitySet="cari">
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="bagkur_no" ColumnName="bagkur_no" />
+                <ScalarProperty Name="sgk_no" ColumnName="sgk_no" />
+                <ScalarProperty Name="not" ColumnName="not" />
+                <ScalarProperty Name="ticaret_sicil_no" ColumnName="ticaret_sicil_no" />
+                <ScalarProperty Name="vergi_numarasi" ColumnName="vergi_numarasi" />
+                <ScalarProperty Name="vergi_dairesi" ColumnName="vergi_dairesi" />
+                <ScalarProperty Name="mukellefmi" ColumnName="mukellefmi" />
+                <ScalarProperty Name="acikhesapmi" ColumnName="acikhesapmi" />
+                <ScalarProperty Name="kilitlimi" ColumnName="kilitlimi" />
+                <ScalarProperty Name="tip" ColumnName="tip" />
+                <ScalarProperty Name="passattempts" ColumnName="passattempts" />
+                <ScalarProperty Name="resetpasscode" ColumnName="resetpasscode" />
+                <ScalarProperty Name="isactivated" ColumnName="isactivated" />
+                <ScalarProperty Name="activationcode2" ColumnName="activationcode2" />
+                <ScalarProperty Name="activationcode1" ColumnName="activationcode1" />
+                <ScalarProperty Name="dogum_tarihi" ColumnName="dogum_tarihi" />
+                <ScalarProperty Name="dogum_yeri" ColumnName="dogum_yeri" />
+                <ScalarProperty Name="telefon_no" ColumnName="telefon_no" />
+                <ScalarProperty Name="cep_no" ColumnName="cep_no" />
+                <ScalarProperty Name="webadresi" ColumnName="webadresi" />
+                <ScalarProperty Name="soyad" ColumnName="soyad" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="cari_vkn_tckn" ColumnName="cari_vkn_tckn" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="cari_mail" ColumnName="cari_mail" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cari_adres">
+            <EntityTypeMapping TypeName="faturaModel.cari_adres">
+              <MappingFragment StoreEntitySet="cari_adres">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="sevkadresimi" ColumnName="sevkadresimi" />
+                <ScalarProperty Name="faturaadresimi" ColumnName="faturaadresimi" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="telefon_no" ColumnName="telefon_no" />
+                <ScalarProperty Name="cep_no" ColumnName="cep_no" />
+                <ScalarProperty Name="ilce_adi" ColumnName="ilce_adi" />
+                <ScalarProperty Name="ilce_kodu" ColumnName="ilce_kodu" />
+                <ScalarProperty Name="il_adi" ColumnName="il_adi" />
+                <ScalarProperty Name="il_kodu" ColumnName="il_kodu" />
+                <ScalarProperty Name="ulke_adi" ColumnName="ulke_adi" />
+                <ScalarProperty Name="ulke_kodu" ColumnName="ulke_kodu" />
+                <ScalarProperty Name="adres" ColumnName="adres" />
+                <ScalarProperty Name="cari_id" ColumnName="cari_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="depolars">
+            <EntityTypeMapping TypeName="faturaModel.depolar">
+              <MappingFragment StoreEntitySet="depolar">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="ind_orani" ColumnName="ind_orani" />
+                <ScalarProperty Name="fiyatno" ColumnName="fiyatno" />
+                <ScalarProperty Name="ana_depomu" ColumnName="ana_depomu" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kodu" ColumnName="kodu" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dil_cevirileri">
+            <EntityTypeMapping TypeName="faturaModel.dil_cevirileri">
+              <MappingFragment StoreEntitySet="dil_cevirileri">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="ceviri" ColumnName="ceviri" />
+                <ScalarProperty Name="anahtarkelime" ColumnName="anahtarkelime" />
+                <ScalarProperty Name="dil_kodu" ColumnName="dil_kodu" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dillers">
+            <EntityTypeMapping TypeName="faturaModel.diller">
+              <MappingFragment StoreEntitySet="diller">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="yazim_yonu" ColumnName="yazim_yonu" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dovizlers">
+            <EntityTypeMapping TypeName="faturaModel.dovizler">
+              <MappingFragment StoreEntitySet="dovizler">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="ana_birimmi" ColumnName="ana_birimmi" />
+                <ScalarProperty Name="kur_carpani" ColumnName="kur_carpani" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="faturas">
+            <EntityTypeMapping TypeName="faturaModel.fatura">
+              <MappingFragment StoreEntitySet="fatura">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="teslim_tarihi" ColumnName="teslim_tarihi" />
+                <ScalarProperty Name="teslim_eden" ColumnName="teslim_eden" />
+                <ScalarProperty Name="teslim_alan" ColumnName="teslim_alan" />
+                <ScalarProperty Name="not" ColumnName="not" />
+                <ScalarProperty Name="toplam_smmgvstutar" ColumnName="toplam_smmgvstutar" />
+                <ScalarProperty Name="toplam_smmgvsmatrah" ColumnName="toplam_smmgvsmatrah" />
+                <ScalarProperty Name="toplam_sgktutar" ColumnName="toplam_sgktutar" />
+                <ScalarProperty Name="toplam_sgkmatrah" ColumnName="toplam_sgkmatrah" />
+                <ScalarProperty Name="toplam_mfvtutar" ColumnName="toplam_mfvtutar" />
+                <ScalarProperty Name="toplam_mfvmatrah" ColumnName="toplam_mfvmatrah" />
+                <ScalarProperty Name="toplam_btututar" ColumnName="toplam_btututar" />
+                <ScalarProperty Name="toplam_btumatrah" ColumnName="toplam_btumatrah" />
+                <ScalarProperty Name="toplam_gvstutar" ColumnName="toplam_gvstutar" />
+                <ScalarProperty Name="toplam_gvsmatrah" ColumnName="toplam_gvsmatrah" />
+                <ScalarProperty Name="fatura_tipi" ColumnName="fatura_tipi" />
+                <ScalarProperty Name="entegrator_tipi" ColumnName="entegrator_tipi" />
+                <ScalarProperty Name="satis_iban" ColumnName="satis_iban" />
+                <ScalarProperty Name="fatura_durum" ColumnName="fatura_durum" />
+                <ScalarProperty Name="mail_gittimi" ColumnName="mail_gittimi" />
+                <ScalarProperty Name="fatura_alias" ColumnName="fatura_alias" />
+                <ScalarProperty Name="fatura_guid" ColumnName="fatura_guid" />
+                <ScalarProperty Name="aciklama" ColumnName="aciklama" />
+                <ScalarProperty Name="fatura_onaykontrol" ColumnName="fatura_onaykontrol" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="sevk_tarihi" ColumnName="sevk_tarihi" />
+                <ScalarProperty Name="fatura_tarihi" ColumnName="fatura_tarihi" />
+                <ScalarProperty Name="belgeno" ColumnName="belgeno" />
+                <ScalarProperty Name="sira_no" ColumnName="sira_no" />
+                <ScalarProperty Name="seri" ColumnName="seri" />
+                <ScalarProperty Name="toplam_fiyat" ColumnName="toplam_fiyat" />
+                <ScalarProperty Name="toplam_oivtutar" ColumnName="toplam_oivtutar" />
+                <ScalarProperty Name="toplam_otvtutar" ColumnName="toplam_otvtutar" />
+                <ScalarProperty Name="toplam_tevkifat" ColumnName="toplam_tevkifat" />
+                <ScalarProperty Name="toplam_kdvtutar" ColumnName="toplam_kdvtutar" />
+                <ScalarProperty Name="toplam_iskonto" ColumnName="toplam_iskonto" />
+                <ScalarProperty Name="aratoplam" ColumnName="aratoplam" />
+                <ScalarProperty Name="islem_tipi" ColumnName="islem_tipi" />
+                <ScalarProperty Name="doviz_kuru" ColumnName="doviz_kuru" />
+                <ScalarProperty Name="doviz_id" ColumnName="doviz_id" />
+                <ScalarProperty Name="cari_id" ColumnName="cari_id" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fatura_ayarlari">
+            <EntityTypeMapping TypeName="faturaModel.fatura_ayarlari">
+              <MappingFragment StoreEntitySet="fatura_ayarlari">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="giden_fatura_tipi" ColumnName="giden_fatura_tipi" />
+                <ScalarProperty Name="seri_kullanilsinmi" ColumnName="seri_kullanilsinmi" />
+                <ScalarProperty Name="seri" ColumnName="seri" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="kullanici_adi" ColumnName="kullanici_adi" />
+                <ScalarProperty Name="entegrator_tipi" ColumnName="entegrator_tipi" />
+                <ScalarProperty Name="test_alici_vkn" ColumnName="test_alici_vkn" />
+                <ScalarProperty Name="test_gndrn_vkn" ColumnName="test_gndrn_vkn" />
+                <ScalarProperty Name="testmi" ColumnName="testmi" />
+                <ScalarProperty Name="fatura_tipi" ColumnName="fatura_tipi" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fatura_gelen">
+            <EntityTypeMapping TypeName="faturaModel.fatura_gelen">
+              <MappingFragment StoreEntitySet="fatura_gelen">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="recorddate" ColumnName="recorddate" />
+                <ScalarProperty Name="teslim_tarihi" ColumnName="teslim_tarihi" />
+                <ScalarProperty Name="teslim_eden" ColumnName="teslim_eden" />
+                <ScalarProperty Name="teslim_alan" ColumnName="teslim_alan" />
+                <ScalarProperty Name="not" ColumnName="not" />
+                <ScalarProperty Name="mesaj" ColumnName="mesaj" />
+                <ScalarProperty Name="durum" ColumnName="durum" />
+                <ScalarProperty Name="hareketsatirlariobj" ColumnName="hareketsatirlariobj" />
+                <ScalarProperty Name="kdvtoplamobj" ColumnName="kdvtoplamobj" />
+                <ScalarProperty Name="gonderenmusteriobj" ColumnName="gonderenmusteriobj" />
+                <ScalarProperty Name="alicimusteriobj" ColumnName="alicimusteriobj" />
+                <ScalarProperty Name="otvtutar" ColumnName="otvtutar" />
+                <ScalarProperty Name="issucceded" ColumnName="issucceded" />
+                <ScalarProperty Name="aktarimmesaji" ColumnName="aktarimmesaji" />
+                <ScalarProperty Name="fatura_notu" ColumnName="fatura_notu" />
+                <ScalarProperty Name="guid" ColumnName="guid" />
+                <ScalarProperty Name="iskontotutar" ColumnName="iskontotutar" />
+                <ScalarProperty Name="vergitutar" ColumnName="vergitutar" />
+                <ScalarProperty Name="aratoplam" ColumnName="aratoplam" />
+                <ScalarProperty Name="meblag" ColumnName="meblag" />
+                <ScalarProperty Name="kur_carpani" ColumnName="kur_carpani" />
+                <ScalarProperty Name="doviz" ColumnName="doviz" />
+                <ScalarProperty Name="fatura_tipi" ColumnName="fatura_tipi" />
+                <ScalarProperty Name="entegrator_tipi" ColumnName="entegrator_tipi" />
+                <ScalarProperty Name="belgeno" ColumnName="belgeno" />
+                <ScalarProperty Name="faturano" ColumnName="faturano" />
+                <ScalarProperty Name="faturatarihi" ColumnName="faturatarihi" />
+                <ScalarProperty Name="invoicetypecodetype" ColumnName="invoicetypecodetype" />
+                <ScalarProperty Name="olusturma_tarihi" ColumnName="olusturma_tarihi" />
+                <ScalarProperty Name="fatura_turu" ColumnName="fatura_turu" />
+                <ScalarProperty Name="gonderen_sehir" ColumnName="gonderen_sehir" />
+                <ScalarProperty Name="gonderen_unvan" ColumnName="gonderen_unvan" />
+                <ScalarProperty Name="gonderen_vkn" ColumnName="gonderen_vkn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fatura_gelen_satir">
+            <EntityTypeMapping TypeName="faturaModel.fatura_gelen_satir">
+              <MappingFragment StoreEntitySet="fatura_gelen_satir">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="fazla_adet" ColumnName="fazla_adet" />
+                <ScalarProperty Name="eksik_adet" ColumnName="eksik_adet" />
+                <ScalarProperty Name="red_ack" ColumnName="red_ack" />
+                <ScalarProperty Name="red_kodu" ColumnName="red_kodu" />
+                <ScalarProperty Name="red_adet" ColumnName="red_adet" />
+                <ScalarProperty Name="teslim_adet" ColumnName="teslim_adet" />
+                <ScalarProperty Name="sikayet" ColumnName="sikayet" />
+                <ScalarProperty Name="satirno" ColumnName="satirno" />
+                <ScalarProperty Name="fiyat" ColumnName="fiyat" />
+                <ScalarProperty Name="iskonto_tutar" ColumnName="iskonto_tutar" />
+                <ScalarProperty Name="iskonto_orani" ColumnName="iskonto_orani" />
+                <ScalarProperty Name="tevkifat_tutar" ColumnName="tevkifat_tutar" />
+                <ScalarProperty Name="tevkifat_orani" ColumnName="tevkifat_orani" />
+                <ScalarProperty Name="oiv_tutar" ColumnName="oiv_tutar" />
+                <ScalarProperty Name="oiv_orani" ColumnName="oiv_orani" />
+                <ScalarProperty Name="otv_tutar" ColumnName="otv_tutar" />
+                <ScalarProperty Name="otv_orani" ColumnName="otv_orani" />
+                <ScalarProperty Name="kdv_tutar" ColumnName="kdv_tutar" />
+                <ScalarProperty Name="kdv_orani" ColumnName="kdv_orani" />
+                <ScalarProperty Name="doviz_kuru" ColumnName="doviz_kuru" />
+                <ScalarProperty Name="doviz_cinsi" ColumnName="doviz_cinsi" />
+                <ScalarProperty Name="miktari" ColumnName="miktari" />
+                <ScalarProperty Name="birimi" ColumnName="birimi" />
+                <ScalarProperty Name="stok_adi" ColumnName="stok_adi" />
+                <ScalarProperty Name="guid" ColumnName="guid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fatura_satir">
+            <EntityTypeMapping TypeName="faturaModel.fatura_satir">
+              <MappingFragment StoreEntitySet="fatura_satir">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="fazla_adet" ColumnName="fazla_adet" />
+                <ScalarProperty Name="eksik_adet" ColumnName="eksik_adet" />
+                <ScalarProperty Name="red_ack" ColumnName="red_ack" />
+                <ScalarProperty Name="red_kodu" ColumnName="red_kodu" />
+                <ScalarProperty Name="red_adet" ColumnName="red_adet" />
+                <ScalarProperty Name="teslim_adet" ColumnName="teslim_adet" />
+                <ScalarProperty Name="sikayet" ColumnName="sikayet" />
+                <ScalarProperty Name="satirno" ColumnName="satirno" />
+                <ScalarProperty Name="gtip" ColumnName="gtip" />
+                <ScalarProperty Name="gonderilme_sekli" ColumnName="gonderilme_sekli" />
+                <ScalarProperty Name="kap_adedi" ColumnName="kap_adedi" />
+                <ScalarProperty Name="kap_no" ColumnName="kap_no" />
+                <ScalarProperty Name="kap_cinsi" ColumnName="kap_cinsi" />
+                <ScalarProperty Name="teslim_sarti" ColumnName="teslim_sarti" />
+                <ScalarProperty Name="smm_gvs_tutar" ColumnName="smm_gvs_tutar" />
+                <ScalarProperty Name="smm_gvs_matrah" ColumnName="smm_gvs_matrah" />
+                <ScalarProperty Name="smm_gvs_orani" ColumnName="smm_gvs_orani" />
+                <ScalarProperty Name="sgk_tutar" ColumnName="sgk_tutar" />
+                <ScalarProperty Name="sgk_matrah" ColumnName="sgk_matrah" />
+                <ScalarProperty Name="sgk_orani" ColumnName="sgk_orani" />
+                <ScalarProperty Name="mfv_tutar" ColumnName="mfv_tutar" />
+                <ScalarProperty Name="mfv_matrah" ColumnName="mfv_matrah" />
+                <ScalarProperty Name="mfv_orani" ColumnName="mfv_orani" />
+                <ScalarProperty Name="btu_tutar" ColumnName="btu_tutar" />
+                <ScalarProperty Name="btu_matrah" ColumnName="btu_matrah" />
+                <ScalarProperty Name="btu_orani" ColumnName="btu_orani" />
+                <ScalarProperty Name="gvs_tutar" ColumnName="gvs_tutar" />
+                <ScalarProperty Name="gvs_matrah" ColumnName="gvs_matrah" />
+                <ScalarProperty Name="gvs_orani" ColumnName="gvs_orani" />
+                <ScalarProperty Name="fiyat" ColumnName="fiyat" />
+                <ScalarProperty Name="iskonto_toplam" ColumnName="iskonto_toplam" />
+                <ScalarProperty Name="iskonto_5" ColumnName="iskonto_5" />
+                <ScalarProperty Name="iskonto_4" ColumnName="iskonto_4" />
+                <ScalarProperty Name="iskonto_3" ColumnName="iskonto_3" />
+                <ScalarProperty Name="iskonto_2" ColumnName="iskonto_2" />
+                <ScalarProperty Name="iskonto_1" ColumnName="iskonto_1" />
+                <ScalarProperty Name="tevkifat" ColumnName="tevkifat" />
+                <ScalarProperty Name="tevkifat_orani" ColumnName="tevkifat_orani" />
+                <ScalarProperty Name="oiv_tutar" ColumnName="oiv_tutar" />
+                <ScalarProperty Name="oiv_matrah" ColumnName="oiv_matrah" />
+                <ScalarProperty Name="oiv_orani" ColumnName="oiv_orani" />
+                <ScalarProperty Name="otv_tutar" ColumnName="otv_tutar" />
+                <ScalarProperty Name="otv_matrah" ColumnName="otv_matrah" />
+                <ScalarProperty Name="otv_orani" ColumnName="otv_orani" />
+                <ScalarProperty Name="kdv_tutar" ColumnName="kdv_tutar" />
+                <ScalarProperty Name="kdv_matrah" ColumnName="kdv_matrah" />
+                <ScalarProperty Name="kdv_orani" ColumnName="kdv_orani" />
+                <ScalarProperty Name="doviz_kuru1" ColumnName="doviz_kuru1" />
+                <ScalarProperty Name="doviz_id1" ColumnName="doviz_id1" />
+                <ScalarProperty Name="miktari" ColumnName="miktari" />
+                <ScalarProperty Name="birim_fiyati" ColumnName="birim_fiyati" />
+                <ScalarProperty Name="birim_id" ColumnName="birim_id" />
+                <ScalarProperty Name="stok_adi" ColumnName="stok_adi" />
+                <ScalarProperty Name="stok_id" ColumnName="stok_id" />
+                <ScalarProperty Name="fatura_id" ColumnName="fatura_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="firmas">
+            <EntityTypeMapping TypeName="faturaModel.firma">
+              <MappingFragment StoreEntitySet="firma">
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kase" ColumnName="kase" />
+                <ScalarProperty Name="logo" ColumnName="logo" />
+                <ScalarProperty Name="smtpServerSSLEnable" ColumnName="smtpServerSSLEnable" />
+                <ScalarProperty Name="smtpServerPort" ColumnName="smtpServerPort" />
+                <ScalarProperty Name="smtpServerName" ColumnName="smtpServerName" />
+                <ScalarProperty Name="emailDisplayName" ColumnName="emailDisplayName" />
+                <ScalarProperty Name="emailUserPassword" ColumnName="emailUserPassword" />
+                <ScalarProperty Name="emailUserName" ColumnName="emailUserName" />
+                <ScalarProperty Name="lisans_bitis_tarihi" ColumnName="lisans_bitis_tarihi" />
+                <ScalarProperty Name="notlar" ColumnName="notlar" />
+                <ScalarProperty Name="iban3" ColumnName="iban3" />
+                <ScalarProperty Name="iban2" ColumnName="iban2" />
+                <ScalarProperty Name="iban1" ColumnName="iban1" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="telefon" ColumnName="telefon" />
+                <ScalarProperty Name="subdomain" ColumnName="subdomain" />
+                <ScalarProperty Name="web_sitesi" ColumnName="web_sitesi" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="ilce_adi" ColumnName="ilce_adi" />
+                <ScalarProperty Name="ilce_kodu" ColumnName="ilce_kodu" />
+                <ScalarProperty Name="il_adi" ColumnName="il_adi" />
+                <ScalarProperty Name="il_kodu" ColumnName="il_kodu" />
+                <ScalarProperty Name="ulke_adi" ColumnName="ulke_adi" />
+                <ScalarProperty Name="ulke_kodu" ColumnName="ulke_kodu" />
+                <ScalarProperty Name="adres" ColumnName="adres" />
+                <ScalarProperty Name="ticaret_sicil_no" ColumnName="ticaret_sicil_no" />
+                <ScalarProperty Name="vergi_dairesi" ColumnName="vergi_dairesi" />
+                <ScalarProperty Name="unvan" ColumnName="unvan" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fiyat_tipleri">
+            <EntityTypeMapping TypeName="faturaModel.fiyat_tipleri">
+              <MappingFragment StoreEntitySet="fiyat_tipleri">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="kdv_dahilmi" ColumnName="kdv_dahilmi" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kodlars">
+            <EntityTypeMapping TypeName="faturaModel.kodlar">
+              <MappingFragment StoreEntitySet="kodlar">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="recorddate" ColumnName="recorddate" />
+                <ScalarProperty Name="ustkod" ColumnName="ustkod" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kullanicis">
+            <EntityTypeMapping TypeName="faturaModel.kullanici">
+              <MappingFragment StoreEntitySet="kullanici">
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="passattempts" ColumnName="passattempts" />
+                <ScalarProperty Name="resetpasscode" ColumnName="resetpasscode" />
+                <ScalarProperty Name="isactivated" ColumnName="isactivated" />
+                <ScalarProperty Name="activationcode2" ColumnName="activationcode2" />
+                <ScalarProperty Name="activationcode1" ColumnName="activationcode1" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="dogum_tarihi" ColumnName="dogum_tarihi" />
+                <ScalarProperty Name="telefon_no" ColumnName="telefon_no" />
+                <ScalarProperty Name="cep_no" ColumnName="cep_no" />
+                <ScalarProperty Name="soyad" ColumnName="soyad" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="rol_yetki" ColumnName="rol_yetki" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="kullanici_mail" ColumnName="kullanici_mail" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="logs">
+            <EntityTypeMapping TypeName="faturaModel.log">
+              <MappingFragment StoreEntitySet="log">
+                <ScalarProperty Name="tarih" ColumnName="tarih" />
+                <ScalarProperty Name="ip_adresi" ColumnName="ip_adresi" />
+                <ScalarProperty Name="bilgi" ColumnName="bilgi" />
+                <ScalarProperty Name="hata" ColumnName="hata" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="tablo_adi" ColumnName="tablo_adi" />
+                <ScalarProperty Name="method" ColumnName="method" />
+                <ScalarProperty Name="controller" ColumnName="controller" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stoks">
+            <EntityTypeMapping TypeName="faturaModel.stok">
+              <MappingFragment StoreEntitySet="stok">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="smm_gvs_orani" ColumnName="smm_gvs_orani" />
+                <ScalarProperty Name="sgk_orani" ColumnName="sgk_orani" />
+                <ScalarProperty Name="mfv_orani" ColumnName="mfv_orani" />
+                <ScalarProperty Name="btu_orani" ColumnName="btu_orani" />
+                <ScalarProperty Name="gvs_orani" ColumnName="gvs_orani" />
+                <ScalarProperty Name="oiv_orani" ColumnName="oiv_orani" />
+                <ScalarProperty Name="otv_orani" ColumnName="otv_orani" />
+                <ScalarProperty Name="kdv_orani" ColumnName="kdv_orani" />
+                <ScalarProperty Name="tedarik_yer_adi" ColumnName="tedarik_yer_adi" />
+                <ScalarProperty Name="tedarik_yer_kodu" ColumnName="tedarik_yer_kodu" />
+                <ScalarProperty Name="resimler" ColumnName="resimler" />
+                <ScalarProperty Name="gtip_no" ColumnName="gtip_no" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kodu" ColumnName="kodu" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stok_barkod">
+            <EntityTypeMapping TypeName="faturaModel.stok_barkod">
+              <MappingFragment StoreEntitySet="stok_barkod">
+                <ScalarProperty Name="guid" ColumnName="guid" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="stok_id" ColumnName="stok_id" />
+                <ScalarProperty Name="barkod_text" ColumnName="barkod_text" />
+                <ScalarProperty Name="barkodu" ColumnName="barkodu" />
+                <ScalarProperty Name="barkod_id" ColumnName="barkod_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stok_birim">
+            <EntityTypeMapping TypeName="faturaModel.stok_birim">
+              <MappingFragment StoreEntitySet="stok_birim">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="agirlik" ColumnName="agirlik" />
+                <ScalarProperty Name="katsayi" ColumnName="katsayi" />
+                <ScalarProperty Name="birim_id" ColumnName="birim_id" />
+                <ScalarProperty Name="stok_id" ColumnName="stok_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stok_fiyat">
+            <EntityTypeMapping TypeName="faturaModel.stok_fiyat">
+              <MappingFragment StoreEntitySet="stok_fiyat">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="fiyat" ColumnName="fiyat" />
+                <ScalarProperty Name="fiyat_tip" ColumnName="fiyat_tip" />
+                <ScalarProperty Name="doviz_id" ColumnName="doviz_id" />
+                <ScalarProperty Name="stok_birim_id" ColumnName="stok_birim_id" />
+                <ScalarProperty Name="depo_id" ColumnName="depo_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ticaret_ayarlari">
+            <EntityTypeMapping TypeName="faturaModel.ticaret_ayarlari">
+              <MappingFragment StoreEntitySet="ticaret_ayarlari">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="api_key" ColumnName="api_key" />
+                <ScalarProperty Name="site_tipi" ColumnName="site_tipi" />
+                <ScalarProperty Name="test_alici_vkn" ColumnName="test_alici_vkn" />
+                <ScalarProperty Name="test_gndrn_vkn" ColumnName="test_gndrn_vkn" />
+                <ScalarProperty Name="testmi" ColumnName="testmi" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="vkn_tckn" ColumnName="vkn_tckn" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ulke_il_ilce">
+            <EntityTypeMapping TypeName="faturaModel.ulke_il_ilce">
+              <MappingFragment StoreEntitySet="ulke_il_ilce">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+                <ScalarProperty Name="ustkod" ColumnName="ustkod" />
+                <ScalarProperty Name="adi" ColumnName="adi" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vergis">
+            <EntityTypeMapping TypeName="faturaModel.vergi">
+              <MappingFragment StoreEntitySet="vergi">
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="isdeleted" ColumnName="isdeleted" />
+                <ScalarProperty Name="ustkod" ColumnName="ustkod" />
+                <ScalarProperty Name="tanim" ColumnName="tanim" />
+                <ScalarProperty Name="oran" ColumnName="oran" />
+                <ScalarProperty Name="kod" ColumnName="kod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mukellefs">
+            <EntityTypeMapping TypeName="faturaModel.mukellef">
+              <MappingFragment StoreEntitySet="mukellef">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+                <ScalarProperty Name="recorddate" ColumnName="recorddate" />
+                <ScalarProperty Name="OlusturmaTarihi" ColumnName="OlusturmaTarihi" />
+                <ScalarProperty Name="Tipi" ColumnName="Tipi" />
+                <ScalarProperty Name="SenderBoxAlias" ColumnName="SenderBoxAlias" />
+                <ScalarProperty Name="PostBoxAlias" ColumnName="PostBoxAlias" />
+                <ScalarProperty Name="VergiKimlikNo" ColumnName="VergiKimlikNo" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

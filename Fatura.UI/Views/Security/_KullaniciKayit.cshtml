@@ -1,0 +1,321 @@
+﻿@model Fatura.Entity.kullanici
+@using Fatura.BLL
+
+@*<!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Login</title>
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/siteozel.css" rel="stylesheet" />
+
+    </head>
+    <body>*@
+<br>
+<br>
+<div class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    <br>
+    <h3 class="text-info">@ViewBag.IslemTipi</h3>
+    <br>
+    <form class="form" action="" method="post" id="klnForm">
+        @Html.AntiForgeryToken()
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="text-info">Adınız*</label>
+                @Html.TextBoxFor(m => m.ad, new { @class = "form-control ", placeholder = "Adınızı Giriniz*", @required = "required", data_val_required = "You need me" })
+                @Html.ValidationMessageFor(m => m.ad)
+            </div>
+            <div class="form-group col-md-6">
+                <label class="text-info">Soyadınız*</label>
+                @Html.TextBoxFor(m => m.soyad, new { @class = "form-control ", placeholder = "Soyadınızı Giriniz*", @required = "required" })
+                @Html.ValidationMessageFor(m => m.soyad)
+            </div>
+        </div>
+        <div class="form-row">
+            @if ((ViewBag.IslemTipi != null && ViewBag.IslemTipi == "Yeni Kullanıcı"))
+            {
+                if (Session["kullanici"] != null && (long)Session["vkn_tckn"] != Utilities.vknAdmin)
+                {
+                    <div class="form-group col-md-6">
+                        <label class="text-info">Mail adresiniz*</label>
+                        @Html.TextBoxFor(m => m.kullanici_mail, new { @class = "form-control ", type = "email", placeholder = "Mail Adresinizi Giriniz*", @required = "required" })
+                        @Html.ValidationMessageFor(m => m.kullanici_mail)
+                        <label class="text-info">Lütfen geçerli bir mail adresi giriniz. Doğrulama kodu gönderilecektir.</label>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-info">VKN/TCKN*</label>
+                        <br>
+                        @Html.Label("vkn_tckn", Session["vkn_tckn"].ToString())
+                        <input class="form-control" type="hidden" id="vkn_tckn" name="vkn_tckn" value="@Session["vkn_tckn"].ToString()" />
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group col-md-6">
+                        <label class="text-info">Mail adresiniz*</label>
+                        @Html.TextBoxFor(m => m.kullanici_mail, new { @class = "form-control ", type = "email", placeholder = "Mail Adresinizi Giriniz*", @required = "required" })
+                        @Html.ValidationMessageFor(m => m.kullanici_mail)
+                        <label class="text-info">Lütfen Geçerli bir mail adresi giriniz. Doğrulama kodu gönderilecektir.</label>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-info">VKN/TCKN*</label>
+                        @Html.TextBoxFor(m => m.vkn_tckn, new { @class = "form-control ", placeholder = "TCKN/VKN giriniz*", @required = "required" })
+                        @Html.ValidationMessageFor(m => m.vkn_tckn)
+                    </div>
+                }
+            }
+            else
+            {
+                if (Session["kullanici"] != null && ((long)Session["vkn_tckn"]) != Utilities.vknAdmin)
+                {
+                    <div class="form-group col-md-6">
+                        <label class="text-info">Mail adresiniz*</label>
+                        <br>
+                        @Html.Label("kullanici_mail", Model.kullanici_mail.ToString())
+                        <input class="form-control" type="hidden" id="kullanici_mail" name="kullanici_mail" value="@Model.kullanici_mail.ToString()" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-info">VKN/TCKN*</label>
+                        <br>
+                        @Html.Label("vkn_tckn", Session["vkn_tckn"].ToString())
+                        <input class="form-control" type="hidden" id="vkn_tckn" name="vkn_tckn" value="@Session["vkn_tckn"].ToString()" />
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group col-md-6">
+                        <label class="text-info">Mail adresiniz*</label>
+                        <br>
+                        @Html.Label("kullanici_mail", Model.kullanici_mail.ToString())
+                        <input class="form-control" type="hidden" id="kullanici_mail" name="kullanici_mail" value="@Model.kullanici_mail.ToString()" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-info">VKN/TCKN*</label>
+                        @Html.TextBoxFor(m => m.vkn_tckn, new { @class = "form-control ", placeholder = "TC/VKN'nizi Giriniz*", @required = "required" })
+                        @Html.ValidationMessageFor(m => m.vkn_tckn)
+                    </div>
+                }
+            }
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="text-info">Cep Tel. Numaranız*</label>
+                @Html.TextBoxFor(m => m.cep_no, new { @class = "form-control ", type = "tel", placeholder = "Cep Telefon Numaranızı Giriniz*", @required = "required" })
+                @Html.ValidationMessageFor(m => m.cep_no)
+            </div>
+            <div class="form-group col-md-6">
+                <label class="text-info">Sabit Tel. Numaranız</label>
+                @Html.TextBoxFor(m => m.telefon_no, new { @class = "form-control ", type = "tel", placeholder = "Sabit Telefon Numaranızı Giriniz" })
+                @Html.ValidationMessageFor(m => m.telefon_no)
+            </div>
+        </div>
+        <div class="form-row">
+            @if (Session["kullanici"] != null)
+            {
+                <div class="form-group col-md-6">
+                    <label class="text-info">Yetkiler</label>
+                    @{ int i = 0;
+                        foreach (var Role_Yetki in ViewBag.Yetkiler)
+                        {
+                            long vkn = (long)Session["vkn_tckn"];
+                            long vknAdmin = Utilities.vknAdmin;
+                            if (vkn == vknAdmin)
+                            {
+                                <label>&nbsp;&nbsp;</label>
+                                <input id="@Role_Yetki.Key" type="checkbox" name="skill" value="@Role_Yetki.Key" @Role_Yetki.Checked />
+                                <label for="@Role_Yetki.Key">
+                                    @Role_Yetki.Display
+                                </label>
+                                <label>&nbsp;&nbsp;</label>
+                            }
+                            else if (Model.vkn_tckn == vkn)
+                            {
+                                if (i < 2)
+                                {
+                                    <label>&nbsp;&nbsp;</label>
+                                    <input id="@Role_Yetki.Key" type="checkbox" name="skill" value="@Role_Yetki.Key" @Role_Yetki.Checked />
+                                    <label for="@Role_Yetki.Key">
+                                        @Role_Yetki.Display
+                                    </label>
+                                    <label>&nbsp;&nbsp;</label>
+                                }
+                                else
+                                {
+                                    <label>&nbsp;&nbsp;</label>
+                                    <input id="@Role_Yetki.Key" type="checkbox" name="skill" disabled="disabled" value="@Role_Yetki.Key" @Role_Yetki.Checked />
+                                    <label for="@Role_Yetki.Key">
+                                        @Role_Yetki.Display
+                                    </label>
+                                    <label>&nbsp;&nbsp;</label>
+                                }
+                            }
+                            i += 1;
+                        }
+                    }
+                    @*@Html.HiddenFor(model => model.rol_yetki)*@
+                    <input type="hidden" id="rol_yetki" name="rol_yetki" value="@Model.rol_yetki" />
+                </div>
+            }
+            @if (Session["kullanici"] != null && Model != null && Model.DropDownList != null && Model.isdeleted == true)
+            {
+                <div class="form-group col-md-6">
+                    <label class="text-info">Kullanıcı Silinmiş mi?</label>
+                    @Html.DropDownListFor(m => m.isdeleted, Model.DropDownList)
+                    @Html.ValidationMessageFor(m => m.isdeleted)
+                </div>
+            }
+        </div>
+        <div class="form-row">
+            @if (Session["kullanici"] == null || (ViewBag.IslemTipi != null && ViewBag.IslemTipi == "Yeni Kullanıcı"))
+            {
+                <div class="form-group col-md-6">
+                    <label class="text-info">Şifreniz*</label>
+                    <input type="password" placeholder="Şifrenizi Giriniz*" class="myPassword form-control" id="sifre" name="sifre" required="required" value="@Model.sifre" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="text-info">Şifreniz Tekrar*</label>
+                    <input type="password" placeholder="Şifrenizi Tekrar Giriniz*" class="myPassword form-control" id="sifre2" name="sifre2" required="required" value="@Model.sifre" />
+                </div>
+
+            }
+        </div>
+        @*<div class="form-row">
+                @if (Session["kullanici"] == null || (ViewBag.IslemTipi != null && ViewBag.IslemTipi == "Yeni Kullanıcı"))
+                {
+                    <div class="form-group col-md-6">
+                        <input id="myPassword" type="password" name="" value="">
+                    </div>
+                }
+            </div>*@
+        <br />
+        <h4 class="alert-danger">@ViewBag.Mesaj</h4>
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+        @if (ViewBag.captchaResmi != null && ViewBag.captchaResmi != "" && Session["kullanici"] == null)
+        {
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="~/Content/temp/@ViewBag.captchaResmi" width="70" id="captchaFileName" name="captchaFileName" />
+                </div>
+                <div class="col-md-6">
+                    <input type="text" placeholder="İşlemin sonucunu giriniz." class="form-control" style="width:220px;" id="captcha" name="captcha" required="required" />
+                    <input type="hidden" id="captchaFileName" name="captchaFileName" value="@ViewBag.captchaResmi" />
+                </div>
+            </div>
+        }
+        <button type="submit" class="klnKaydet btn btn-info" onclick="updatemark()" id="klnKaydet">Kaydet / Güncelle</button>
+        <a class="btn btn-primary mx-4" href="/Security/KullaniciListesi">Geri</a>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Silindi")
+            toastr_mesaj("Kullanıcı başarıyla silindi.", "success", 3000);
+        else if (mesaj == "Eklendi")
+            toastr_mesaj("Kullanıcı başarıyla eklendi.", "success", 3000);
+        else if (mesaj == "Guncellendi")
+            toastr_mesaj("Kullanıcı başarıyla güncellendi.", "success", 3000);
+        else if (mesaj != "") {
+            toastr_mesaj(mesaj, "error", 3000);
+        }
+        $('.myPassword').passtrength({
+            minChars: 4,
+            passwordToggle: true,
+            tooltip: true
+        });
+        //$('.myPassword').change(function () {
+        //    minChars: 4,
+        //    passwordToggle: true,
+        //    tooltip: true
+        //});
+        //$("#sifre").change(function () {
+        //    var strength = 0;
+        //    var sifre = $("#sifre").val();
+        //    strength += /[A-Z]+/.test(sifre) ? 1 : 0;
+        //    strength += /[a-z]+/.test(sifre) ? 1 : 0;
+        //    strength += /[0-9]+/.test(sifre) ? 1 : 0;
+        //    strength += /[\W]+/.test(sifre) ? 1 : 0;
+        //    switch (strength) {
+        //        case 3:
+        //            $("#sifreLabel").text("Şireniz normal zorlukta.");
+        //            break;
+        //        case 4:
+        //            $("#sifreLabel").text("Şireniz çok güçlü.");
+        //            break;
+        //        default:
+        //            $("#sifreLabel").text("Şireniz zayıf, lütfen büyük, küçük harf, rakam ve diğer karakterleri kullanarak şifre oluşturunuz.");
+        //            $("#sifreLabel").css("color", "red");
+        //            break;
+        //    }
+        //});
+        $("#klnKaydet").click(function () {
+            debugger;
+            $(".alert-danger").text("");
+            $(".field-validation-error").text("");
+
+            event.preventDefault();
+            $(this).attr('disabled', true);
+            var mail = $("#kullanici_mail").val();
+            var vkn_tckn = $("#vkn_tckn").val();
+            var sifre = $("#sifre").val();
+            var sifre2 = $("#sifre2").val();
+            if (mail != "" && validateEmail(mail)) {
+                if (!isNaN(vkn_tckn) && vkn_tckn.length > 9 && vkn_tckn.length < 12) {
+                    if (sifre != "") {
+                        if (sifre == sifre2) { //TODO sifre zorluğuna göre renklendirme progressbar
+                            $('#klnForm').submit();
+                        } else {
+                            toastr_mesaj('Girdiğiniz iki şifre biribirinden farklı. Lütfen tekrar giriniz.', "warning", 3000);
+                            $(".alert-danger").text("Girdiğiniz iki şifre biribirinden farklı. Lütfen tekrar giriniz.");
+                            $(this).attr('disabled', false);
+                        }
+                    } else {
+                        toastr_mesaj('Lütfen şifrenizi giriniz.', "warning", 3000);
+                        $(".alert-danger").text("Lütfen şifrenizi giriniz.");
+                        $(this).attr('disabled', false);
+                    }
+                } else {
+                    toastr_mesaj('VKN/TCKN 10 yada 11 rakamdan oluşmalıdır.', "warning", 3000);
+                    $(this).attr('disabled', false);
+                }
+            } else {
+                toastr_mesaj('Lütfen Geçerli bir mail adresi giriniz. Doğrulama kodu gönderilecektir.', "warning", 3000);
+                $(this).attr('disabled', false);
+            }
+        });
+    });
+
+    function updatemark(arg) {
+        var abc = ""
+        //Iterating the collection of checkboxes which checked marked
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                abc = abc + $(this).val() + ","
+                //assign set value to hidden field
+                $('#rol_yetki').val(abc);
+            }
+        });
+    }
+    function testPassword(pwString) {
+        var strength = 0;
+
+        strength += /[A-Z]+/.test(pwString) ? 1 : 0;
+        strength += /[a-z]+/.test(pwString) ? 1 : 0;
+        strength += /[0-9]+/.test(pwString) ? 1 : 0;
+        strength += /[\W]+/.test(pwString) ? 1 : 0;
+
+        switch (strength) {
+            case 3:
+                // its's medium!
+                break;
+            case 4:
+                // it's strong!
+                break;
+            default:
+                // it's weak!
+                break;
+        }
+    }
+</script>

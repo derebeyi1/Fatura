@@ -1,0 +1,337 @@
+﻿@using Fatura.BLL;
+    <header id="header" class="fixed-top">
+        <div class="container-fluid d-flex">
+            <div class="row logo mr-auto">
+                <!--<h1 class="text-light"><a href="index.html"><span>En Ucuz E-Fatura</span></a></h1>-->
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <div>
+                    @if (Session["firma_logo"] != null && Session["firma_logo"].ToString() != "")
+                    {
+                        <img src="~/Content/@Session["vkn_tckn"]/@Session["firma_logo"]" width="80" />
+                    }
+                    else
+                    {
+                        <a href="/Anasayfa/Index"><img src="~/Content/assets/img/favicon.png" alt="" class="img-fluid" width="50"></a>
+                    }
+                </div>
+                <div>
+                    @if (Session["kullanici"] != null)
+                    {
+                        string adsyd = Session["ad_soyad"] == null ? "" : Session["ad_soyad"].ToString();
+                        string firma_unvan = Session["firma_unvan"] == null ? "" : "  ->  " + Session["firma_unvan"].ToString();
+                        <h5 style="color: darkblue">
+                            @if (Session["ad_soyad"] != null)
+                            {
+                                @(Session["ad_soyad"])
+                                if (firma_unvan != "")
+                                {
+                                    @firma_unvan
+                                }
+                            }
+                            else
+                            {
+                                @firma_unvan
+                            }
+                            <br />
+                            @Session["kln_email"]
+                        </h5>
+                    }
+                </div>
+            </div>
+            <nav class="nav-menu d-none d-lg-block">
+                <ul>
+                    <li><a href="/Anasayfa#header">Ana Sayfa</a></li>
+                    <li><a href="#about">Hakkımızda</a></li>
+                    @*<li><a href="#Servisler">Servisler</a></li>*@
+                    @*@if (Session["kullanici"] != null && User.IsInRole("1"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/Security/KullaniciKayit" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Yönetici
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                            </div>
+                        </li>
+                    }*@
+                    @if (Session["kullanici"] != null)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Ayarlar
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @if (Session["kullanici"] != null && User.IsInRole("1"))
+                                {
+                                    <a class="dropdown-item" href="/Firma/FirmaListesi">Firma Ayarları</a>
+                                    <a class="dropdown-item" href="/Security/KullaniciListesi">Kullanici İşlemleri</a>
+                                }
+                                <a class="dropdown-item" href="/Fatura/AyarListesi">E-Fatura Ayarları</a>
+                                <a class="dropdown-item" href="/Siparis/AyarListesi">E-Ticaret Ayarları</a>
+                                <a class="dropdown-item" href="/Fatura/MukellefListesi?id=0">E-Mükellef Listesi</a>
+                                <a class="dropdown-item" href="/Kodlar/Index">Kod İşlemleri</a>
+                                <a class="dropdown-item" href="#">VERGİ TANIMLARI</a>
+                                <a class="dropdown-item" href="#">DÖVİZ TANIMLARI</a>
+                                <a class="dropdown-item" href="#">FİYAT TANIMLARI</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Stok/Cari
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/Stok/StokListesi">Stok İşlemleri</a>
+                                <a class="dropdown-item" href="/Cari/CariListesi">Cari İşlemleri</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Siparişler
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/Siparis/SiparisListesi">Siparişler</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Faturalar
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/Fatura/FaturaListesi">Giden Faturalar</a>
+                                <a class="dropdown-item" href="/Fatura/GelenFatura">Gelen Faturalar</a>
+                                <a class="dropdown-item" href="/Fatura/GelenIrsaliye">Gelen İrsaliyeler</a>
+                            </div>
+                        </li>
+                    }
+                    @*<li><a href="#portfolio">Portföy</a></li>
+                    <li><a href="#faq">S.S.S.</a></li>
+                    <li><a href="#team">Takım</a></li>*@
+                    @*<li><a href="#clients">Müşterilerimiz</a></li>*@
+                    @*<li><a href="#contact">Bize Ulaşın</a></li>*@
+                    @if (Session["kullanici"] == null)
+                    {
+                        <li class="get-started"><a href="/Security/Login" class="GirisYap">Giriş Yap</a></li>
+                    }
+                    @*<li class="get-started"><a href="#">Giriş Yap</a></li>*@
+                    @if (Session["kullanici"] == null)
+                    {
+                        if (Request.Url.Host.Split('.')[0] == Utilities.rootURL)
+                        {
+                            <li class="get-started">
+                                <a href="/Security/KullaniciKayit?id=0" class="KayitOl">Kayıt Ol (Firma)</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="get-started">
+                                <a href="/Security/KullaniciKayit?id=0" class="KayitOl">Kayıt Ol (Müşteri)</a>
+                            </li>
+                        }
+                    }
+
+                    @if (Session["kullanici"] != null)
+                    {
+                        <li class="nav-item font-weight-bold">
+                            <a class="nav-link" href="/Security/Logout">Güvenli<br> Çıkış</a>
+                        </li>
+                    }
+                </ul>
+            </nav><!-- .nav-menu -->
+        </div>
+        @*<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel"></h4>
+                        <a href="javascript:void(0);" class="close btn btn-info" data-dismiss="modal">&times;</a>
+                    </div>
+                    <div id='myModalContent' class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <script>
+            $(document).ready(function () {
+            });
+            $(".GirisYap").click(function () {
+                debugger;
+                var $buttonClicked = $(this);
+                //var id = $buttonClicked.attr('data-id');
+                //var fatura_id = $("#id").val();
+                //var fatura_tipi = $("#fatura_tipi").val();
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    //async: false,
+                    url: '/Security/Login',
+                    contentType: "application/json; charset=utf-8",
+                    data: { },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+            $(".KayitOl").click(function () {
+                debugger;
+                var $buttonClicked = $(this);
+                //var id = $buttonClicked.attr('data-id');
+                //var fatura_id = $("#id").val();
+                //var fatura_tipi = $("#fatura_tipi").val();
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    //async: false,
+                    url: '/Security/KullaniciKayit',
+                    contentType: "application/json; charset=utf-8",
+                    data: {},
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+        </script>
+    </header><!-- End Header -->
+@*<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light ">
+        <img src="~/Content/images/logo2.jpg" width="50" />
+        @if (Session["kullanici"] != null)
+        {
+            <h3 style="color: darkblue">
+                Hoş Geldiniz<br>@Session["ad_soyad"]
+            </h3>
+        }
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+            <ul class="navbar-nav font-weight-bold">
+                <li class="nav-item active">
+                    <a class="nav-link font-weight-bold" href="/Anasayfa">ANASAYFA <span class="sr-only">(current)</span></a>
+                </li>
+                @if (Session["kullanici"] != null && User.IsInRole("1"))
+                {
+                    <li class="nav-item active dropdown">
+                        <a class="nav-link dropdown-toggle font-weight-bold" href="/Security/KullaniciKayit" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            YÖNETİCİ İŞLEMLERİ
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">MENÜ 1</a>
+                            <a class="dropdown-item" href="#">MENÜ 2</a>
+                            <a class="dropdown-item" href="#">MENÜ 3</a>
+
+                        </div>
+                    </li>
+                }
+
+                @if (Session["kullanici"] != null && User.IsInRole("1"))
+                {
+                    <li class="nav-item active dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            KULLANICI İŞLEMLERİ
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">MENÜ 1</a>
+                            <a class="dropdown-item" href="#">MENÜ 2</a>
+                            <a class="dropdown-item" href="#">MENÜ 3</a>
+
+                        </div>
+                    </li>
+                }
+                @if (Session["kullanici"] != null)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            STOKLAR-CARİLER
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/Stok/StokListesi">STOK İŞLEMLERİ</a>
+                            <a class="dropdown-item" href="#">CARİ İŞLEMLERİ</a>
+                            <a class="dropdown-item" href="#">VERGİ TANIMLARI</a>
+                            <a class="dropdown-item" href="#">DÖVİZ TANIMLARI</a>
+                            <a class="dropdown-item" href="#">FİYAT TANIMLARI</a>
+                            <a class="dropdown-item" href="#">FİRMA BİLGİLERİ</a>
+                            <a class="dropdown-item" href="#">E-EVRAK AYARLARI</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GİDENLER
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">E-FATURA/E-ARŞİV OLUŞTUR</a>
+                            <a class="dropdown-item" href="#">İRSALİYE OLUŞTUR</a>
+                            <a class="dropdown-item" href="#">İHRACAT EVRAKI OLUŞTUR</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            GELENLER
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">E-EVRAK GELENLER</a>
+                        </div>
+                    </li>
+                }
+                @if (Session["kullanici"] == null)
+                {
+                    <li class="nav-item active font-weight-bold">
+                        <a class="nav-link" href="/Security/Login">GİRİŞ</a>
+                    </li>
+                }
+                @if (Session["kullanici"] != null && Session["kalanSure"] != null && (int)Session["kalanSure"] < 30)
+                {
+                    <li class="nav-item active font-weight-bold">
+                        Lisans süreniz bitiyor.
+                        <br>
+                        @Session["kalanSure"] gün kaldı.
+                    </li>
+                }
+                @if (Session["kullanici"] != null)
+                {
+                    <li class="nav-item active font-weight-bold">
+                        <a class="nav-link" href="/Security/Logout">GÜVENLİ ÇIKIŞ</a>
+                    </li>
+                }
+
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        KULLANICI İŞLEMLERİ
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">MENÜ 1</a>
+                        <a class="dropdown-item" href="#">MENÜ 2</a>
+                        <a class="dropdown-item" href="#">MENÜ 3</a>
+
+                    </div>
+                </li>
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @HttpContext.Current.User.Identity.Name
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link" href="/Security/Logout">Çıkış Yapınız</a>
+                    </div>
+            </ul>
+        </div>
+    </nav>*@
+
+
+

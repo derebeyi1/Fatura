@@ -1,0 +1,127 @@
+﻿@model Fatura.Entity.kullanici
+@using Fatura.BLL;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        function validation() {
+            if (document.getElementById('kullanici_mail').value == "")
+                window.alert("Mail adresinizi giriniz.");
+            else
+                window.location.href = '/Security/SifremiUnuttum?kullanici_mail=' + document.getElementById('kullanici_mail').value;
+        }
+    </script>
+</head>
+
+<body>
+    <div id="login">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="" method="post">
+                            @Html.AntiForgeryToken()
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <h3 class="text-info">Giriş Yapınız</h3>
+                            <div class="form-group">
+                                <label for="Email" class="text-info">Mail adresiniz</label>
+                                @Html.TextBoxFor(m => m.kullanici_mail, new { @class = "form-control ", placeholder = "Mail Adresinizi Giriniz...", @required = "required" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Password" class="text-info">Şifreniz</label>
+                                @Html.PasswordFor(m => m.sifre, new { @class = "form-control ", placeholder = "Şifrenizi Giriniz...", @required = "required" })
+                            </div>
+                            <h3 class="text-center text-danger">@ViewBag.Mesaj</h3>
+                            @if (((string)(ViewBag.Mesaj ?? "")).Contains("Hesabın aktivasyonu yapılmamıştır."))
+                            {
+                                <a class="tekrarDogrula btn btn-outline-warning  pl-3 m-3" href="javascript:;">Aktivasyon Kodu Gönder</a>
+                            }
+                            @if (ViewBag.captchaResmi != null && ViewBag.captchaResmi != "")
+                            {
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="~/Content/temp/@ViewBag.captchaResmi" width="70" id="captchaFileName" name="captchaFileName" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" placeholder="İşlemin sonucunu giriniz." class="form-control" id="captcha" name="captcha" />
+                                        <input type="hidden" id="captchaFileName" name="captchaFileName" value="@ViewBag.captchaResmi" />
+                                    </div>
+                                </div>
+                            }
+                            <label class="checkbox login">
+                                <input type="checkbox" id="rememberme" checked="checked" value="remember-me" />
+                                Beni Hatırla
+                            </label>
+                            <div class="form-row p-1">
+                                <button type="submit" class="btn btn-success  pl-3 m-3">Giriş</button>
+                                @*<a class="btn btn-outline-warning  pl-3 m-3" href="/Security/SifremiUnuttum">Şifremi Unuttum</a>*@
+                                <a class="btn btn-outline-warning  pl-3 m-3" href="javascript:;" onclick="validation()">Şifremi Unuttum</a>
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            @if (Session["kullanici"] == null)
+                            {
+                                if (Request.Url.Host.Split('.')[0] == Utilities.rootURL)
+                                {
+                                    <h3 class="text-center text-info">E-Ticaret sistemimizi denemek için lütfen ücretsiz kayıt olunuz.</h3>
+                                    <div class="form-row p-1">
+                                        <a class="btn btn-primary  pl-3 m-3" href="/Security/KullaniciKayit?id=0">Kayıt Ol (Firma)</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <h3 class="text-center text-info">Alışverişe başlamak için lütfen ücretsiz kayıt olunuz.</h3>
+                                    <div class="form-row p-1">
+                                        <a class="btn btn-primary  pl-3 m-3" href="/Security/MusteriKayit?id=0">Kayıt Ol (Müşteri)</a>
+                                    </div>
+                                }
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>*@
+
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $(".tekrarDogrula").click(function () {
+            window.location.href = '/Security/TekrarDogrula?mail=' + document.getElementById('kullanici_mail').value;
+        })
+        //    debugger;
+        //    var $buttonClicked = $(this);
+        //    var mail = $("#kullanici_mail").val();
+        //    var options = { "backdrop": "static", keyboard: true };
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/Security/TekrarDogrula",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: JSON.stringify({ "mail": mail }),
+        //        datatype: "json",
+        //        success: function (data) {
+        //            debugger;
+        //            //$('#myModalContent').html(data);
+        //            //$('#myModal').modal(options);
+        //            //$('#myModal').modal('show');
+        //        },
+        //        error: function () {
+        //            alert("Beklenmedik hata oluştu. CariFormu");
+        //        }
+        //    });
+        //})
+    });
+</script>

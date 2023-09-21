@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "SatisGrafik";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+
+<h2>SatisGrafik</h2>
+
+<body>
+    <div style="text-align: center">
+        <canvas id="barcanvas"></canvas>
+    </div>
+    <div style="text-align: center">
+        Disclaimer:- This data is for demo it is
+        not real data it wont relate to any company
+    </div>
+</body>
+
+<script>
+
+        var barChartData =
+            {
+                labels: [@Html.Raw(ViewBag.ObjectName)], //the names displayed on the x-axis, see images below
+                datasets: [{
+                    label: 'ProductWise Sales Count',
+                    backgroundColor: [
+                        "#f990a7",
+                        "#aad2ed",
+                        "#9966FF",
+                        "#99e5e5",
+                        "#f7bd83",
+                    ],
+                    borderWidth: 2,
+                    data: [@ViewBag.Data]  //what you returned back from controller. values displayed on the y-axis, see images below
+                }]
+            };
+
+            window.onload = function () {
+                var ctx1 = document.getElementById("barcanvas").getContext("2d");
+                window.myBar = new Chart(ctx1,
+                    {
+                        type: 'bar',
+                        data: barChartData,
+                        options:
+                            {
+                                title:
+                                {
+                                    display: true,
+                                    text: "ProductWise Sales Count"
+                                },
+                                responsive: true,
+                                maintainAspectRatio: true
+                            }
+                    });
+            }
+</script>  

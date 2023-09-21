@@ -1,0 +1,66 @@
+﻿@model Fatura.Entity.kullanici
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/siteozel.css" rel="stylesheet" />*@
+    @{
+        ViewBag.Title = "FirmaListesi";
+        Layout = "~/Views/Shared/_MasterPage.cshtml";
+    }
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+    <div class=" container">
+
+        <h3 class="text-center text-info">E-FATURA KAYIT SİSTEMİNE HOŞGELDİNİZ</h3>
+        <br>
+        <form class="form" action="" method="post">
+            @*@Html.AntiForgeryToken()*@
+            <div class="form-row">
+                <div class="form-group col-lg-10">
+                    <h2 style="color: darkblue">Sayın @Model.ad @Model.soyad (@Model.kullanici_mail)</h2>
+                    <h3>@ViewBag.Mesaj</h3>
+                    <h3>@ViewBag.mailMesaj</h3>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-10">
+                    <label class="text-info">Doğrulama Kodunuz*</label>
+                    @Html.TextBoxFor(m => m.activationcode2, new { @class = "form-control ", placeholder = "Doğrulama Kodunuzu Giriniz*", @required = "required" })
+                    @Html.ValidationMessageFor(m => m.activationcode2)
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-info">Tamam</button>
+            <br />
+            <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+        </form>
+    </div>
+    @*<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>*@
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Silindi")
+            toastr_mesaj("Kullanıcı başarıyla silindi.", "success", 3000);
+        else if (mesaj == "Eklendi")
+            toastr_mesaj("Kullanıcı başarıyla eklendi.", "success", 3000);
+        else if (mesaj == "Guncellendi")
+            toastr_mesaj("Kullanıcı başarıyla güncellendi.", "success", 3000);
+        else if (mesaj.startsWith("Kullanıcı bilgileri başarıyla kaydedildi."))
+            toastr_mesaj(mesaj, "success", 3000);        
+        else if (mesaj != "") {
+            toastr_mesaj(mesaj, "error", 3000);
+        }
+    });
+</script>

@@ -1,0 +1,38 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<Fatura.Entity.birimler>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/shared/_MasterPage.cshtml";
+}
+<br><br>
+<h3>Birimler</h3>
+<p>
+    @using (Html.BeginForm("Index", "Birimler", FormMethod.Get))
+    {
+    <b>Aranacak Ad:</b>@Html.TextBox("p");
+        <input type="submit" value="Arama" />
+    }
+
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Birinci kolon</th>
+            <th>İkinci kolon</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var birimler in Model)
+        {
+            <tr>
+                <td>@birimler.donusum_kodu</td>
+                <td>@birimler.adi</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+@*@Html.PagedListPager(Model, i => Url.Action("Index", "Birimler", new { i, arama = Request.QueryString["arama"] }))*@
+@Html.PagedListPager((IPagedList)Model, sayfa => Url.Action("Index", new { sayfa }))

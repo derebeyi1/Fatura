@@ -1,0 +1,260 @@
+﻿@using Fatura.Entity
+@*@model List<cari>*@
+@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<cari>
+@using Fatura.BLL
+
+<h3>Cari Bul</h3>
+@*<div id="dvCariListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">*@
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td width="30%">
+                Cari adına göre: <input type="text" id="cari_adi1" name="cari_adi1" />
+                @*@Html.TextBox("SearchString", null, new { style = "width: 100px;" })*@
+                @*<input type="submit" class="cariBul1 btn btn-info" value="Ara" />*@
+                <a href="javascript:void(0);" class="cariBul1 btn btn-info fa fa-search"></a>
+            </td>
+        </tr>
+    </table>
+}
+<table class="table table-bordered table-striped table-hover table-condensed" border="1" id="dataTable">
+    <thead>
+        <tr>
+            <th>İşlem</th>
+            <th>@Html.ActionLink("Cari Adı", "CariListesi", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+            <th>@Html.ActionLink("Cari VKN/TCKN", "CariListesi", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+            <th style="color:Highlight">Cari Tipi</th>
+            <th style="color:Highlight">Mükellef mi?</th>
+            <th style="color:Highlight">Kilitli mi?</th>
+            <th style="color:Highlight">Açık Hesap mı?</th>
+            <th style="color:Highlight">E-Mail Adresi</th>
+            <th style="color:Highlight">Cep No</th>
+            @*@if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">Silinmiş mi?</th>
+                }*@
+            @*<th style="color:Highlight">İşlemler</th>*@
+            <th style="visibility: hidden;width: 1px">Stok ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cari in Model)
+        {
+            <tr id="row_@cari.id">
+                <td><a href="javascript:void(0);" class="cariSec btn btn-info" data-id="@cari.id||||@cari.ad @cari.soyad||||@cari.tip||||@cari.vergi_numarasi||||@cari.mukellefmi">Seç</a></td>
+                <td>@cari.ad @cari.soyad</td>
+                <td>@cari.vergi_numarasi</td>
+                <td>
+                    @{ switch ((int)cari.tip)
+                        {
+                            case 0: <label>Ticari</label>
+                                break;
+                            case 1: <label style="color:blue">Müstahsil</label>
+                                break;
+                        }
+                    }
+                </td>
+                <td>
+                    @if (cari.mukellefmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>
+                    @if (cari.kilitlimi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>
+                    @if (cari.acikhesapmi == true)
+                    {
+                        @:<label style="color:red">Evet</label>
+                    }
+                    else
+                    {
+                        @:Hayır
+                    }
+                </td>
+                <td>@cari.cari_mail</td>
+                <td>@cari.cep_no</td>
+                @*@if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                    {
+                        <td>
+                            @if (cari.isdeleted == true)
+                            {
+                                @:<label style="color:red">Evet</label>
+                            }
+                            else
+                            {
+                                @:Hayır
+                            }
+                        </td>
+                    }*@
+                @*<td>
+                        <div class="row" style="width:200px;">
+                            <div class="col-md-6">
+                                @Html.ActionLink("Güncelle", "Guncelle", new { id = cari.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-success mx-2" })
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@cari.id">
+                                    Sil
+                                </button>
+                                <div class="modal fade" id="Sil_@cari.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Stok Sil</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4>Stoğu silmek istiyor musunuz?</h4>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                @Html.ActionLink("Sil", "Sil", new { id = cari.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+@*@Html.PagedListPager((IPagedList)Model, page => Url.Action("StokListesi", "Stok", new { page }))
+    @Html.PagedListPager((IPagedList)Model, _sayfaNo => Url.Action("StokListesi", new { SayfaNo = _sayfaNo }))
+    @Html.PagedListPager(Model, _sayfaNo => Url.Action("StokListesi", "Stok", new { SayfaNo = _sayfaNo }), new PagedListRenderOptions { LinkToFirstPageFormat = "<< İlk", LinkToPreviousPageFormat = "< Önceki", LinkToNextPageFormat = "Sonraki >", LinkToLastPageFormat = "Son >>" })*@
+<div id="myPager" class="row">
+    <div class="col-sm-12 col-md-6">
+        @Html.PagedListPager(Model, _sayfaNo => Url.Action("CariBul", "Fatura", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }),
+            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "myModalContent" }))
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <BR>
+        Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+    </div>
+</div>
+@*</div>*@
+<script>
+    $(".cariBul1").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var searchString = $("#cari_adi1").val();
+        //if (cari_adi.trim().length > 2) {
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "POST",
+            url: "/Fatura/CariBul",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ "searchString": searchString }),
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                //$("#cari_adi1").val("");
+                $('#myModalContent').html(data);
+                $('#myModal').modal(options);
+                $('#myModal').modal('show');
+
+            },
+            error: function () {
+                alert("Beklenmedik hata oluştu. CariFormu");
+            }
+        });
+        //}
+        //else {
+        //    alert("Cari adı alanına en az 3 harf giriniz.");
+        //};
+    });
+    $(".cariSec").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var id = $buttonClicked.attr('data-id');
+        var res = id.split("||||");
+        //alert(":1:>" + res[0]);
+        //alert(":2:>" + res[1]);
+        //alert(":3:>" + res[2]);
+        debugger;
+        $("#cari_id").val(res[0]);
+        $("#cari_adi").val(res[1]);
+        var cari_vkn = res[3];
+        AliasDoldur("fatura_alias", cari_vkn);
+        if (res[2] == 1) { //cari tipi 1 ise fatura_tipi müstahsil set ediliyor
+            $("#fatura_tipi").val("5");
+            //toastr_mesaj('Müstahsil cari seçtiniz. Faturanın tipi E-Müstahsil olarak ayarlandı.', "warning", 3000);
+            $('.mustahsil').show();
+            $('.vergi').hide();
+            //toastr.options = {
+            //    "closeButton": true,
+            //    "debug": false,
+            //    "newestOnTop": false,
+            //    "progressBar": true,
+            //    "positionClass": "toast-top-full-width",
+            //    "preventDuplicates": false,
+            //    "onclick": null,
+            //    "showDuration": "3000",
+            //    "hideDuration": "3000",
+            //    "timeOut": "3000",
+            //    "extendedTimeOut": "3000",
+            //    "showEasing": "swing",
+            //    "hideEasing": "linear",
+            //    "showMethod": "fadeIn",
+            //    "hideMethod": "fadeOut"
+            //}
+            //toastr["info"]("<span style='font-size:120%'>Müstahsil carisi seçtiniz. Faturanın tipi E-Müstahsil olarak ayarlandı.</span>")
+            toastr_mesaj("<span style='font - size: 120 %'>Müstahsil carisi seçtiniz. Faturanın tipi E-Müstahsil olarak ayarlandı.</span>", "warning", 3000);
+        } else {
+            if (res[4] == 1 || res[4] == true || res[4] == 'True') {
+                $("#fatura_tipi").val("2");
+                toastr_mesaj('Mukellef cari seçtiniz. Faturanın tipi E-Fatura olarak ayarlandı.', "warning", 3000);
+            }
+            else {
+                $("#fatura_tipi").val("1");
+                toastr_mesaj('Ticari cari seçtiniz. Faturanın tipi E-Arşiv olarak ayarlandı.', "warning", 3000);
+            }
+            $('.vergi').show();
+            $('.mustahsil').hide();
+        }
+        $('#seri').focus();
+        $('#myModal').modal('hide');
+        //$('#dataTable tr').each(function () {
+        //    var customerId = $(this).find("td:second").html();
+        //});
+        //var options = { "backdrop": "static", keyboard: true };
+        //$.ajax({
+        //    type: "POST",
+        //    url: "/Fatura/CariBul",
+        //    contentType: "application/json; charset=utf-8",
+        //    data: JSON.stringify({ "cari_adi": cari_adi }),
+        //    datatype: "json",
+        //    success: function (data) {
+        //        debugger;
+        //        $("#cari_adi1").val("");
+        //        $('#myModalContent').html(data);
+        //        $('#myModal').modal(options);
+        //        $('#myModal').modal('show');
+
+        //    },
+        //    error: function () {
+        //        alert("Beklenmedik hata oluştu. CariFormu");
+        //    }
+        //});
+    });
+</script>
+

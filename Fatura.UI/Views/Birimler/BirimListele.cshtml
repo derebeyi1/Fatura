@@ -1,0 +1,49 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<Fatura.Entity.birimler>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/shared/_MasterPage.cshtml";
+}
+
+<h2>Birim Listele</h2>
+<div class="row">
+    <div class="col-md-7">
+        @Html.ActionLink("Yeni Birim Ekle", "Yeni", "Birimler", new { @class = "btn btn-success" })
+    </div>
+    <div class="col-md-5">
+        <p>
+            @using (Html.BeginForm("BirimListele", "Birimler", FormMethod.Get))
+            {
+                <b>Aranacak Birim Adı : </b> @Html.TextBox("p");
+                <input type="submit" value="Arama" />
+            }
+
+        </p>
+    </div>
+</div>
+<table class="table table-bordered table-striped ">
+    <thead>
+        <tr>
+            <th>Birim Kodu</th>
+            <th>Birim Adı</th>
+            <th>Güncelle</th>
+            <th> Sil </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var birimler in Model)
+        {
+        <tr>
+            <td>@birimler.donusum_kodu</td>
+            <td>@birimler.adi</td>
+            <td>@Html.ActionLink("Güncelle", "Guncelle", "Birimler", new { id = birimler.id }, new { @class = "btn btn-success" })</td>
+            <td><a class=" btn btn-danger " data-id="@birimler.id">Sil</a></td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+@*@Html.PagedListPager(Model, i => Url.Action("Index", "Birimler", new { i, arama = Request.QueryString["arama"] }))*@
+@Html.PagedListPager((IPagedList)Model, sayfa => Url.Action("BirimListele", new { sayfa }))

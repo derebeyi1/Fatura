@@ -1,0 +1,1401 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using Fatura.Entity
+@model PagedList.IPagedList<fatura>
+@using Fatura.BLL
+
+<BR>
+@{
+    ViewBag.Title = "FaturaListesi";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<div id="dvFaturaListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+
+
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="30%">
+                    <span style="font-size:x-large;font-weight:bold">Fatura Listesi</span> @Html.ActionLink(" ", "Yeni", null, new { @class = "btn btn-success mx-2 fa fa-plus", @title = "Yeni Fatura Oluştur" })
+                </td>
+                <td width="30%">
+                    Sayfada
+                    <select id="SayfaKayitSayisi" name="SayfaKayitSayisi">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    kayıt göster.
+                </td>
+                <td width="30%">
+                    Fatura Bul: @Html.TextBox("SearchString", null, new { style = "width: 100px;" })
+                    @*<input type="submit" class="btn btn-info" value="Ara" />*@
+                    <button type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </td>
+                <td>
+                    @*<input type="button" class="SecilenGonder btn btn-info mx-3 fa fa-paper-plane" title="Seçilen Faturaları Gönder" data-id="" value="">*@
+                    <a href="javascript:0" class="SecilenGonder btn btn-info mx-3 fa fa-paper-plane" title="Seçilen Faturaları Gönder" data-id=""></a>
+                    @*<button type="submit" data-id="" class="SecilenGonder btn btn-info mx-2 fa fa-paper-plane" title="Seçilen Faturaları Gönder"></button>*@
+                </td>
+                <td>
+                    @*<input type="button" class="SecilenDurumGuncelle btn btn-outline-success mx-3" data-id="" value="Seçilenlerin Durumunu Sorgula">*@
+                    <a href="javascript:0" class="SecilenDurumGuncelle btn btn-info mx-2 fa fa-refresh" title="Seçilen Faturaların Durumunu Sorgula" data-id=""></a>
+                    @*<button type="submit" data-id="" class="SecilenDurumGuncelle btn btn-info mx-2 fa fa-refresh" title="Seçilen Faturaların Durumunu Sorgula"></button>*@
+                </td>
+            </tr>
+        </table>
+    }
+
+    <table class="table table-bordered align-baseline" id="dataTable">
+        <thead>
+            <tr>
+                <th><input title="Hepsini Seç" id="secHepsi" type="checkbox" class="largerCheckbox" /></th>
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">VKN/TCKN</th>
+                }
+                <th scope="col">@Html.ActionLink("Cari / Alias", "FaturaListesi", new { sortOrder = ViewBag.CariAdiSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">Döviz Cinsi/Kuru</th>
+                <th style="color:Highlight">İskonto</th>
+                <th style="color:Highlight">KDV / Tevkifat</th>
+                <th style="color:Highlight">ÖTV / ÖİV</th>
+                <th>@Html.ActionLink("Toplam Fiyat", "FaturaListesi", new { sortOrder = ViewBag.ToplamFiyatSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">Seri-Sıra</th>
+                <th>@Html.ActionLink("Belge No", "FaturaListesi", new { sortOrder = ViewBag.BelgeNoParm, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Fatura Tarihi", "FaturaListesi", new { sortOrder = ViewBag.FaturaTarihiSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Fatura Tipi", "FaturaListesi", new { sortOrder = ViewBag.FaturaTipiSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                @if (ViewBag.MustahsilVar != null)
+                {
+                    <th style="color:Highlight">GVS</th>
+                    <th style="color:Highlight">BTU</th>
+                    <th style="color:Highlight">MFV</th>
+                    <th style="color:Highlight">SGK</th>
+                }
+                else if (ViewBag.SMMVar != null)
+                {
+                    <th style="color:Highlight">GVS</th>
+                }
+                @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                {
+                    <th style="color:Highlight">Silinmiş mi?</th>
+                }
+                <th style="color:Highlight">E-Fatura Durumu</th>
+                <th style="color:Highlight">İşlemler</th>
+                <th style="visibility: hidden;width: 1px">Fatura ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fatura in Model)
+            {
+                faturaEntities db = new faturaEntities();
+                fatura.doviz_cinsi_ack = db.dovizlers.Find(fatura.doviz_id).kod;
+                <tr id="row_@fatura.id">
+                    @if (fatura.fatura_onaykontrol != null && fatura.fatura_guid != null && fatura.fatura_guid != ""
+                        && fatura.belgeno != null && fatura.belgeno != "" && (fatura.fatura_durum != "Hata"))
+                    {
+                        <td><label class="checkBoxcontainer"></label><input type="checkbox" id="drm_@fatura.id" name="@fatura.id" class="drm" /><span class="checkmark"></span></td>
+                    }
+                    else
+                    {
+                        <td><label class="checkBoxcontainer"></label><input type="checkbox" id="gnd_@fatura.id" name="@fatura.id" class="gnd" /><span class="checkmark"></span></td>
+                    }
+                    @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                    {
+                        <td>@fatura.vkn_tckn</td>
+                    }
+                    <td>
+                        @fatura.cari_adi
+                        <input type="hidden" id="cari_adi_@fatura.id" name="cari_adi_@fatura.id" value="@fatura.cari_adi" />
+                        @{
+                            var alias = (fatura.fatura_alias == null || fatura.fatura_alias == "") ? "" : " / " + fatura.fatura_alias;
+                        }
+                        @alias
+                        <input type="hidden" id="fatura_tipi_@fatura.id" name="fatura_tipi_@fatura.id" value="@fatura.fatura_tipi" />
+                        <input type="hidden" id="fatura_onaykontrol_@fatura.id" name="fatura_onaykontrol_@fatura.id" value="@fatura.fatura_onaykontrol" />
+                    </td>
+                    <td>@fatura.doviz_cinsi_ack / @fatura.doviz_kuru</td>
+                    <td>@decimal.Round((decimal)fatura.toplam_iskonto, 4, MidpointRounding.AwayFromZero)</td>
+                    <td>@decimal.Round((decimal)fatura.toplam_kdvtutar, 4, MidpointRounding.AwayFromZero)/ @decimal.Round((decimal)fatura.toplam_tevkifat, 4, MidpointRounding.AwayFromZero)</td>
+                    <td>@decimal.Round((decimal)fatura.toplam_otvtutar, 4, MidpointRounding.AwayFromZero)/ @decimal.Round((decimal)fatura.toplam_oivtutar, 4, MidpointRounding.AwayFromZero)</td>
+                    <td>
+                        @decimal.Round((decimal)fatura.toplam_fiyat, 4, MidpointRounding.AwayFromZero)
+                        <input type="hidden" id="toplam_fiyat_@fatura.id" name="toplam_fiyat_@fatura.id" value="@fatura.toplam_fiyat" />
+                    </td>
+                    <td class="serisira_@fatura.id">@fatura.seri-@fatura.sira_no</td>
+                    <td class="belgeno_@fatura.id">@fatura.belgeno</td>
+                    <td>@fatura.fatura_tarihi</td>
+                    <td>
+                        @if (fatura.fatura_tipi == Utilities.EMustahsil)
+                        {
+                            @:<label style="color:blue">@Utilities.FaturaTipleri[(int)fatura.fatura_tipi]</label>
+                        }
+                        else if (fatura.fatura_tipi == Utilities.EIhracat)
+                        {
+                            @:<label style="color:coral">@Utilities.FaturaTipleri[(int)fatura.fatura_tipi]</label>
+                        }
+                        else if (fatura.fatura_tipi == Utilities.EIrsaliye)
+                        {
+                            @:<label style="color:lawngreen">@Utilities.FaturaTipleri[(int)fatura.fatura_tipi]</label>
+                        }
+                        else
+                        if (fatura.fatura_tipi == Utilities.ESMM)
+                        {
+                            @:<label style="color:yellowgreen">@Utilities.FaturaTipleri[(int)fatura.fatura_tipi]</label>
+                        }
+                        else
+                        {
+                            @fatura.fatura_tipi_ack;
+                        }
+                    </td>
+                    @if (ViewBag.MustahsilVar != null)
+                    {
+                        if ((decimal)fatura.toplam_gvstutar != 0)
+                        {
+                            <td>
+                                @decimal.Round((decimal)fatura.toplam_gvstutar, 4, MidpointRounding.AwayFromZero)
+                                <input type="hidden" id="toplam_gvstutar_@fatura.id" name="toplam_gvstutar_@fatura.id" value="@fatura.toplam_gvstutar" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        if ((decimal)fatura.toplam_btututar != 0)
+                        {
+                            <td>
+                                @decimal.Round((decimal)fatura.toplam_btututar, 4, MidpointRounding.AwayFromZero)
+                                <input type="hidden" id="toplam_btututar_@fatura.id" name="toplam_btututar_@fatura.id" value="@fatura.toplam_btututar" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        if ((decimal)fatura.toplam_mfvtutar != 0)
+                        {
+                            <td>
+                                @decimal.Round((decimal)fatura.toplam_mfvtutar, 4, MidpointRounding.AwayFromZero)
+                                <input type="hidden" id="toplam_mfvtutar_@fatura.id" name="toplam_mfvtutar_@fatura.id" value="@fatura.toplam_mfvtutar" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        if ((decimal)fatura.toplam_sgktutar != 0)
+                        {
+                            <td>
+                                @decimal.Round((decimal)fatura.toplam_sgktutar, 4, MidpointRounding.AwayFromZero)
+                                <input type="hidden" id="toplam_sgktutar_@fatura.id" name="toplam_sgktutar_@fatura.id" value="@fatura.toplam_sgktutar" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else if (ViewBag.SMMVar != null)
+                    {
+                        if ((decimal)fatura.toplam_gvstutar != 0)
+                        {
+                            <td>
+                                @decimal.Round((decimal)fatura.toplam_gvstutar, 4, MidpointRounding.AwayFromZero)
+                                <input type="hidden" id="toplam_gvstutar_@fatura.id" name="toplam_gvstutar_@fatura.id" value="@fatura.toplam_gvstutar" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                    {
+                        <td>
+                            @if (fatura.isdeleted == true)
+                            {
+                                @:<label style="color:red">Evet</label>
+                            }
+                            else
+                            {
+                                @:Hayır
+                            }
+                        </td>
+                    }
+                    <td class="durum_@fatura.id">
+                        <div class="row">
+                            <div>
+                                @if (fatura.fatura_durum == "Hata")
+                                {
+                                    <span style="color:red; font:bold 20px; font-size: 120%">@fatura.fatura_durum.Trim()</span>
+                                }
+                                else if (fatura.fatura_durum == "İmzalandı" || fatura.fatura_durum == "Onaylandı")
+                                {
+                                    <span style="color:limegreen; font:bold 20px; font-size: 120%">@fatura.fatura_durum.Trim()</span>
+                                }
+                                else
+                                {
+                                    @fatura.fatura_durum.Trim()
+                                }
+                            </div>
+                            <div>
+                                @if (fatura.mail_gittimi != null && (bool)fatura.mail_gittimi)
+                                {
+                                    @:<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                    <td width="15%" class="butonlar_@fatura.id">
+                        @if ((fatura.fatura_onaykontrol != null && fatura.fatura_guid != null && fatura.fatura_guid != ""
+                            && fatura.belgeno != null && fatura.belgeno != "")
+                            && fatura.fatura_durum != "Hata")
+                        //&& (fatura.fatura_durum == "Onaylandı" || fatura.fatura_durum == "İmzalandı" || fatura.fatura_durum == "Hata"))
+                        //&& ((fatura.fatura_tipi == Utilities.EMustahsil && fatura.fatura_onaykontrol != 6)
+                        //|| (fatura.fatura_tipi == Utilities.EIrsaliye && fatura.fatura_onaykontrol != 9)
+                        //|| (fatura.fatura_tipi != Utilities.EMustahsil && fatura.fatura_tipi != Utilities.EIrsaliye && fatura.fatura_onaykontrol != 12))) //TODO
+                        {
+                            <div class="row">
+                                <div>
+                                    @*<input type="button" id="GetFaturaForPrint_@fatura.id" class="GetFaturaForPrint btn btn-success mx-3" data-id="@fatura.id" value="Yazdır">*@
+                                    <button type="submit" id="GetFaturaForPrint_@fatura.id" data-id="@fatura.id" class="GetFaturaForPrint btn btn-info mx-2 fa fa-print" title="Fatura Yazdır"></button>
+                                </div>
+                                @if ((fatura.fatura_durum != "Onaylandı" && fatura.fatura_durum != "İmzalandı" && fatura.fatura_durum != "Hata" && fatura.fatura_durum != "İptal Edildi")
+                                    //|| (fatura.fatura_tipi == Utilities.EMustahsil && fatura.fatura_onaykontrol != 4)
+                                    //|| (fatura.fatura_tipi == Utilities.EIrsaliye && fatura.fatura_onaykontrol != 6)
+                                    //|| (fatura.fatura_tipi != Utilities.EMustahsil && fatura.fatura_tipi != Utilities.EIrsaliye && fatura.fatura_onaykontrol != 7)
+                                    ) //TODO sadece fatura_durum kullansak olmazmı?
+                                {
+                                    <div>
+                                        @*<input type="button" id="DurumGuncelle_@fatura.id" class="DurumGuncelle btn btn-outline-success mx-3" data-id="@fatura.id" value="Durum Sorgula">*@
+                                        <button type="submit" id="DurumGuncelle_@fatura.id" data-id="@fatura.id" class="DurumGuncelle btn btn-info mx-2 fa fa-refresh" title="Fatura Durum Sorgula"></button>
+                                    </div>
+                                }
+                                @if ((fatura.fatura_durum == "Onaylandı" || fatura.fatura_durum == "İmzalandı" || fatura.fatura_durum == "Hata") && fatura.fatura_onaykontrol != Utilities.FaturaIptal)
+                                {
+                                    <div>
+                                        @*<input type="button" id="FaturaIptal_@fatura.id" class="FaturaIptal btn btn-success mx-3" data-id="@fatura.id" title="Faturayı iptal et" value="İptal">*@
+                                        <button type="submit" id="FaturaIptal_@fatura.id" data-id="@fatura.id" class="FaturaIptal btn btn-info mx-2 fa fa-trash" title="Faturayı İptal Et"></button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div>
+                                    @Html.ActionLink(" ", "Guncelle", new { id = fatura.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "guncelle_" + fatura.id + " btn btn-success mx-2 fa fa-pencil", @title = "Fatura Güncelle" })
+                                </div>
+                                <div>
+                                    <button type="button" class="sil_@fatura.id btn btn-danger fa fa-trash" title="Fatura Sil" data-toggle="modal" data-target="#Sil_@fatura.id">
+                                    </button>
+                                    <div class="modal" id="Sil_@fatura.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Fatura Sil</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h4>Faturayı silmek istiyor musunuz?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                    @Html.ActionLink("Sil", "Sil", new { id = fatura.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @*<input type="button" id="FaturaGonder_@fatura.id" class="FaturaGonder btn btn-info mx-3 fa fa-paper-plane" data-id="@fatura.id" value="Gönder">*@
+                                    <button type="submit" id="FaturaGonder_@fatura.id" data-id="@fatura.id" class="FaturaGonder btn btn-info mx-2 fa fa-paper-plane-o" title="Fatura Gönder"></button>
+                                </div>
+                                @if ((fatura.fatura_durum == "Onaylandı" || fatura.fatura_durum == "İmzalandı" || fatura.fatura_durum == "Hata") && fatura.fatura_onaykontrol != Utilities.FaturaIptal)
+                                {
+                                    <div>
+                                        @*<input type="button" id="FaturaIptal_@fatura.id" class="FaturaIptal btn btn-success mx-2" data-id="@fatura.id" title="Faturayı iptal et" value="İptal">*@
+                                        <button type="submit" id="FaturaIptal_@fatura.id" data-id="@fatura.id" class="FaturaIptal btn btn-warning mx-2 fa fa-ban" title="Faturayı İptal Et"></button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("FaturaListesi", "Fatura", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+    <BR>
+</div>
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"></h4>
+                <a href="javascript:void(0);" class="CloseModal btn btn-info" data-dismiss="modal">&times;</a>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Yazdır" onclick="printDiv('#myModalContent')">
+                <button type="button" class="CloseModal btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var fgdene = 0;
+        var sgdene = 0;
+        var fsdene = 0;
+        var ssene = 0;
+        debugger;
+        var mesaj = "@TempData["mesaj"]";
+        if (mesaj != "") {
+            var mesaj1 = mesaj.split("||||");
+            toastr_mesaj(mesaj1[0], mesaj1[1], 3000);
+        }
+        $('#secHepsi').click(function (e, param) {
+            debugger;
+            var check = param;
+            if ($("input:checkbox").prop("checked")) {
+                $(".drm").prop("checked", true);
+                $(".gnd").prop("checked", true);
+            } else {
+                $(".drm").prop("checked", false);
+                $(".gnd").prop("checked", false);
+            }
+        });
+        $(".drm").on("change", function () {
+            debugger;
+            var total_check_boxes = $(".drm").length + $(".gnd").length;
+            var total_checked_boxes = $(".drm:checked").length + $(".gnd:checked").length;
+            if (total_check_boxes === total_checked_boxes) {
+                $("#secHepsi").prop("checked", true);
+            }
+            else {
+                $("#secHepsi").prop("checked", false);
+            }
+        });
+        $(".gnd").on("change", function () {
+            debugger;
+            var total_check_boxes = $(".drm").length + $(".gnd").length;
+            var total_checked_boxes = $(".drm:checked").length + $(".gnd:checked").length;
+            if (total_check_boxes === total_checked_boxes) {
+                $("#secHepsi").prop("checked", true);
+            }
+            else {
+                $("#secHepsi").prop("checked", false);
+            }
+        });
+        $(".FaturaGonder").click(function (e, fatid) {
+            debugger;
+            faturaGonder($(this), fatid);
+        });
+        var faturaGonder = function (e, fatid) {
+            debugger;
+            var $buttonClicked = e;
+            $buttonClicked.attr('disabled', true);
+            var id = 0;
+            if (fatid != undefined && fatid != 0)
+                id = fatid;
+            else
+                id = $buttonClicked.attr('data-id');
+            var selectedIDs = new Array();
+            var rowFaturaTipi = $("#fatura_tipi_" + id).val();
+            var rowCariAdi = $("#cari_adi_" + id).val();
+            var rowGVS = $("#toplam_gvstutar_" + id).val();
+            var rowBTU = $("#toplam_btututar_" + id).val();
+            var rowMFV = $("#toplam_mfvtutar_" + id).val();
+            var rowSGK = $("#toplam_sgktutar_" + id).val();
+            if (rowGVS != null) { rowGVS = Number(rowGVS); } else { rowGVS = 0; }
+            if (rowBTU != null) { rowBTU = Number(rowBTU); } else { rowBTU = 0; }
+            if (rowMFV != null) { rowMFV = Number(rowMFV); } else { rowMFV = 0; }
+            if (rowSGK != null) { rowSGK = Number(rowSGK); } else { rowSGK = 0; }
+            //var rowMustahsilToplamVergi = Number(rowGVS) + Number(rowBTU) + Number(rowMFV) + Number(rowSGK);
+            var toplamfiyat = $("#toplam_fiyat_" + id).val();
+            if ((rowFaturaTipi != 5 && toplamfiyat > 0) || (rowFaturaTipi == 5 && rowGVS > 0 && rowBTU > 0 && rowMFV > 0 && rowSGK > 0)) //toplam vergi ya da toplam fiyat 0 ise fatura gönderilmiyor.
+            {
+                selectedIDs.push(id);
+                if (selectedIDs.length > 0) {
+                    toastr_mesaj("Fatura göderiliyor, lütfen bekleyiniz.", "success", 3000);
+                    $.ajax({
+                        type: "POST",
+                        url: '/Fatura/FaturaGonder',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ 'ids': selectedIDs }), //{ 'ids': selectedIDs }, { "id": id }
+                        datatype: "json",
+                        success: function (data) {
+                            debugger;
+                            $buttonClicked.attr('disabled', false);
+                            var mesaj = "";
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].status) {
+                                    if (data[i].returnvalue != "") {
+                                        debugger;
+                                        var len = data[i].returnvalue.length;
+                                        var seri = data[i].returnvalue.substring(0, 3);
+                                        var sira = data[i].returnvalue.substring(7, len);
+                                        var sira_no = parseInt(sira);
+                                        $(".sil_" + id).hide();
+                                        $(".guncelle_" + id).hide();
+                                        $(".serisira_" + id).html(seri + "-" + sira_no);
+                                        $(".belgeno_" + id).html(data[i].returnvalue);
+                                        $("#gnd_" + id).removeClass('gnd').addClass('drm');
+                                        $("#gnd_" + id).attr('id', 'drm_' + id);
+                                        //var btns = '<div class="row"><div><input type="button" id="GetFaturaForPrint_' + id + '" class="GetFaturaForPrint btn btn-success mx-3" data-id="' + id + '" value="Yazdır"></div>';
+                                        //btns += '<div><input type="button" id="DurumGuncelle_' + id + '" class="DurumGuncelle btn btn-outline-success mx-3" data-id="' + id + '" value="Durum Güncelle"></div></div>';
+                                        var btns = "";
+                                        btns += '<div class="row">'
+                                        btns += '	<div>'
+                                        btns += '		<input type="button" id="GetFaturaForPrint_' + id + '" class="GetFaturaForPrint btn btn-success mx-3" data-id="' + id + '" value="Yazdır">'
+                                        btns += '	</div>'
+                                        btns += '	<div>'
+                                        btns += '		<input type="button" id="DurumGuncelle_' + id + '" class="DurumGuncelle btn btn-outline-success mx-3" data-id="' + id + '" value="Durum Sorgula">'
+                                        btns += '	</div>'
+                                        btns += '</div>'
+                                        $(".butonlar_" + id).html(btns);
+                                        //$(document).on("click", "#DurumGuncelle_" + id, function () {
+                                        $(document).on("click", "#DurumGuncelle_" + id, function () {
+                                            debugger;
+                                            if (fgdene == 0) {
+                                                fgdene = fgdene + 1;
+                                                durumGuncelle($(this), id);
+                                            }
+                                        });
+                                        $(document).on("click", "#GetFaturaForPrint_" + id, function () {
+                                            debugger;
+                                            if (fgdene == 0) {
+                                                fgdene = fgdene + 1;
+                                                getFaturaForPrint($(this), id);
+                                            }
+                                        });
+                                        $buttonClicked.hide();
+                                        mesaj = data[i].returnvalue + " numaralı fatura başarıyla gönderildi. Durum sorgulama yapınız.";
+                                    }
+                                    else
+                                        mesaj = data[i].errordescription
+                                    toastr_mesaj(mesaj, "success", 4000);
+                                    debugger;
+                                    setTimeout(function () { durumGuncelle($(this), id); }, 1000);
+                                }
+                                else {
+                                    if (data[i].returnvalue != "")
+                                        mesaj = data[i].returnvalue + " numaralı fatura gönderilemedi";
+                                    else
+                                        mesaj = data[i].errordescription;
+                                    toastr_mesaj(mesaj, "error", 0);
+                                }
+                            }
+                        },
+                        error: function () {
+                            $buttonClicked.attr('disabled', false);
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                }
+                else
+                    toastr_mesaj("Lütfen fatura seçiniz.", "warning", 0);
+            }
+            else
+            {
+                toastr_mesaj(rowCariAdi + " için kestiğiniz fatura gönderilemedi, toplam tutar ya da vergi sıfır görünüyor, lütfen faturayı kontrol ediniz.", "warning", 3000);
+                $buttonClicked.attr('disabled', false);
+            }
+        }
+        $(".SecilenGonder").click(function () {
+            debugger;
+            var selectedIDs = [];
+            var id = "";
+            $("input:checkbox[class=gnd]:checked").each(function () {
+                debugger;
+                id = $(this).attr('name');
+                var rowFaturaTipi = $("#fatura_tipi_" + id).val();
+                var rowCariAdi = $("#cari_adi_" + id).val();
+                var rowFaturaOnayKontrol = $("#fatura_onaykontrol_" + id).val();
+                var rowGVS = $("#toplam_gvstutar_" + id).val();
+                var rowBTU = $("#toplam_btututar_" + id).val();
+                var rowMFV = $("#toplam_mfvtutar_" + id).val();
+                var rowSGK = $("#toplam_sgktutar_" + id).val();
+                if (rowGVS != null) { rowGVS = Number(rowGVS); } else { rowGVS = 0; }
+                if (rowBTU != null) { rowBTU = Number(rowBTU); } else { rowBTU = 0; }
+                if (rowMFV != null) { rowMFV = Number(rowMFV); } else { rowMFV = 0; }
+                if (rowSGK != null) { rowSGK = Number(rowSGK); } else { rowSGK = 0; }
+                //var rowMustahsilToplamVergi = Number(rowGVS) + Number(rowBTU) + Number(rowMFV) + Number(rowSGK);
+                var toplamfiyat = $("#toplam_fiyat_" + id).val();
+                if ((rowFaturaTipi != 5 && toplamfiyat > 0) || (rowFaturaTipi == 5 && rowGVS > 0 && rowBTU > 0 && rowMFV > 0 && rowSGK > 0)) //toplam vergi ya da toplam fiyat 0 ise fatura gönderilmiyor.
+                {
+                    debugger;
+                    if (rowFaturaOnayKontrol != 99) //Fatura iptal değil ise gönder
+                        selectedIDs.push(id);
+                    else
+                        toastr_mesaj(rowCariAdi + " için kestiğiniz fatura iptal edilmiştir. İptal edilmiş faturayı gönderemezsiniz.", "warning", 3000);
+                }
+                else {
+                    toastr_mesaj(rowCariAdi + " için kestiğiniz fatura gönderilemedi, toplam tutar ya da vergi sıfır görünüyor, lütfen faturayı kontrol ediniz.", "warning", 3000);
+                }
+            });
+            if (selectedIDs.length > 0) {
+                toastr_mesaj("Fatura göderiliyor, lütfen bekleyiniz.", "success", 5000);
+                var $buttonClicked = $(this);
+                $buttonClicked.attr('disabled', true);
+                $.ajax({
+                    type: "POST",
+                    url: '/Fatura/FaturaGonder',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'ids': selectedIDs }), //{ 'ids': selectedIDs }, { "id": id }
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $buttonClicked.attr('disabled', false);
+                        var mesajTrueR = "";
+                        var mesajFalseR = "";
+                        var mesajTrue = "";
+                        var mesajFalse = "";
+                        var id = 0;
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].status) {
+                                if (data[i].returnvalue != "") {
+                                    id = data[i].id;
+                                    mesajTrueR += data[i].returnvalue + "<br>";
+                                    var len = data[i].returnvalue.length;
+                                    var seri = data[i].returnvalue.substring(0, 3);
+                                    var sira = data[i].returnvalue.substring(7, len);
+                                    var sira_no = parseInt(sira);
+                                    $(".sil_" + id).hide();
+                                    $(".guncelle_" + id).hide();
+                                    $(".serisira_" + id).html(seri + "-" + sira_no);
+                                    $(".belgeno_" + id).html(data[i].returnvalue);
+                                    $("#gnd_" + id).removeClass('gnd').addClass('drm');
+                                    $("#gnd_" + id).attr('id', 'drm_' + id);
+                                    var btns = "";
+                                    btns += '<div class="row">'
+                                    btns += '	<div>'
+                                    btns += '		<input type="button" id="GetFaturaForPrint_' + id + '" class="GetFaturaForPrint btn btn-success mx-3" data-id="' + id + '" value="Yazdır">'
+                                    btns += '	</div>'
+                                    btns += '	<div>'
+                                    btns += '		<input type="button" id="DurumGuncelle_' + id + '" class="DurumGuncelle btn btn-outline-success mx-3" data-id="' + id + '" value="Durum Sorgula">'
+                                    btns += '	</div>'
+                                    btns += '</div>'
+                                    $(".butonlar_" + id).html(btns);
+                                    $(document).on("click", ".DurumGuncelle", function () {
+                                        debugger;
+                                        if (sgdene == 0) {
+                                            sgdene = sgdene + 1;
+                                            var id1 = $(this).attr('data-id');
+                                            durumGuncelle($(this), id1);
+                                        }
+                                    });
+                                    $(document).on("click", ".GetFaturaForPrint", function () {
+                                        debugger
+                                        if (sgdene == 0) {
+                                            sgdene = sgdene + 1;
+                                            var id1 = $(this).attr('data-id');
+                                            getFaturaForPrint($(this), id1);
+                                        }
+                                    });
+                                    $('table').find('input:checkbox').prop('checked', false);
+                                }
+                                else
+                                    mesajTrue = data[i].errordescription;
+                            }
+                            else {
+                                if (data[i].returnvalue != "")
+                                    mesajFalseR += data[i].returnvalue + "<br>";
+                                else
+                                    mesajFalse += data[i].errordescription + "<br>";
+                            }
+                        }
+                        $('table').find('input:checkbox').prop('checked', false);
+                        if (mesajTrueR != "") {
+                            toastr_mesaj(mesajTrueR + " numaralı fatura/faturalar başarıyla gönderildi.", "success", 5000);
+                            setTimeout(function () { secilenDurumGuncelle($(this), selectedIDs); }, 1000);
+                        }
+                        if (mesajFalseR != "")
+                            toastr_mesaj(mesajFalseR + " numaralı fatura/faturalar gönderilemedi.", "error", 0);
+                        if (mesajTrue != "")
+                            toastr_mesaj(mesajTrue, "success", 5000);
+                        if (mesajFalse != "")
+                            toastr_mesaj(mesajFalse, "error", 0);
+                        $buttonClicked.attr('disabled', false);
+                        $(this).closest('table').find('td input:checkbox').attr("checked", false);
+                        debugger;
+                    },
+                    error: function () {
+                        $buttonClicked.attr('disabled', false);
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else {
+                toastr_mesaj("Gönderilmiş ya da tutarı 0 olan fatura seçtiniz. Lütfen göndermek için uygun fatura seçiniz.", "warning", 3000);
+            }
+
+        });
+        $(".DurumGuncelle").click(function (e, fatid) {
+            debugger;
+            durumGuncelle($(this), fatid);
+        });
+        var durumGuncelle = function (e, fatid) {
+            debugger;
+            var $buttonClicked = e;
+            $buttonClicked.attr('disabled', true);
+            var id = 0;
+            if (fatid != undefined && fatid != 0)
+                id = fatid;
+            else
+                id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            var returnvalueArray = "";
+            var belgeno = "";
+            var ilkdurum = "";
+            var onaykontrol = "";
+            var mailgittimi = "";
+            var faturatipi = "";
+            var selectedIDs = new Array();
+            var rowFaturaTipi = $("#fatura_tipi_" + id).val();
+            var rowOnayKontrol = $("#fatura_onaykontrol_" + id).val();
+            var rowDurum = $(".durum_" + id).html();
+            //if (((rowFaturaTipi != 5 && rowOnayKontrol != 7) || (rowFaturaTipi == 5 && rowOnayKontrol != 4) || (rowFaturaTipi == 6 && rowOnayKontrol != 6)) && (rowDurum != 'İmzalandı' || rowDurum != 'Onaylandı')) //4 ve 7 Uyumsoft için imzalandi(müstahsil) ve onaylandi(normal earsiv) demek
+            if (rowDurum != 'İmzalandı' && rowDurum != 'Onaylandı') //4 ve 7 Uyumsoft için imzalandi(müstahsil) ve onaylandi(normal earsiv) demek
+                selectedIDs.push(id);
+            if (selectedIDs.length > 0) {
+                toastr_mesaj("Fatura durumları güncelleniyor, lütfen bekleyiniz.", "success", 3000);
+                $.ajax({
+                    type: "POST",
+                    url: '/Fatura/DurumGuncelle',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ "ids": selectedIDs, }),
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        fgdene = 0;
+                        sgdene = 0;
+                        $buttonClicked.attr('disabled', false);
+                        var mesaj = "";
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            var durum = "";
+                            if (data[i].status) {
+                                if (data[i].returnvalue != "")
+                                {
+                                    debugger;
+                                    returnvalueArray = data[i].returnvalue.split("||||"); //ar.returnvalue = fat.belgeno + "||||" + fat.fatura_durum + "||||" + fat.fatura_onaykontrol + "||||" + fat.mail_gittimi;
+                                    belgeno = returnvalueArray[0];
+                                    ilkdurum = returnvalueArray[1];
+                                    onaykontrol = returnvalueArray[2];
+                                    mailgittimi = returnvalueArray[3];
+                                    faturatipi = returnvalueArray[4];
+                                    mesaj = belgeno + " numaralı faturanın durumu başarıyla güncellendi.";
+                                    $(".belgeno_" + id).html(belgeno);
+                                    $("#fatura_onaykontrol_" + id).val(onaykontrol);
+
+                                    durum += '<div class="row">'
+                                    if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                        durum += '	<div>'
+                                        durum += '      <span style="color:limegreen; font:bold 20px; font-size: 120%">' + ilkdurum + '</span>'
+                                        durum += '	</div>'
+                                    }
+                                    else {
+                                        durum += '	<div>'
+                                        durum += ilkdurum
+                                        durum += '	</div>'
+                                    }
+                                    if (mailgittimi == "True") {
+                                        durum += '	<div>'
+                                        durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:limegreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                        durum += '	</div>'
+                                    }
+                                    durum += '</div>'
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+
+                                    //if (mailgittimi == "True") {
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '	<div>'
+                                    //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    $(".durum_" + id).html(durum);
+                                    //if (((faturatipi == 5 && onaykontrol == 4) || (faturatipi != 5 && onaykontrol == 7)) && (ilkdurum == "Onaylandı" || ilkdurum == "İmzalandı"))
+                                    if (ilkdurum == "Onaylandı" || ilkdurum == "İmzalandı") {
+                                        $("#DurumGuncelle_" + id).hide();
+                                        var btns = "";
+                                        btns += '<div class="row">'
+                                        btns += '    <div>'
+                                        btns += '        <input type="button" id="GetFaturaForPrint_' + id + '" class="GetFaturaForPrint btn btn-success mx-3" data-id="' + id + '" value="Yazdır">'
+                                        btns += '    </div>'
+                                        btns += '    <div>'
+                                        btns += '        <input type="button" id="FaturaIptal_' + id + '" class="FaturaIptal btn btn-success mx-3" data-id="' + id + '" title="Faturayı iptal et" value="İptal">'
+                                        btns += '    </div>'
+                                        btns += '</div>'
+                                        $(".butonlar_" + id).html(btns);
+                                        $(document).on("click", "#GetFaturaForPrint_" + id, function () {
+                                            debugger;
+                                            if (fsdene == 0) {
+                                                fsdene = fsdene + 1;
+                                                //var id1 = $(this).attr('data-id');
+                                                getFaturaForPrint($(this), id);
+                                            }
+                                        });
+                                        $(document).on("click", "#FaturaIptal_" + id, function () {
+                                            debugger;
+                                            if (fsdene == 0) {
+                                                fsdene = fsdene + 1;
+                                                //var id1 = $(this).attr('data-id');
+                                                faturaIptal($(this), id);
+                                            }
+                                        });
+                                    }
+                                    fgdene = 0;
+                                    sgdene = 0;
+                                }
+                                else
+                                    mesaj = data[i].errordescription
+                                toastr_mesaj(mesaj, "success", 4000);
+                            }
+                            else
+                            {
+                                if (data[i].returnvalue != "")
+                                {
+                                    returnvalueArray = data[i].returnvalue.split("||||"); //ar.returnvalue = fat.belgeno + "||||" + fat.fatura_durum + "||||" + fat.fatura_onaykontrol + "||||" + fat.mail_gittimi;
+                                    belgeno = returnvalueArray[0];
+                                    ilkdurum = returnvalueArray[1];
+                                    onaykontrol = returnvalueArray[2];
+                                    mailgittimi = returnvalueArray[3];
+                                    faturatipi = returnvalueArray[4];
+                                    $("#fatura_onaykontrol_" + id).val(onaykontrol);
+                                    //if (onaykontrol != 12)
+                                    if (ilkdurum != 'Hata')
+                                    {
+                                        debugger;
+                                        durum += '<div class="row">'
+                                        if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                            durum += '	<div>'
+                                            durum += '      <span style="color:limegreen; font:bold 20px; font-size: 120%">' + ilkdurum + '</span>'
+                                            durum += '	</div>'
+                                        }
+                                        else {
+                                            durum += '	<div>'
+                                            durum += ilkdurum
+                                            durum += '	</div>'
+                                        }
+                                        if (mailgittimi == "True") {
+                                            durum += '	<div>'
+                                            durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:limegreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                            durum += '	</div>'
+                                        }
+                                        durum += '</div>'
+                                        //durum += '<div class="row">'
+                                        //durum += '	<div>'
+                                        //if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                        //    durum += '<label style="color:limegreen; font:bold 20px; font-size: 120%>' + ilkdurum + '</label>'
+                                        //}
+                                        //else {
+                                        //    durum += ilkdurum
+                                        //}
+                                        //durum += '	</div>'
+                                        //if (mailgittimi == "True")
+                                        //{
+                                        //    durum += '	<div>'
+                                        //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                        //    durum += '	</div>'
+                                        //}
+                                        ////else
+                                        ////{
+                                        ////    durum += '<div class="row">'
+                                        ////    durum += '	<div>'
+                                        ////    durum += ilkdurum
+                                        ////    durum += '	</div>'
+                                        ////    durum += '</div>'
+                                        ////}
+                                        //durum += '</div>'
+                                        mesaj = belgeno + " numaralı faturanın durumu güncellenemedi.";
+                                    }
+                                    else
+                                    {
+                                        durum += '<div class="row">'
+                                        durum += '	<div>'
+                                        durum += '<label style="color:red">' + ilkdurum + '</label>'
+                                        durum += '	</div>'
+                                        durum += '</div>'
+                                        $(".sil_" + id).show();
+                                        $(".guncelle_" + id).show();
+                                        //$(".serisira_" + id).html(seri + "-" + sira_no);
+                                        $(".belgeno_" + id).html(belgeno);
+                                        $("#drm_" + id).removeClass('drm').addClass('gnd');
+                                        $("#drm_" + id).attr('id', 'gnd_' + id);
+                                        var btns = "";
+                                        btns += '<div class="row">'
+                                        btns += '    <div>'
+                                        btns += '        <a class="guncelle_' + id + ' btn btn-success mx-2" href="/Fatura/Guncelle/' + id + '?SayfaNo=1">Güncelle</a>'
+                                        btns += '    </div>'
+                                        btns += '    <div>'
+                                        btns += '        <button type="button" class="sil_' + id + ' btn btn-danger" data-toggle="modal" data-target="#Sil_' + id + '">'
+                                        btns += '            Sil'
+                                        btns += '        </button>'
+                                        btns += '        <div class="modal fade" id="Sil_' + id + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">'
+                                        btns += '            <div class="modal-dialog modal-dialog-centered" role="document">'
+                                        btns += '                <div class="modal-content">'
+                                        btns += '                    <div class="modal-header">'
+                                        btns += '                        <h5 class="modal-title" id="exampleModalLongTitle">Fatura Sil</h5>'
+                                        btns += '                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+                                        btns += '                            <span aria-hidden="true">×</span>'
+                                        btns += '                        </button>'
+                                        btns += '                    </div>'
+                                        btns += '                    <div class="modal-body">'
+                                        btns += '                        <h4>Faturayı silmek istiyor musunuz?</h4>'
+                                        btns += '                    </div>'
+                                        btns += '                    <div class="modal-footer">'
+                                        btns += '                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>'
+                                        btns += '                        <a class="btn btn-info mx-4" href="/Fatura/Sil/' + id + '?SayfaNo=1">Sil</a>'
+                                        btns += '                    </div>'
+                                        btns += '                </div>'
+                                        btns += '            </div>'
+                                        btns += '        </div>'
+                                        btns += '    </div>'
+                                        btns += '    <div>'
+                                        btns += '        <input type="button" id="FaturaGonder_' + id + '" class="FaturaGonder btn btn-info mx-3" data-id="' + id + '" value="Gönder">'
+                                        btns += '    </div>'
+                                        btns += '</div>'
+
+                                        $(".butonlar_" + id).html(btns);
+                                        //$(document).on("click", ".guncelle_" + id, function () {
+                                        //    debugger;
+                                        //    durumGuncelle($(".guncelle_" + id), id);
+                                        //});
+                                        $(document).on("click", "#FaturaGonder_" + id, function () {
+                                            debugger;
+                                            faturaGonder($(this), id);
+                                        });
+                                        mesaj = belgeno + " numaralı fatura hatalıdır. Kontrol edip tekrar gönderiniz.";
+                                    }
+                                    $(".durum_" + id).html(durum);
+                                }
+                                else
+                                    mesaj = data[i].errordescription;
+                                toastr_mesaj(mesaj, "error", 0);
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else {
+                $buttonClicked.attr('disabled', false);
+                toastr_mesaj("Bu fatura başarıyla gönderilmiş ve onaylanmıştır. Lütfen başka fatura seçiniz.", "warning", 4000);
+            }
+        };
+        $(".SecilenDurumGuncelle").click(function (e, fatid) {
+            debugger;
+            secilenDurumGuncelle($(this), fatid);
+        });
+        var secilenDurumGuncelle = function (e, fatid) {
+            debugger;
+            var $buttonClicked = e;
+            var selectedIDs = [];
+            var secilenVarMi = false;
+            var returnvalueArray = "";
+            var belgeno = "";
+            var ilkdurum = "";
+            var onaykontrol = "";
+            var mailgittimi = "";
+            var faturatipi = "";
+            if (fatid != undefined && fatid.length > 0)
+            {
+                selectedIDs = fatid
+                secilenVarMi = true;
+            }
+            else
+            {
+                $("input:checkbox[class=drm]:checked").each(function () {
+                    var id = $(this).attr('name');
+                    var rowOnayKontrol = $("#fatura_onaykontrol_" + id).val();
+                    var rowFaturaTipi = $("#fatura_tipi_" + id).val();
+                    var rowDurum = $(".durum_" + id).html();
+                    //if (((rowFaturaTipi != 5 && rowOnayKontrol != 7) || (rowFaturaTipi == 5 && rowOnayKontrol != 4)) && (rowDurum != 'İmzalandı' || rowDurum != 'Onaylandı')) //4 ve 7 Uyumsoft için imzalandi(müstahsil) ve onaylandi(normal earsiv) demek
+                    if (rowDurum != 'İmzalandı' && rowDurum != 'Onaylandı' && rowDurum != 'İptal Edildi')
+                    {
+                        debugger;
+                        selectedIDs.push(id);
+                        secilenVarMi = true;
+                    }
+                });
+            }
+            if (selectedIDs.length > 0)
+            {
+                toastr_mesaj("Fatura durumları güncelleniyor, lütfen bekleyiniz.", "success", 7000);
+                var $buttonClicked = $(this);
+                $buttonClicked.attr('disabled', true);
+                $.ajax({
+                    type: "POST",
+                    url: '/Fatura/DurumGuncelle',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'ids': selectedIDs }), //{ 'ids': selectedIDs }, { "id": id }
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $buttonClicked.attr('disabled', false);
+                        var mesajTrueR = "";
+                        var mesajFalseR = "";
+                        var mesajFalseHata = "";
+                        var mesajTrue = "";
+                        var mesajFalse = "";
+                        var id = 0;
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            var durum = "";
+                            if (data[i].status)
+                            {
+                                debugger;
+                                if (data[i].returnvalue != "")
+                                {
+                                    returnvalueArray = data[i].returnvalue.split("||||"); //ar.returnvalue = fat.fatura_durum + "||||" + fat.fatura_onaykontrol;
+                                    belgeno = returnvalueArray[0];
+                                    ilkdurum = returnvalueArray[1];
+                                    onaykontrol = returnvalueArray[2];
+                                    mailgittimi = returnvalueArray[3];
+                                    faturatipi = returnvalueArray[4];
+                                    id = data[i].id;
+                                    mesajTrueR += belgeno + "<br>";
+                                    $(".belgeno_" + id).html(belgeno);
+                                    $("#fatura_onaykontrol_" + id).val(onaykontrol);
+
+                                    durum += '<div class="row">'
+                                    if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                        durum += '	<div>'
+                                        durum += '      <span style="color:limegreen; font:bold 20px; font-size: 120%">' + ilkdurum + '</span>'
+                                        durum += '	</div>'
+                                    }
+                                    else {
+                                        durum += '	<div>'
+                                        durum += ilkdurum
+                                        durum += '	</div>'
+                                    }
+                                    if (mailgittimi == "True") {
+                                        durum += '	<div>'
+                                        durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:limegreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                        durum += '	</div>'
+                                    }
+                                    durum += '</div>'
+                                    //durum += '<div class="row">'
+                                    //durum += '	<div>'
+                                    //if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                    //    durum += '<label style="color:limegreen; font:bold 20px; font-size: 120%>' + ilkdurum + '</label>'
+                                    //}
+                                    //else {
+                                    //    durum += ilkdurum
+                                    //}
+                                    //durum += '	</div>'
+                                    //if (mailgittimi == "True") {
+                                    //    durum += '	<div>'
+                                    //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                    //    durum += '	</div>'
+                                    //}
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    //durum += '</div>'
+                                    //if (mailgittimi == "True")
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '	<div>'
+                                    //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //    //durum += '<br><span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color: springgreen; font: bold 20px; font - size: 150 %"> ✓</span>';
+                                    //}
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    $(".durum_" + id).html(durum);
+                                    //if ((faturatipi == 5 && onaykontrol == 4) || (faturatipi != 5 && onaykontrol == 7) || (ilkdurum == "Onaylandı" || ilkdurum == "İmzalandı"))
+                                    if (ilkdurum == "Onaylandı" || ilkdurum == "İmzalandı") {
+                                        $("#DurumGuncelle_" + id).hide();
+                                        var btns = "";
+                                        btns += '<div class="row">'
+                                        btns += '    <div>'
+                                        btns += '        <input type="button" id="GetFaturaForPrint_' + id + '" class="GetFaturaForPrint btn btn-success mx-3" data-id="' + id + '" value="Yazdır">'
+                                        btns += '    </div>'
+                                        btns += '    <div>'
+                                        btns += '        <input type="button" id="FaturaIptal_' + id + '" class="FaturaIptal btn btn-success mx-3" data-id="' + id + '" title="Faturayı iptal et" value="İptal">'
+                                        btns += '    </div>'
+                                        btns += '</div>'
+                                        $(".butonlar_" + id).html(btns);
+                                        $(document).on("click", "#GetFaturaForPrint_" + id, function () {
+                                            debugger;
+                                            if (ssdene == 0) {
+                                                ssdene = ssdene + 1;
+                                                //var id1 = $(this).attr('data-id');
+                                                getFaturaForPrint($(this), id);
+                                            }
+                                        });
+                                        $(document).on("click", "#FaturaIptal_" + id, function () {
+                                            debugger;
+                                            if (ssdene == 0) {
+                                                ssdene = ssdene + 1;
+                                                //var id1 = $(this).attr('data-id');
+                                                faturaIptal($(this), id);
+                                            }
+                                        });
+                                    }
+                                }
+                                else
+                                    mesajTrue = data[i].errordescription;
+                            }
+                            else
+                            {
+                                if (ilkdurum != 'Hata')
+                                {
+                                    durum += '<div class="row">'
+                                    if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                        durum += '	<div>'
+                                        durum += '      <span style="color:limegreen; font:bold 20px; font-size: 120%">' + ilkdurum + '</span>'
+                                        durum += '	</div>'
+                                    }
+                                    else {
+                                        durum += '	<div>'
+                                        durum += ilkdurum
+                                        durum += '	</div>'
+                                    }
+                                    if (mailgittimi == "True") {
+                                        durum += '	<div>'
+                                        durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:limegreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                        durum += '	</div>'
+                                    }
+                                    durum += '</div>'
+                                    //durum += '<div class="row">'
+                                    //durum += '	<div>'
+                                    //if (ilkdurum == 'İmzalandı' || ilkdurum == 'Onaylandı') {
+                                    //    durum += '<label style="color:limegreen; font:bold 20px; font-size: 120%>' + ilkdurum + '</label>'
+                                    //}
+                                    //else {
+                                    //    durum += ilkdurum
+                                    //}
+                                    //durum += '	</div>'
+                                    //if (mailgittimi == "True") {
+                                    //    durum += '	<div>'
+                                    //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                    //    durum += '	</div>'
+                                    //}
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    //durum += '</div>'
+                                    //if (mailgittimi == "True")
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '	<div>'
+                                    //    durum += '		<span title="Mail Gönderildi">Mail</span><span title="Mail Gönderildi" style="color:springgreen; font:bold 20px; font-size: 150%"> ✓</span>'
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    //else
+                                    //{
+                                    //    durum += '<div class="row">'
+                                    //    durum += '	<div>'
+                                    //    durum += ilkdurum
+                                    //    durum += '	</div>'
+                                    //    durum += '</div>'
+                                    //}
+                                    //mesaj = belgeno + " numaralı faturanın durumu güncellenemedi.";
+                                }
+                                else
+                                {
+                                    durum += '<div class="row">'
+                                    durum += '	<div>'
+                                    durum += ilkdurum
+                                    durum += '	</div>'
+                                    durum += '</div>'
+                                    $(".sil_" + id).show();
+                                    $(".guncelle_" + id).show();
+                                    //$(".serisira_" + id).html(seri + "-" + sira_no);
+                                    $(".belgeno_" + id).html(belgeno);
+                                    $("#drm_" + id).removeClass('drm').addClass('gnd');
+                                    $("#drm_" + id).attr('id', 'gnd_' + id);
+                                    var btns = "";
+                                    btns += '<div class="row">'
+                                    btns += '    <div>'
+                                    btns += '        <a class="guncelle_' + id + ' btn btn-success mx-2" href="/Fatura/Guncelle/' + id + '?SayfaNo=1">Güncelle</a>'
+                                    btns += '    </div>'
+                                    btns += '    <div>'
+                                    btns += '        <button type="button" class="sil_' + id + ' btn btn-danger" data-toggle="modal" data-target="#Sil_' + id + '">'
+                                    btns += '            Sil'
+                                    btns += '        </button>'
+                                    btns += '        <div class="modal fade" id="Sil_' + id + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">'
+                                    btns += '            <div class="modal-dialog modal-dialog-centered" role="document">'
+                                    btns += '                <div class="modal-content">'
+                                    btns += '                    <div class="modal-header">'
+                                    btns += '                        <h5 class="modal-title" id="exampleModalLongTitle">Fatura Sil</h5>'
+                                    btns += '                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+                                    btns += '                            <span aria-hidden="true">×</span>'
+                                    btns += '                        </button>'
+                                    btns += '                    </div>'
+                                    btns += '                    <div class="modal-body">'
+                                    btns += '                        <h4>Faturayı silmek istiyor musunuz?</h4>'
+                                    btns += '                    </div>'
+                                    btns += '                    <div class="modal-footer">'
+                                    btns += '                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>'
+                                    btns += '                        <a class="btn btn-info mx-4" href="/Fatura/Sil/' + id + '?SayfaNo=1">Sil</a>'
+                                    btns += '                    </div>'
+                                    btns += '                </div>'
+                                    btns += '            </div>'
+                                    btns += '        </div>'
+                                    btns += '    </div>'
+                                    btns += '    <div>'
+                                    btns += '        <input type="button" id="FaturaGonder_' + id + '" class="FaturaGonder btn btn-info mx-3" data-id="' + id + '" value="Gönder">'
+                                    btns += '    </div>'
+                                    btns += '</div>'
+
+                                    $(".butonlar_" + id).html(btns);
+                                    //$(document).on("click", ".guncelle_" + id, function () {
+                                    //    debugger;
+                                    //    durumGuncelle($(".guncelle_" + id), id);
+                                    //});
+                                    $(document).on("click", "#FaturaGonder_" + id, function () {
+                                        debugger;
+                                        faturaGonder($(this), id);
+                                    });
+                                    mesajFalseHata = data[i].id + "<br>";
+                                }
+                                $(".durum_" + id).html(durum);
+                                if (data[i].returnvalue != "")
+                                    mesajFalseR += data[i].id + "<br>";
+                                else
+                                    mesajFalse = data[i].errordescription;
+                            }
+                        }
+                        if (mesajTrueR != "") {
+                            toastr_mesaj(mesajTrueR + " numaralı faturanın/faturaların durumları başarıyla güncellendi.", "success", 5000);
+                        }
+                        if (mesajFalseR != "")
+                            toastr_mesaj(mesajFalseR + " numaralı faturanın/faturaların durumu güncellenemedi.", "error", 0);
+                        if (mesajFalseHata != "")
+                            toastr_mesaj(mesajFalseHata + " numaralı fatura/faturalar hatalıdır. Lütfen düzeltip tekrar gönderiniz.", "error", 0);
+                        if (mesajTrue != "")
+                            toastr_mesaj(mesajTrue, "success", 5000);
+                        if (mesajFalse != "")
+                            toastr_mesaj(mesajFalse, "error", 0);
+                        $buttonClicked.attr('disabled', false);
+                        $(this).closest('table').find('td input:checkbox').attr("checked", false);
+                        debugger;
+                        $('table').find('input:checkbox').prop('checked', false);
+                    },
+                    error: function () {
+                        $buttonClicked.attr('disabled', false);
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else
+            {
+                if (secilenVarMi == true)
+                    toastr_mesaj("Gönderilmeyen ya da başarıyla gönderilmiş ve işlemi tamamlanmış fatura/faturalar seçtiniz. Durumu güncellenmesi gereken fatura seçiniz.", "warning", 3000);
+                else
+                    toastr_mesaj("Lütfen durum sorgulama için uygun fatura seçiniz.", "warning", 3000);
+            }
+        }
+        $(".GetFaturaForPrint").click(function (e, fatid) {
+            debugger;
+            getFaturaForPrint($(this), fatid);
+        });
+        var getFaturaForPrint = function (e, fatid) {
+            debugger;
+            var $buttonClicked = e;
+            var id = 0;
+            if (fatid != undefined && fatid != 0)
+                id = fatid;
+            else
+                id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "POST",
+                url: '/Fatura/GetFaturaForPrint',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "id": id, }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    fgdene = 0;
+                    sgdene = 0;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        }
+        $(".FaturaIptal").click(function (e, fatid) {
+            debugger;
+            faturaIptal($(this), fatid);
+        });
+        var faturaIptal = function (e, fatid) {
+            debugger;
+            var $buttonClicked = e;
+            $buttonClicked.attr('disabled', true);
+            var id = 0;
+            if (fatid != undefined && fatid != 0)
+                id = fatid;
+            else
+                id = $buttonClicked.attr('data-id');
+            var selectedIDs = new Array();
+            var rowBelgeNo = $("#belgeno_" + id).val();
+            //var rowFaturaTipi = $("#fatura_tipi_" + id).val();
+            //var rowCariAdi = $("#cari_adi_" + id).val();
+            //var rowGVS = $("#toplam_gvstutar_" + id).val();
+            //var rowBTU = $("#toplam_btututar_" + id).val();
+            //var rowMFV = $("#toplam_mfvtutar_" + id).val();
+            //var rowSGK = $("#toplam_sgktutar_" + id).val();
+            //var rowMustahsilToplamVergi = Number(rowGVS) + Number(rowBTU) + Number(rowMFV) + Number(rowSGK);
+            //var toplamfiyat = $("#toplam_fiyat_" + id).val();
+            //if ((rowFaturaTipi != 5 && toplamfiyat > 0) || (rowFaturaTipi == 5 && rowMustahsilToplamVergi > 0)) //toplam vergi ya da toplam fiyat 0 ise fatura gönderilmiyor.
+            if (confirm(rowBelgeNo + " numaralı faturayı iptal etmek istiyor musunuz?")) {
+                if (1 == 1) { //TODO
+                    selectedIDs.push(id);
+                    if (selectedIDs.length > 0) {
+                        toastr_mesaj("Fatura iptal ediliyor, lütfen bekleyiniz.", "success", 3000);
+                        $.ajax({
+                            type: "POST",
+                            url: '/Fatura/FaturaIptal',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({ 'ids': selectedIDs }), //{ 'ids': selectedIDs }, { "id": id }
+                            datatype: "json",
+                            success: function (data) {
+                                debugger;
+                                $buttonClicked.attr('disabled', false);
+                                var mesaj = "";
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].status) {
+                                        debugger;
+                                        var durum = "";
+                                        durum += '<div class="row">'
+                                        durum += '	<div>'
+                                        durum += 'İptal Edildi'
+                                        durum += '	</div>'
+                                        durum += '</div>'
+                                        $("#fatura_onaykontrol_" + id).val(99); //iptal kodu
+                                        $(".durum_" + id).html(durum);
+                                        $buttonClicked.hide();
+                                        mesaj = rowBelgeNo + " numaralı fatura başarıyla iptal edildi.";
+
+                                        //toastr_mesaj(mesaj, "success", 4000);
+                                        //debugger;
+                                        //setTimeout(function () { durumGuncelle($(this), id); }, 1000);
+                                    }
+                                    else
+                                    {
+                                        if (data[i].errordescription != "")
+                                            mesaj = data[i].errordescription;
+                                        else
+                                            mesaj = rowBelgeNo + " numaralı fatura iptal edilemedi";
+                                        toastr_mesaj(mesaj, "error", 0);
+                                    }
+                                }
+                            },
+                            error: function () {
+                                $buttonClicked.attr('disabled', false);
+                                alert("Dynamic content load failed.");
+                            }
+                        });
+                    }
+                    else
+                        toastr_mesaj("Lütfen fatura seçiniz.", "warning", 0);
+                }
+                else {
+                    toastr_mesaj(rowCariAdi + " için kestiğiniz fatura gönderilemedi, toplam tutar ya da vergi sıfır görünüyor, lütfen faturayı kontrol ediniz.", "warning", 3000);
+                    $buttonClicked.attr('disabled', false);
+                }
+            }
+            else {
+                $buttonClicked.attr('disabled', false);
+                return false;
+            }
+        }
+    });
+    var ConfirmDelete = function (id) {
+        $("#hidden_id").val(id);
+        $("#myModal").show();
+    }
+    var StokSil = function () {
+        $("#loaderDiv").show();
+        var stok_id = $("#hidden_id").val();
+        $.ajax({
+            type: "POST",
+            url: "/Fatura/Sil",
+            data: { id: id },
+            success: function () {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+            }
+        })
+    }
+    function printDiv(divName) {
+        w = window.open();
+        w.document.write($(divName).html());
+        w.print();
+        w.close();
+    }
+</script>

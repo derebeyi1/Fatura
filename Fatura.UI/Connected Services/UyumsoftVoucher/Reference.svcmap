@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="e7cea516-90b3-413f-b2be-e78beabb816d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="VoucherIntegration.xsd" MetadataType="Schema" ID="cde274ae-45d1-486e-861f-b0f8e9217bfe" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?xsd=xsd2" />
+    <MetadataFile FileName="VoucherIntegration1.xsd" MetadataType="Schema" ID="55913ceb-316b-475a-b4ce-6654c61d6cf4" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?xsd=xsd3" />
+    <MetadataFile FileName="VoucherIntegration2.xsd" MetadataType="Schema" ID="cf0a459d-5e75-4b93-a971-04f72aa5c22b" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?xsd=xsd0" />
+    <MetadataFile FileName="VoucherIntegration3.xsd" MetadataType="Schema" ID="adb63e67-0e2e-464d-8a26-2224b673091f" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?xsd=xsd1" />
+    <MetadataFile FileName="VoucherIntegration.disco" MetadataType="Disco" ID="da3a9469-e2ee-4292-9c24-e09e4eaa3e6c" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?disco" />
+    <MetadataFile FileName="VoucherIntegration.wsdl" MetadataType="Wsdl" ID="24ab004f-5a9f-49f9-918b-33d2622dcca7" SourceId="1" SourceUrl="https://efatura-test.uyumsoft.com.tr/Services/VoucherIntegration?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

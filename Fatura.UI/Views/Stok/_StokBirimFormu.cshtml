@@ -1,0 +1,91 @@
+﻿@model Fatura.Entity.stok_birim
+
+<h2>@ViewBag.Baslik</h2>
+@using (Html.BeginForm("BirimKaydet", "Stok", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @*<input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+        <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+        <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />*@
+    <input type="hidden" id="id" name="id" value="@Model.id" />
+    <input type="hidden" id="stok_id" name="stok_id" value="@Model.stok_id" />
+    <table class="table table-bordered" width="100%" cellspacing="0">
+        @*@Html.HiddenFor(m => m.id)
+        @Html.HiddenFor(m => m.stok_id)*@
+        <tr>
+            <td>Birimi</td>
+            <td>
+                @Html.DropDownListFor(m => m.birim_id, Model.DropDownListFor)
+                @Html.ValidationMessageFor(m => m.birim_id)
+            </td>
+        </tr>
+        <tr>
+            <td>Katsayısı</td>
+            <td>
+                @Html.TextBoxFor(m => m.katsayi, new { @class = "form-control ", placeholder = "Katsayı giriniz." })
+                @Html.ValidationMessageFor(m => m.katsayi)
+            </td>
+        </tr>
+        <tr>
+            <td>Ağırlığı</td>
+            <td>
+                @Html.TextBoxFor(m => m.agirlik, new { @class = "form-control ", placeholder = "Ağırlığı giriniz." })
+                @Html.ValidationMessageFor(m => m.agirlik)
+            </td>
+        </tr>
+    </table>
+    <button type="submit" class="btn btn-info">Kaydet / Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+    <br />
+    @ViewBag.Mesaj
+    <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+
+    <div id='myModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'></div>
+            </div>
+        </div>
+
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $('select').change(function () {
+            //alert("id: " + $(this).attr('name') + " value: " + $(this).val() + "   Text: " + $(this).find('option:selected').text());
+            if ($(this).attr('name') == "ulke_kodu") {
+                debugger;
+                $("#ulke_adi").val($("#ulke_kodu option:selected").text());
+                debugger;
+                AckGetir("il_kodu", $(this).val());
+            } else if ($(this).attr('name') == "il_kodu") {
+                $("#il_adi").val($("#il_kodu option:selected").text());
+                debugger;
+                AckGetir("ilce_kodu", $(this).val());
+            } else if ($(this).attr('name') == "ilce_kodu") {
+                $("#ilce_adi").val($("#ilce_kodu option:selected").text());
+                debugger;
+            }
+        });
+    })
+    function AckGetir(name, ustkod)
+    {
+        //alert("AckGetir:" + name + ustkod);
+        var url = '@Url.Action("AckGetir", "Cari")';
+        //alert("AckGetir url:" + url);
+        var PDD = $("#" + name);
+        //alert("AckGetir PDD:" + PDD);
+        //var ODD= $("#ODD").val();
+        var ODD= ustkod;
+        $.getJSON(url, { ustkod: ODD}, function (response) {
+            PDD.empty();
+            //alert("AckGetir response:" + response);
+            debugger;
+            $.each(response, function (index, item) {
+                //debugger;
+                var p = new Option(item.Display, item.Key);
+                PDD.append(p);
+            });
+        });
+}
+</script>
+

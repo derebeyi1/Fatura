@@ -1,0 +1,1166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1BEE3ED3-C090-436F-BB61-8AD16B021EE3}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Fatura.UI</RootNamespace>
+    <AssemblyName>Fatura.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Chart.Mvc, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Chart.Mvc.1.0.0.2\lib\net45\Chart.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Connected Services\N11CategoryService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\N11OrderService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\N11ProductService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\N11ProductStockService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\UyumsoftDespatch\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\UyumsoftIntegration\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\UyumsoftProducerReceipt\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\UyumsoftVoucher\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\VeribanAppConnect\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\VeribanIntegration\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\VeribanTransferDocument\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AnasayfaController.cs" />
+    <Compile Include="Controllers\BirimlerController.cs" />
+    <Compile Include="Controllers\CariController.cs" />
+    <Compile Include="Controllers\DecimalModelBinder.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FaturaController.cs" />
+    <Compile Include="Controllers\FirmaController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\KodlarController.cs" />
+    <Compile Include="Controllers\Logger.cs" />
+    <Compile Include="Controllers\N11Controller.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\SiparisController.cs" />
+    <Compile Include="Controllers\StokController.cs" />
+    <Compile Include="CustomHtmlHelper\CustomHTMLHelper.cs" />
+    <Compile Include="Filters\ExceptionHandler.cs" />
+    <Compile Include="Filters\FaturaRoleProvider.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\config.xml" />
+    <None Include="Connected Services\N11CategoryService\CategoryService.wsdl" />
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributesIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributesIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributeValueResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetCategoryAttributeValueResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetParentCategoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetParentCategoryResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetSubCategoriesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetSubCategoriesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetTopLevelCategoriesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11CategoryService\Fatura.UI.N11CategoryService.GetTopLevelCategoriesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.ComplementaryItemDetailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.ComplementaryItemDetailResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.DetailedOrderListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.DetailedOrderListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.MakeOrderItemShipmentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.MakeOrderItemShipmentResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderDetailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderDetailResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderItemAcceptResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderItemAcceptResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderItemRejectResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderItemRejectResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11OrderService\Fatura.UI.N11OrderService.OrderListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\N11OrderService\OrderService.wsdl" />
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.AdaptUnificationProductsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.AdaptUnificationProductsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.DeleteProductByIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.DeleteProductByIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.DeleteProductBySellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.DeleteProductBySellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductByProductIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductByProductIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductBySellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductBySellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductQuestionDetailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductQuestionDetailResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductQuestionListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.GetProductQuestionListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.ProductApprovalStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.ProductApprovalStatusResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SaveProductAnswerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SaveProductAnswerResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SaveProductResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SaveProductResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SearchProductsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.SearchProductsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateDiscountValueByProductIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateDiscountValueByProductIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateDiscountValueBySellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateDiscountValueBySellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductBasicResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductBasicResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductPriceByIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductPriceByIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductPriceBySellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductPriceBySellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductsByPimsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductService\Fatura.UI.N11ProductService.UpdateProductsByPimsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\N11ProductService\ProductService.wsdl" />
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.DeleteAndUpdateStockByStockAttributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.DeleteAndUpdateStockByStockAttributesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.GetProductStockByProductIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.GetProductStockByProductIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.GetProductStockByProductSellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.GetProductStockByProductSellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockAttributesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockAttributesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockSellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.IncreaseStockByStockSellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.UpdateStockByStockIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.UpdateStockByStockIdResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.UpdateStockByStockSellerCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\N11ProductStockService\Fatura.UI.N11ProductStockService.UpdateStockByStockSellerCodeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\N11ProductStockService\ProductStockService.wsdl" />
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration.disco" />
+    <None Include="Connected Services\UyumsoftDespatch\configuration91.svcinfo" />
+    <None Include="Connected Services\UyumsoftDespatch\configuration.svcinfo" />
+    <None Include="Connected Services\N11CategoryService\configuration91.svcinfo" />
+    <None Include="Connected Services\N11CategoryService\configuration.svcinfo" />
+    <None Include="Connected Services\N11CategoryService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\N11OrderService\configuration91.svcinfo" />
+    <None Include="Connected Services\N11OrderService\configuration.svcinfo" />
+    <None Include="Connected Services\N11OrderService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\N11ProductService\configuration91.svcinfo" />
+    <None Include="Connected Services\N11ProductService\configuration.svcinfo" />
+    <None Include="Connected Services\N11ProductService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\N11ProductStockService\configuration91.svcinfo" />
+    <None Include="Connected Services\N11ProductStockService\configuration.svcinfo" />
+    <None Include="Connected Services\N11ProductStockService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.ClonedDespatchServiceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchesDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchIdentitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchStatusWithLogResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.DespatchViewResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.FlagResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.InboxDespatchListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.InboxReceiptAdviceDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.InboxReceiptAdviceListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.InboxReceiptAdvicesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.OutboxDespatchListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.PdfDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.ReceiptAdviceIdentitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.ReceiptAdviceStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.StringResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.SystemUsersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftDespatch\Fatura.UI.UyumsoftDespatch.UserAliassesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\UyumsoftDespatch\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.ByteArrayResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.CloneInvoiceServiceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.DateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.DocumentResponseStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.EnvelopeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.FlagResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InboxInvoiceListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceGtbInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceIdentitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoicesDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoicesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceStatusWithLogResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.InvoiceViewResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.OutboxInvoiceListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.ResponseOfWhoAmIInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.StringElementResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.StringResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.SummaryReportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.SystemUsersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftIntegration\Fatura.UI.UyumsoftIntegration.UserAliassesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration.wsdl" />
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftDespatch\DespatchIntegration9.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration.disco" />
+    <None Include="Connected Services\UyumsoftIntegration\configuration91.svcinfo" />
+    <None Include="Connected Services\UyumsoftIntegration\configuration.svcinfo" />
+    <None Include="Connected Services\UyumsoftIntegration\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.DateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.FlagResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ProducerReceiptDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ProducerReceiptIdentityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ProducerReceiptInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ResponseOfHtmlViewResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ResponseOfListOfProducerReceiptStatusInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ResponseOfListOfProducerReceiptStatusWithLogInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.ResponseOfPagedResponseOfProducerReceipt.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftProducerReceipt\Fatura.UI.UyumsoftProducerReceipt.StringResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration.disco" />
+    <None Include="Connected Services\UyumsoftProducerReceipt\configuration91.svcinfo" />
+    <None Include="Connected Services\UyumsoftProducerReceipt\configuration.svcinfo" />
+    <None Include="Connected Services\UyumsoftProducerReceipt\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.DateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.DocumentIdentityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.FlagResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.ResponseOfListOfVoucherStatusInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.ResponseOfListOfVoucherStatusWithLogInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.ResponseOfPagedResponseOfVoucher.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.ResponseOfVoucherSource.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.StringResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\UyumsoftVoucher\Fatura.UI.UyumsoftVoucher.VoucherDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration.disco" />
+    <None Include="Connected Services\UyumsoftVoucher\configuration91.svcinfo" />
+    <None Include="Connected Services\UyumsoftVoucher\configuration.svcinfo" />
+    <None Include="Connected Services\UyumsoftVoucher\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\VeribanAppConnect\AppConnectService.disco" />
+    <None Include="Connected Services\VeribanAppConnect\configuration91.svcinfo" />
+    <None Include="Connected Services\VeribanAppConnect\configuration.svcinfo" />
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.ActiveSystemResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.CustomerInformation.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.DownloadResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.EArchiveInvoiceQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.EArchiveOkcDocumentQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.EArchiveReceiptQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.MailData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.OperationResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.ReceivedTransferQueueViewModel.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.SalesInvoices.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.SalesInvoiceStateResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.Serial.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.TransferQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanAppConnect\Fatura.UI.VeribanAppConnect.TransferResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\VeribanAppConnect\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\VeribanIntegration\configuration91.svcinfo" />
+    <None Include="Connected Services\VeribanIntegration\configuration.svcinfo" />
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.DownloadResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.EArchiveInvoiceQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.EArchiveOkcDocumentQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.EArchiveReceiptQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.OperationResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.TransferQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanIntegration\Fatura.UI.VeribanIntegration.TransferResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\VeribanIntegration\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.ActivationEnvelope.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.ActiveSystemResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.CustomerData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.CustomerInformation.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.CustomerSeries.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.DespatchSellerBuyerList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.DespatchStatusData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.DespatchStatusDataForConnetctor.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.DownloadResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.GetDespatchXmlContentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.GetInvoiceXmlContentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.InvoiceShortStatusDataForConnetctor.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.InvoiceStatusData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.InvoiceStatusDataForConnetctor.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.LoginResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.OperationResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.PurchaseDespatchViewModel.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.PurchaseInvoices.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.ReceivedTransferQueueViewModel.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.SalesDespatchViewModel.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.SalesInvoices.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.SellerBuyerList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\VeribanTransferDocument\Fatura.UI.VeribanTransferDocument.UserAccountActivationInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\VeribanTransferDocument\TransferDocumentService.disco" />
+    <None Include="Connected Services\VeribanTransferDocument\configuration91.svcinfo" />
+    <None Include="Connected Services\VeribanTransferDocument\configuration.svcinfo" />
+    <None Include="Connected Services\VeribanTransferDocument\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Chart.css" />
+    <Content Include="Content\Chart.min.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <None Include="Connected Services\UyumsoftIntegration\Integration.wsdl" />
+    <None Include="Connected Services\UyumsoftIntegration\Integration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftIntegration\Integration8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration.wsdl" />
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftProducerReceipt\ProducerReceiptIntegration9.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration.wsdl" />
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\UyumsoftVoucher\VoucherIntegration3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanAppConnect\AppConnectService.wsdl" />
+    <None Include="Connected Services\VeribanAppConnect\AppConnectService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanAppConnect\AppConnectService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanIntegration\IntegrationService.wsdl" />
+    <None Include="Connected Services\VeribanIntegration\IntegrationService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanTransferDocument\TransferDocumentService.wsdl" />
+    <None Include="Connected Services\VeribanTransferDocument\TransferDocumentService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanTransferDocument\TransferDocumentService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\VeribanTransferDocument\TransferDocumentService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
+    <None Include="Scripts\jquery-3.5.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.5.1.js" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.5.1.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout_sil.cshtml" />
+    <Content Include="Views\Shared\_MasterPage.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Anasayfa\Index.cshtml" />
+    <Content Include="Views\Birimler\BirimForm.cshtml" />
+    <Content Include="Views\Birimler\BirimListele.cshtml" />
+    <Content Include="Views\Birimler\Index.cshtml" />
+    <Content Include="Views\Cari\CariFormu.cshtml" />
+    <Content Include="Views\Cari\CariListesi.cshtml" />
+    <Content Include="Views\Cari\_CariAdresFormu.cshtml" />
+    <Content Include="Views\Email\SendEmail.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\Notfound.cshtml" />
+    <Content Include="Views\Fatura\AyarListesi.cshtml" />
+    <Content Include="Views\Fatura\FaturaFormu.cshtml" />
+    <Content Include="Views\Fatura\FaturaListesi.cshtml" />
+    <Content Include="Views\Fatura\GelenFatura.cshtml" />
+    <Content Include="Views\Fatura\GelenIrsaliye.cshtml" />
+    <Content Include="Views\Fatura\GelenIrsaliyeYanitla.cshtml" />
+    <Content Include="Views\Fatura\GetFaturaForPrint.cshtml" />
+    <Content Include="Views\Fatura\MukellefListesi.cshtml" />
+    <Content Include="Views\Fatura\SatisGrafik.cshtml" />
+    <Content Include="Views\Fatura\SatisGrafik1.cshtml" />
+    <Content Include="Views\Fatura\silCariBul.cshtml" />
+    <Content Include="Views\Fatura\_CariBul.cshtml" />
+    <Content Include="Views\Fatura\_FaturaAyarFormu.cshtml" />
+    <Content Include="Views\Fatura\_FaturaDetayFormu.cshtml" />
+    <Content Include="Views\Fatura\_StokBul.cshtml" />
+    <Content Include="Views\Firma\FirmaFormu.cshtml" />
+    <Content Include="Views\Firma\FirmaListesi.cshtml" />
+    <Content Include="Views\Kodlar\Index.cshtml" />
+    <Content Include="Views\Security\Dogrula.cshtml" />
+    <Content Include="Views\Security\KullaniciKayit.cshtml" />
+    <Content Include="Views\Security\KullaniciListesi.cshtml" />
+    <Content Include="Views\Security\Login.cshtml" />
+    <Content Include="Views\Security\SifremiUnuttum.cshtml" />
+    <Content Include="Views\Stok\StokFormu.cshtml" />
+    <Content Include="Views\Stok\StokGuncelle.cshtml" />
+    <Content Include="Views\Stok\StokListesi.cshtml" />
+    <Content Include="Views\Stok\_StokBirimFormu.cshtml" />
+    <Content Include="Views\Stok\_StokFiyatFormu.cshtml" />
+    <Content Include="Views\Stok\_StokListesi.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Admin\KullaniciKayit.cshtml" />
+    <Content Include="Views\Security\_Login.cshtml" />
+    <Content Include="Views\Security\_KullaniciKayit.cshtml" />
+    <Content Include="Views\Siparis\SiparisListesi.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Views\N11\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fatura.BLL\Fatura.BLL.csproj">
+      <Project>{6ce5b7d5-19a0-4055-ba4a-f7d5a14af567}</Project>
+      <Name>Fatura.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fatura.DAL\Fatura.DAL.csproj">
+      <Project>{c408f0f8-ec16-48c1-9df8-d80ffa4bd231}</Project>
+      <Name>Fatura.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fatura.Entity\Fatura.Entity.csproj">
+      <Project>{74c7e05b-f18a-4ee6-b8cc-bd2c337fca0a}</Project>
+      <Name>Fatura.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\N11CategoryService\" />
+    <WCFMetadataStorage Include="Connected Services\N11OrderService\" />
+    <WCFMetadataStorage Include="Connected Services\N11ProductService\" />
+    <WCFMetadataStorage Include="Connected Services\N11ProductStockService\" />
+    <WCFMetadataStorage Include="Connected Services\UyumsoftDespatch\" />
+    <WCFMetadataStorage Include="Connected Services\UyumsoftIntegration\" />
+    <WCFMetadataStorage Include="Connected Services\UyumsoftProducerReceipt\" />
+    <WCFMetadataStorage Include="Connected Services\UyumsoftVoucher\" />
+    <WCFMetadataStorage Include="Connected Services\VeribanAppConnect\" />
+    <WCFMetadataStorage Include="Connected Services\VeribanIntegration\" />
+    <WCFMetadataStorage Include="Connected Services\VeribanTransferDocument\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>58717</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:58717/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -1,0 +1,261 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using Fatura.Entity
+@model PagedList.IPagedList<fatura_gelen>
+@using Fatura.BLL
+
+<BR>
+@{
+    ViewBag.Title = "GelenIrsaliye";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<BR>
+<BR>
+<BR>
+<div id="dvMukellefListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td width="10%">
+                    <span style="font-size:x-large;font-weight:bold">Gelen İrsaliyeler</span>
+                </td>
+                <td width="1%">
+                    <input autocomplete="off" class="form-control date-picker" data-val="true" data-val-date="The field fatura_tarihi must be a date." data-val-required="Başlangıç tarihi alanı gereklidir." id="baslangic" name="baslangic" placeholder="Başlangıç Tarihi" style="width:200px;" type="text" value="">
+                    <span class="field-validation-valid" data-valmsg-for="baslangic" data-valmsg-replace="true"></span>
+                </td>
+                <td width="1%">
+                    <input autocomplete="off" class="form-control date-picker" data-val="true" data-val-date="The field fatura_tarihi must be a date." data-val-required="Başlangıç tarihi alanı gereklidir." id="bitis" name="bitis" placeholder="Bitiş Tarihi" style="width:200px;" type="text" value="">
+                    <span class="field-validation-valid" data-valmsg-for="bitis" data-valmsg-replace="true"></span>
+                </td>
+                <td width="5%">
+                    <input type="button" class="GelenIrsaliyeCek btn btn-success mx-3" data-id="1" value="Gelen İrsaliyeleri Al">
+                    @*<a href="javascript:void(0);" class="MukellefCek btn btn-success mx-3" data-id="1">Mükellef Listesini Güncelle</a>*@
+                    @*@Html.ActionLink("Mükellef Listesini Güncelle", "MukellefListesi", new { id = 1, sortOrder = ViewBag.BelgeNoParm, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-success mx-3" })*@
+
+                </td>
+                <td width="10%">
+                    Sayfada
+                    @*@Html.TextBox("SayfaKayitSayisi", null, new { style = "width: 50px;" })*@
+                    <select id="SayfaKayitSayisi" name="SayfaKayitSayisi">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    kayıt göster.
+                </td>
+                <td width="10%">
+                    @Html.TextBox("SearchString", null, new { style = "width: 100px;" })
+                    <input type="submit" class=" btn btn-info" value="Ara" />
+                </td>
+            </tr>
+        </table>
+    }
+    <table class="table table-bordered align-baseline" id="dataTable">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("Gönderen VKN/TCKN", "GelenIrsaliye", new { sortOrder = ViewBag.VKNSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Gönderen Ünvanı", "GelenIrsaliye", new { sortOrder = ViewBag.UnvanSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th>@Html.ActionLink("Şehir", "GelenIrsaliye", new { sortOrder = ViewBag.SehirSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">Fatura Türü</th>
+                <th style="color:Highlight">Fatura Notu</th>
+                <th>@Html.ActionLink("Fatura Tarihi", "GelenIrsaliye", new { sortOrder = ViewBag.TarihSort, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi })</th>
+                <th style="color:Highlight">Yanıt Durumu</th>
+                <th style="color:Highlight">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fatura_gelen in Model)
+            {
+            <tr>
+                <td>@fatura_gelen.gonderen_vkn</td>
+                <td>@fatura_gelen.gonderen_unvan</td>
+                <td>@fatura_gelen.gonderen_sehir</td>
+                <td>@fatura_gelen.fatura_turu-@fatura_gelen.invoicetypecodetype</td>
+                <td>@fatura_gelen.fatura_notu</td>
+                <td>@fatura_gelen.faturatarihi</td>
+                <td>
+                    @if (fatura_gelen.durum == 1)
+                    {
+                        @:<label style="color:green">Onaylandı</label>
+                    }
+                </td>
+                <td width="15%" class="butonlar_@fatura_gelen.belgeno">
+                    <div class="row">
+                        @*<div>
+                            <a href="javascript:void(0);" class="GelenIrsaliyeDetay btn btn-success mx-3" data-id="@fatura_gelen.hareketsatirlariobj">Detay Göster</a>
+                        </div>*@
+                        <div>
+                            @Html.ActionLink("Görüntüle ve Onayla", "GelenIrsaliyeYanitla", new { guid = fatura_gelen.guid, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+                        </div>
+                        @*<div>
+                            <button type="button" class="Onay_@fatura_gelen.guid btn btn-info" data-toggle="modal" data-target="#Onay_@fatura_gelen.guid">
+                                Onayla
+                            </button>
+                            <div class="modal fade" id="Onay_@fatura_gelen.guid" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Fatura Sil</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>İrsaliyeyi onaylamak istiyor musunuz?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                            <a href="javascript:void(0);" class="Onayla btn btn-success mx-3" data-id="@fatura_gelen.guid">Onayla</a>
+                                            @Html.ActionLink("Onayla", "Onayla", new { guid = fatura_gelen.guid, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                    <a href="javascript:void(0);" class="CloseModal btn btn-info" data-dismiss="modal">&times;</a>
+                </div>
+                <div id='myModalContent' class="modal-body">
+                    <table id="table12" class="hidden">
+                        <tr>
+                            <th>Adı</th>
+                            <th>Miktarı</th>
+                            <th>Fiyatı</th>
+                            <th>Tutarı</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="CloseModal btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @Html.PagedListPager(Model, _sayfaNo => Url.Action("GelenIrsaliye", "Fatura", new { SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <BR>
+            Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+        </div>
+    </div>
+    <BR>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        jQuery.datetimepicker.setLocale('tr');
+        $('.date-picker').datetimepicker({
+            format: 'd.m.Y H:i',
+        });
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj == "Guncellendi")
+            toastr_mesaj("Mükellef listesi başarıyla güncellendi.", "success", 3000);
+        else if (mesaj == "Guncel")
+            toastr_mesaj("Mükellef listesi güncel.", "success", 3000);
+        else if (mesaj != "") {
+            toastr_mesaj(mesaj, "error", 3000);
+        }
+        $(".GelenIrsaliyeCek").click(function () {
+            debugger;
+            toastr_mesaj("Gelen irsaliyeler alınıyor, lütfen bekleyiniz.", "success", 10000);
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            //$buttonClicked.attr('class', 'disabled');
+            var id = $buttonClicked.attr('data-id');
+            var baslangic = $("#baslangic").val();
+            var bitis = $("#bitis").val();
+            //var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "POST",
+                url: '/Fatura/GelenIrsaliye',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "baslangic": baslangic, "bitis": bitis }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("body").html(data);
+                    //$buttonClicked.attr('class', 'disabled');
+                    $buttonClicked.attr('disabled', false);
+                    //if (data.status) {
+                    //    alert("kayit sayisi=>" + data.returnvalue);
+                    //}
+                },
+                error: function () {
+                    $buttonClicked.attr('disabled', false);
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $(".GelenIrsaliyeDetay").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            let data = JSON.parse($buttonClicked.attr('data-id'));
+            var len = data.length;
+            var txt = "";
+            var options = { "backdrop": "static", keyboard: true };
+            if (len > 0) {
+                for (var i = 0; i < len; i++) {
+                    if (i == 0) {
+                        //txt += "<table id='table12' class='table table-bordered table-condensed table-striped'><tr><th>Adı</th><th>Miktarı</th><th>Birim Fiyatı</th><th>KDV Oran/Tutar</th><th>Tevkifat Oran/Tutar</th><th>ÖTV Oran/Tutar</th><th>Tutarı</th><th>Döviz Cinsi</th></tr>";
+                        txt += "<table id='table12' class='table table-bordered table-condensed table-striped'><tr><th>Adı</th><th>Miktarı</th></tr>";
+                    }
+                    if (data[i].StokItem) {
+                        txt += "<tr><td>" + data[i].StokItem.Adi + "</td><td>" + data[i].Miktar + "</td>";
+                        //txt += "<td>%" + data[i].Kdv.Oran + "-" + data[i].Kdv.Tutar + "</td><td>%" + data[i].Kdv.TevkifatOrani + "-" + data[i].Kdv.TevkifatTutar + "</td><td>%" + data[i].Kdv.OtvOran + "-" + data[i].Kdv.OtvTutar + "</td><td>" + data[i].Tutar + "</td><td>" + data[i].doviz + "</td></tr > ";
+                        //txt += "<td>" + data[i].doviz + "</td></tr > ";
+                    }
+                }
+                if (txt != "")
+                    txt += "</table>"
+                //if (txt != "") {
+                //    $("#table12").append(txt).removeClass("hidden");
+                //}
+            }
+            debugger;
+            //var txt = toTable([{ "city": "AMBALA", "cStatus": "Y" }, { "city": "ASANKHURD", "cStatus": "Y" }, { "city": "ASSANDH", "cStatus": "Y" }]);
+
+            //var txt = toTable(data);
+            $('#myModalContent').html(txt);
+            $('#myModal').modal(options);
+            $('#myModal').modal('show');
+        });
+        $(".Onayla").click(function () {
+            debugger;
+            toastr_mesaj("İrsaliye onaylanıyor, lütfen bekleyiniz.", "success", 5000);
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            var guidid = $buttonClicked.attr('data-id');
+            $.ajax({
+                type: "POST",
+                url: '/Fatura/GelenIrsaliyeYanitla',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "guid": guid }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    $buttonClicked.attr('disabled', false);
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+</script>

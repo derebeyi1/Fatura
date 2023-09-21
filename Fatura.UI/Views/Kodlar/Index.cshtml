@@ -1,0 +1,26 @@
+﻿@*@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}*@
+
+<link href="~/Content/header-v5.css" rel="stylesheet">
+@*<link href="~/Content/bootstrap.min.css" rel="stylesheet">*@
+<body>
+    <div class="header-v5 header-static">
+
+        <!-- Navbar -->
+        <div class="navbar navbar-default mega-menu" role="navigation">
+            <div class="container">
+                <div class="collapse navbar-collapse navbar-responsive-collapse">
+                    @Html.Raw(ViewBag.Tree);
+                </div>
+            </div>
+        </div>
+        <!-- End Navbar -->
+    </div>
+    <nav class="nav-menu d-none d-lg-block">
+        <div class="collapse navbar-collapse navbar-responsive-collapse">
+            @Html.Raw(ViewBag.Tree);
+        </div>
+    </nav>
+</body>

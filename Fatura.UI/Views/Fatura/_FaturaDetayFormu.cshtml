@@ -1,0 +1,904 @@
+﻿@model Fatura.Entity.fatura_satir
+@using Fatura.BLL
+
+<h2>@ViewBag.Baslik</h2>
+@using (Html.BeginForm("SatirKaydet", "Fatura", FormMethod.Post, new { @enctype = "multipart/form-data", id = "detayForm" }))
+{
+    <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+    <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+    <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+    <input type="hidden" name="fatura_tipi" id="fatura_tipi" value="@ViewBag.FaturaTipi" />
+    <input type="hidden" name="id" id="id" value="@Model.id" />
+    <input type="hidden" name="fatura_id" id="fatura_id" value="@Model.fatura_id" />
+    <input type="hidden" name="stok_id" id="stok_id" value="@Model.stok_id" />
+    <table class="table table-bordered" width="100%" cellspacing="0">
+        @*@Html.HiddenFor(m => m.id)
+            @Html.HiddenFor(m => m.fatura_id)*@
+        <tr>
+            <td>Stok Adı</td>
+            @*<td>
+                    @Html.TextBoxFor(m => m.stok_id, new { @class = "form-control ", placeholder = "Ürün adı giriniz." })
+                    @Html.ValidationMessageFor(m => m.stok_id)
+                </td>*@
+            <td>
+                @*@Html.HiddenFor(m => m.stok_id)*@
+                @Html.ValidationMessageFor(m => m.stok_id)
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12">
+                        <div class="form-group form-inline">
+                            @Html.TextBoxFor(m => m.stok_adi, new { @class = "form-control", style = "width:350px;", placeholder = "Stok adını giriniz.", @required = "required" })
+                            @Html.ValidationMessageFor(m => m.stok_adi)
+                            <a href="javascript:void(0);" class="stokBul btn btn-success mx-2 fa fa-search"></a>
+                            @*<a data-toggle="modal" href="#myModal1" class="stokBul btn btn-primary">Launch modal</a>
+                                <button type="button" class="stokBul btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Modal 1 </button>*@
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Döviz Cinsi/Kuru</td>
+            <td>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12">
+                        <div class="form-group form-inline">
+                            @Html.DropDownListFor(m => m.doviz_id1, Model.DropDownListForDoviz)
+                            @Html.ValidationMessageFor(m => m.doviz_id1)
+                            @Html.TextBoxFor(m => m.doviz_kuru1, new { @class = "form-control", style = "width:120px;", placeholder = "Döviz Kuru" })
+                            @Html.ValidationMessageFor(m => m.doviz_kuru1)
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Birimi</td>
+            <td>
+                @Html.DropDownListFor(m => m.birim_id, Model.DropDownListForBirimler)
+                @Html.ValidationMessageFor(m => m.birim_id)
+            </td>
+        </tr>
+        <tr>
+            <td>Birim Fiyatı</td>
+            <td>
+                @Html.TextBoxFor(m => m.birim_fiyati, new { @class = "form-control ", style = "width:180px;", placeholder = "Birim fiyatı giriniz.", @required = "required" })
+                @Html.ValidationMessageFor(m => m.birim_fiyati)
+            </td>
+        </tr>
+        <tr>
+            <td>Miktarı</td>
+            <td>
+                @Html.TextBoxFor(m => m.miktari, new { @class = "form-control ", style = "width:180px;", placeholder = "Miktarı giriniz.", @required = "required" })
+                @Html.ValidationMessageFor(m => m.miktari)
+            </td>
+        </tr>
+        @if (ViewBag.FaturaTipi != Utilities.ESMM)
+        {
+            <tr>
+                <td>İskonto Oranı(%)</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                (%)@Html.TextBoxFor(m => m.iskonto_1, new { @class = "form-control ", style = "width:150px;", placeholder = "İskonto oranı giriniz." })
+                                @Html.ValidationMessageFor(m => m.iskonto_1)
+                                @Html.TextBoxFor(m => m.iskonto_toplam, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(m => m.iskonto_toplam)
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (ViewBag.FaturaTipi == Utilities.EMustahsil)
+        {
+            <tr>
+                <td>GVS Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.gvs_orani, Model.DropDownListForGvs)
+                                @Html.TextBoxFor(m => m.gvs_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>SGK Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.sgk_orani, Model.DropDownListForSgk)
+                                @Html.TextBoxFor(m => m.sgk_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>MFV Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.mfv_orani, Model.DropDownListForMfv)
+                                @Html.TextBoxFor(m => m.mfv_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>BTU Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.btu_orani, Model.DropDownListForBtu)
+                                @Html.TextBoxFor(m => m.btu_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        else if (ViewBag.FaturaTipi == Utilities.EIhracat)
+        {
+            <tr>
+                <td>Teslim Şartı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.teslim_sarti, Model.DropDownListForTeslimSekli)
+                                @*@Html.TextBoxFor(m => m.teslim_sarti, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })*@
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Kap Cinsi</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.kap_cinsi, Model.DropDownListForKapCinsi)
+                                @*@Html.TextBoxFor(m => m.kap_cinsi, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })*@
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Kap No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.kap_no, new { @class = "form-control ", style = "width:200px;", placeholder = "Kap numaralarını giriniz.", @required = "required" })
+                    @Html.ValidationMessageFor(m => m.kap_no)
+                </td>
+            </tr>
+            <tr>
+                <td>Kap Adedi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.kap_adedi, new { @class = "form-control ", style = "width:200px;", placeholder = "Kap adedi giriniz.", @required = "required" })
+                    @Html.ValidationMessageFor(m => m.kap_adedi)
+                </td>
+            </tr>
+            <tr>
+                <td>Gönderilme Şekli</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.gonderilme_sekli, Model.DropDownListForGonderilmeSekli)
+                                @*@Html.TextBoxFor(m => m.gonderilme_sekli, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })*@
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>GTIP No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.gtip, new { @class = "form-control ", style = "width:200px;", placeholder = "GTIP numarasını giriniz.", @required = "required" })
+                    @Html.ValidationMessageFor(m => m.gtip)
+                </td>
+            </tr>
+        }
+        else if (ViewBag.FaturaTipi == Utilities.ESMM)
+        {
+            <tr>
+                <td>KDV Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.kdv_orani, Model.DropDownListForKdv)
+                                @Html.TextBoxFor(m => m.kdv_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Tevkifat Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.tevkifat_orani, Model.DropDownListForTev)
+                                @Html.TextBoxFor(m => m.tevkifat, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>GVS Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.gvs_orani, Model.DropDownListForGvsSMM)
+                                @Html.TextBoxFor(m => m.gvs_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        }
+        else
+        {
+            <tr>
+                <td>KDV Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.kdv_orani, Model.DropDownListForKdv)
+                                @Html.TextBoxFor(m => m.kdv_tutar, new { Value = "22", @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })                                 
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Tevkifat Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.tevkifat_orani, Model.DropDownListForTev)
+                                @Html.TextBoxFor(m => m.tevkifat, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>ÖTV Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.otv_orani, Model.DropDownListForOtv)
+                                @Html.TextBoxFor(m => m.otv_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>ÖİV Oranı/Tutarı</td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-12">
+                            <div class="form-group form-inline">
+                                @Html.DropDownListFor(m => m.oiv_orani, Model.DropDownListForOiv)
+                                @Html.TextBoxFor(m => m.oiv_tutar, new { @class = "form-control ", style = "width:150px;", placeholder = "", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>Tutar</td>
+            <td>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-12">
+                        <div class="form-group form-inline">
+                            @Html.TextBoxFor(m => m.fiyat, new { @class = "form-control ", placeholder = "", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <button type="submit" class="detayKaydet btn btn-info">Kaydet / Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+    <br />
+    @ViewBag.Mesaj
+    <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+
+    @*<div id='myModal' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id='myModalContent'></div>
+                </div>
+            </div>
+
+        </div>*@
+}
+<div class="col-md-6">
+    <div data-backdrop="static" class="modal" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 90%;">
+            <div class="modal-content" style="height:180%">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Stok Bul</h5>
+                    @*<button class="close" data-dismiss="modal">&times;</button>*@
+                    <a href="javascript:void(0);" class="close btn btn-info">&times;</a>
+                    @*<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1" data-dismiss="modal">Close</button>*@
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div id='myModal1Content' class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                        @Html.ActionLink("Sil", "AdresSil", new { id = Model.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {        
+        $(".detayKaydet").click(function (e) {
+            debugger;
+            e.preventDefault();
+            //alert($("#kdv_tutar").val() + "---" + $("#kdv_tutar").val().toLocaleString('tr') + "---" + $("#kdv_tutar").val().toLocaleString(undefined, {
+            //    minimumFractionDigits: 4,
+            //    maximumFractionDigits: 4
+            //}));
+            var fatura_id = $("#fatura_id").val();
+            var stok_id = $("#stok_id").val();
+            var stok_adi = $("#stok_adi").val();
+            var birim_fiyati = parseFloat($("#birim_fiyati").val());
+            if (Number.isNaN(birim_fiyati))
+                birim_fiyati = 0;
+            var miktari = parseFloat($("#miktari").val());
+            if (Number.isNaN(miktari))
+                miktari = 0;
+            var fiyat = parseFloat($("#fiyat").val());
+            if (Number.isNaN(fiyat))
+                fiyat = 0;
+            if (stok_id != "" && stok_id != 0 && stok_adi != "" && birim_fiyati != "" && birim_fiyati != 0 && miktari != "" && miktari != 0 && fiyat != "" && fiyat != 0) {
+                $('#detayForm').submit();
+                debugger;
+                //if ($(this).valid()) {
+                //    //the action is send with this ajax request and the send works
+                //    $.ajax({
+                //        url: this.action,
+                //        type: this.method,
+                //        data: $(this).serialize(),
+                //        success: function (result) {
+                //            alert("yo");
+                //        }
+                //    });
+                //}
+                //if ($(this).valid()) {
+                //    var formdata = new FormData($(this).get(0));
+
+                //    $.ajax({
+                //        url: this.action,
+                //        type: this.method,
+                //        data: formdata,
+                //        processData: false,
+                //        contentType: false,
+                //        beforeSend: function () {
+                //            // Doing some loading gif stuff
+                //        },
+                //        success: function (result) {
+                //            debugger;
+                //            toastr_mesaj("Stok başarıyla eklendi.", "info", 3000);
+                //            window.location.href = "/Fatura/Guncelle?id=" + fatura_id;
+                //        },
+                //        //complete: function () {
+                //        //    //$.validator.unobtrusive.parse('form');
+                //        //    // And so on.
+                //        //}
+                //    });
+                //}
+            } else {
+                toastr_mesaj('Stok seçiniz, birim fiyatı ve miktarı giriniz.', "warning", 3000);
+                return false;
+            }
+        });
+        $("input").change(function () {
+            debugger;
+            if (this.id == "miktari" || this.id == "birim_fiyati" || this.id == "iskonto_1") {
+                var iskonto_orani = parseFloat($("#iskonto_1").val());
+                if (iskonto_orani == NaN)
+                    iskonto_orani = 0;
+                var iskonto_tutar = 0;
+                var iskontosuz_tutar = 0;
+                var miktari = parseFloat($("#miktari").val());
+                if (Number.isNaN(miktari))
+                    miktari = 0;
+                var birim_fiyati = parseFloat($("#birim_fiyati").val());
+                if (Number.isNaN(birim_fiyati))
+                    birim_fiyati = 0;
+                var kdv_orani = parseFloat($("#kdv_orani").val());
+                if (Number.isNaN(kdv_orani))
+                    kdv_orani = 0;
+                var tevkifat_orani = parseFloat($("#tevkifat_orani").val());
+                if (Number.isNaN(tevkifat_orani))
+                    tevkifat_orani = 0;
+                var otv_orani = parseFloat($("#otv_orani").val());
+                if (Number.isNaN(otv_orani))
+                    otv_orani = 0;
+                var oiv_orani = parseFloat($("#oiv_orani").val());
+                if (Number.isNaN(oiv_orani))
+                    oiv_orani = 0;
+                var gvs_orani = parseFloat($("#gvs_orani").val());
+                if (Number.isNaN(gvs_orani))
+                    gvs_orani = 0;
+                var sgk_orani = parseFloat($("#sgk_orani").val());
+                if (Number.isNaN(sgk_orani))
+                    sgk_orani = 0;
+                var mfv_orani = parseFloat($("#mfv_orani").val());
+                if (Number.isNaN(mfv_orani))
+                    mfv_orani = 0;
+                var btu_orani = parseFloat($("#btu_orani").val());
+                if (Number.isNaN(btu_orani))
+                    btu_orani = 0;
+                if ($("#fatura_tipi").val() == 5) { //müstahsil ise
+                    //if ($("#doviz_kuru").val() != $("#doviz_kuru1").val()) //satır bazında farklı doviz kuru olursa fat doviz kuruna cevirmek icin
+                    //    iskontosuz_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ($("#doviz_kuru1").val() / $("#doviz_kuru").val())).toFixed(8);
+                    //else
+                    iskontosuz_tutar = miktari * birim_fiyati;
+                    if (iskonto_orani > 0) {
+                        iskonto_tutar = iskontosuz_tutar * (iskonto_orani / 100);
+                    }
+                    var satir_tutar = iskontosuz_tutar - iskonto_tutar;
+                    $("#iskonto_toplam").val(iskonto_tutar.toFixed(4));
+                    var satir_gvs_tutar = satir_tutar * (gvs_orani / 100);
+                    var satir_sgk_tutar = satir_tutar * (sgk_orani / 100);
+                    var satir_mfv_tutar = satir_tutar * (mfv_orani / 100);
+                    var satir_btu_tutar = (satir_tutar - (satir_gvs_tutar + satir_sgk_tutar + satir_mfv_tutar)) * (btu_orani / 100);
+                    $("#gvs_tutar").val(satir_gvs_tutar.toFixed(4));
+                    $("#sgk_tutar").val(satir_sgk_tutar.toFixed(4));
+                    $("#mfv_tutar").val(satir_mfv_tutar.toFixed(4));
+                    $("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                    debugger;
+                    //var net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                    var fiyat = parseFloat(satir_tutar) - (parseFloat(satir_gvs_tutar) + parseFloat(satir_sgk_tutar) + parseFloat(satir_mfv_tutar) + parseFloat(satir_btu_tutar));
+                    $("#fiyat").val(fiyat.toFixed(4));
+                    if (this.id == "iskonto_1")
+                        $('#gvs_orani').focus();
+                }
+                else if ($("#fatura_tipi").val() == 8)  //smm ise
+                {
+                    debugger;
+                    //var iskonto_orani = parseFloat($("#iskonto_1").val());
+                    //if (iskonto_orani == NaN)
+                    //    iskonto_orani = 0;
+                    var iskonto_tutar = 0;
+                    var iskontosuz_tutar = 0;
+                    //if ($("#doviz_kuru").val() != $("#doviz_kuru1").val()) //satır bazında farklı doviz kuru olursa fat doviz kuruna cevirmek icin
+                    //    iskontosuz_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ($("#doviz_kuru1").val() / $("#doviz_kuru").val())).toFixed(8);
+                    //else
+                    iskontosuz_tutar = miktari * birim_fiyati;
+                    if (iskonto_orani > 0) {
+                        iskonto_tutar = iskontosuz_tutar * (iskonto_orani / 100);
+                    }
+                    var satir_tutar = iskontosuz_tutar - iskonto_tutar;
+                    var satir_kdv_tutar = satir_tutar * (kdv_orani / 100);
+                    var satir_gvs_tutar = satir_tutar * (gvs_orani / 100);
+                    //var satir_otv_tutar = satir_tutar * ($("#otv_orani").val() / 100);
+                    //var satir_oiv_tutar = satir_tutar * ($("#oiv_orani").val() / 100);
+                    var satir_tevkifat_tutar = satir_kdv_tutar * (tevkifat_orani / 100);
+                    $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#kdv_tutar1").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#iskonto_toplam").val(iskonto_tutar.toFixed(4));
+                    //$("#otv_tutar").val(satir_otv_tutar.toFixed(4));
+                    //$("#oiv_tutar").val(satir_oiv_tutar.toFixed(4));
+                    $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                    $("#gvs_tutar").val(satir_gvs_tutar.toFixed(4));
+                    debugger;
+                    //var net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                    //var fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                    var vergi = parseFloat($("#kdv_tutar").val()) - parseFloat($("#tevkifat").val());
+                    var fiyat = (parseFloat(satir_tutar) - parseFloat(satir_gvs_tutar)) + parseFloat(vergi);
+                    $("#fiyat").val(fiyat.toFixed(4));
+                    if (this.id == "iskonto_1")
+                        $('#kdv_orani').focus();
+                }
+                else {
+                    //var iskonto_orani = parseFloat($("#iskonto_1").val());
+                    var iskonto_tutar = 0;
+                    var iskontosuz_tutar = 0;
+                    //if ($("#doviz_kuru").val() != $("#doviz_kuru1").val()) //satır bazında farklı doviz kuru olursa fat doviz kuruna cevirmek icin
+                    //    iskontosuz_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ($("#doviz_kuru1").val() / $("#doviz_kuru").val())).toFixed(8);
+                    //else
+                    iskontosuz_tutar = miktari * birim_fiyati;
+                    if (iskonto_orani > 0) {
+                        iskonto_tutar = iskontosuz_tutar * (iskonto_orani / 100);
+                    }
+                    var satir_tutar = (iskontosuz_tutar - iskonto_tutar);
+                    var satir_kdv_tutar = satir_tutar * (kdv_orani / 100);
+                    var satir_otv_tutar = satir_tutar * (otv_orani / 100);
+                    var satir_oiv_tutar = satir_tutar * (oiv_orani / 100);
+                    var satir_tevkifat_tutar = satir_kdv_tutar * (tevkifat_orani / 100);
+                    $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#kdv_tutar1").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#iskonto_toplam").val(iskonto_tutar.toFixed(4));
+                    $("#otv_tutar").val(satir_otv_tutar.toFixed(4));
+                    $("#oiv_tutar").val(satir_oiv_tutar.toFixed(4));
+                    $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                    debugger;
+                    //var net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                    //var fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                    var fiyat = parseFloat(satir_tutar);
+                    $("#fiyat").val(fiyat.toFixed(4));
+                    if (this.id == "iskonto_1")
+                        $('#kdv_orani').focus();
+                }
+            }
+            if (this.id == "stok_adi") {
+                debugger;
+                //var stok_adi = this.value;
+                if (this.value != "") {
+                    StokBul(this.value, $("#fatura_tipi").val());
+                }
+                else {
+                    toastr_mesaj('Stok seçiniz, birim fiyatı ve miktarı giriniz.', "warning", 3000);
+                }
+            }
+        });
+        $('#stok_adi').keydown(function (event) {
+            if (event.keyCode == 13) {
+                debugger;
+                StokBul(this.value, $("#fatura_tipi").val());
+            }
+        });
+        $('#birim_fiyati').keydown(function (event) {
+            if (event.keyCode == 13) {
+                debugger;
+                $('#miktari').focus();
+            }
+        });
+        $('#miktari').keydown(function (event) {
+            if (event.keyCode == 13) {
+                debugger;
+                $('#iskonto_1').focus();
+            }
+        });
+        $('#iskonto_1').keydown(function (event) {
+            if (event.keyCode == 13) {
+                debugger;
+                $('#kdv_orani').focus();
+                $('#gvs_orani').focus();
+            }
+        });
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+        $("select").change(function () {
+            debugger;
+            if (this.id.startsWith("doviz_id")) {
+                DovizKuruGetir(this.id, this.value);
+            } else {
+                var iskonto_orani = parseFloat($("#iskonto_1").val());
+                if (Number.isNaN(iskonto_orani))
+                    iskonto_orani = 0;
+                var iskonto_tutar = parseFloat($("#iskonto_toplam").val());
+                if (Number.isNaN(iskonto_tutar))
+                    iskonto_tutar = 0;
+                var satir_kdv_tutar = parseFloat($("#kdv_tutar").val());
+                if (Number.isNaN(satir_kdv_tutar))
+                    satir_kdv_tutar = 0;
+                var satir_otv_tutar = parseFloat($("#otv_tutar").val());
+                if (Number.isNaN(satir_otv_tutar))
+                    satir_otv_tutar = 0;
+                var satir_oiv_tutar = parseFloat($("#oiv_tutar").val());
+                if (Number.isNaN(satir_oiv_tutar))
+                    satir_oiv_tutar = 0;
+                var satir_tevkifat_tutar = parseFloat($("#tevkifat").val());
+                if (Number.isNaN(satir_tevkifat_tutar))
+                    satir_tevkifat_tutar = 0;
+                var iskontosuz_tutar = 0;
+                var net_kdv = 0;
+                var fiyat = 0;
+                //if ($("#doviz_kuru").val() != $("#doviz_kuru1").val()) //satır bazında farklı doviz kuru olursa fat doviz kuruna cevirmek icin
+                //    iskontosuz_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ($("#doviz_kuru1").val() / $("#doviz_kuru").val())).toFixed(8);
+                //else
+                var miktari = parseFloat($("#miktari").val());
+                if (Number.isNaN(miktari))
+                    miktari = 0;
+                var birim_fiyati = parseFloat($("#birim_fiyati").val());
+                if (Number.isNaN(birim_fiyati))
+                    birim_fiyati = 0;
+                iskontosuz_tutar = miktari * birim_fiyati;
+                //if (iskonto_orani > 0) {
+                //    iskonto_tutar = (iskontosuz_tutar * (iskonto_orani / 100)).toFixed(8);
+                //}
+                var satir_tutar = (iskontosuz_tutar - iskonto_tutar);
+
+                var kdv_orani = parseFloat($("#kdv_orani").val());
+                if (Number.isNaN(kdv_orani))
+                    kdv_orani = 0;
+                var tevkifat_orani = parseFloat($("#tevkifat_orani").val());
+                if (Number.isNaN(tevkifat_orani))
+                    tevkifat_orani = 0;
+                var otv_orani = parseFloat($("#otv_orani").val());
+                if (Number.isNaN(otv_orani))
+                    otv_orani = 0;
+                var oiv_orani = parseFloat($("#oiv_orani").val());
+                if (Number.isNaN(oiv_orani))
+                    oiv_orani = 0;
+                var gvs_orani = parseFloat($("#gvs_orani").val());
+                if (Number.isNaN(gvs_orani))
+                    gvs_orani = 0;
+                var sgk_orani = parseFloat($("#sgk_orani").val());
+                if (Number.isNaN(sgk_orani))
+                    sgk_orani = 0;
+                var mfv_orani = parseFloat($("#mfv_orani").val());
+                if (Number.isNaN(mfv_orani))
+                    mfv_orani = 0;
+                var btu_orani = parseFloat($("#btu_orani").val());
+                if (Number.isNaN(btu_orani))
+                    btu_orani = 0;
+
+                if ($("#fatura_tipi").val() == 8)  //smm ise
+                {
+                    if (this.id == "kdv_orani") {
+                        debugger;
+                        satir_tutar = iskontosuz_tutar;
+                        var satir_kdv_tutar = parseFloat(satir_tutar * (kdv_orani / 100));
+                        $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                        $("#kdv_tutar1").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                        var satir_tevkifat_tutar = parseFloat(satir_kdv_tutar * (tevkifat_orani / 100));
+                        $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                        //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                        //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                        var vergi = parseFloat($("#kdv_tutar").val()) - parseFloat($("#tevkifat").val());
+                        fiyat = (parseFloat(satir_tutar) - parseFloat($("#gvs_tutar").val())) + parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+                else {
+                    if (this.id == "kdv_orani") {
+                        debugger;
+                        var satir_kdv_tutar = parseFloat(satir_tutar * (kdv_orani / 100));
+                        $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                        $("#kdv_tutar1").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                        var satir_tevkifat_tutar = parseFloat(satir_kdv_tutar * (tevkifat_orani / 100));
+                        $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                        //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                        //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                        fiyat = parseFloat(satir_tutar);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+                if ($("#fatura_tipi").val() == 8)  //smm ise
+                {
+                    if (this.id == "tevkifat_orani") {
+                        debugger;
+                        satir_tutar = iskontosuz_tutar;
+                        var satir_tevkifat_tutar = parseFloat(satir_kdv_tutar * (tevkifat_orani / 100));
+                        $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                        //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                        //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                        //fiyat = parseFloat(satir_tutar);
+                        //$("#fiyat").val(fiyat.toFixed(4));
+                        var vergi = parseFloat($("#kdv_tutar").val()) - parseFloat($("#tevkifat").val());
+                        fiyat = (parseFloat(satir_tutar) - parseFloat($("#gvs_tutar").val())) + parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+                else {
+                    if (this.id == "tevkifat_orani") {
+                        debugger;
+                        var satir_tevkifat_tutar = parseFloat(satir_kdv_tutar * (tevkifat_orani / 100));
+                        $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                        //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                        //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                        fiyat = parseFloat(satir_tutar);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+                if (this.id == "otv_orani") {
+                    var satir_otv_tutar = parseFloat(satir_tutar * (otv_orani / 100));
+                    $("#otv_tutar").val(satir_otv_tutar.toFixed(4));
+                    //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                    //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                    fiyat = parseFloat(satir_tutar);
+                    $("#fiyat").val(fiyat.toFixed(4));
+                }
+                if (this.id == "oiv_orani") {
+                    debugger;
+                    var satir_oiv_tutar = parseFloat(satir_tutar * (oiv_orani / 100));
+                    $("#oiv_tutar").val(satir_oiv_tutar.toFixed(4));
+                    //net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(4);
+                    //fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                    fiyat = parseFloat(satir_tutar);
+                    $("#fiyat").val(fiyat.toFixed(4));
+                }
+                if ($("#fatura_tipi").val() == 8)  //smm ise
+                {
+                    debugger;
+                    if (this.id == "gvs_orani") {
+                        debugger;
+                        satir_tutar = iskontosuz_tutar;
+                        var satir_gvs_tutar = parseFloat(satir_tutar * (gvs_orani / 100));
+                        $("#gvs_tutar").val(satir_gvs_tutar.toFixed(4));
+                        //var btu_matrah = satir_tutar - (parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()));
+                        //var satir_btu_tutar = btu_matrah * ($("#btu_orani").val() / 100);
+                        //$("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                        var vergi = parseFloat($("#kdv_tutar").val()) - parseFloat($("#tevkifat").val());
+                        fiyat = (parseFloat(satir_tutar) - parseFloat($("#gvs_tutar").val())) + parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+                if ($("#fatura_tipi").val() == 5)  //mustahsil ise
+                {
+                    if (this.id == "gvs_orani") {
+                        debugger;
+                        var satir_gvs_tutar = parseFloat(satir_tutar * (gvs_orani / 100));
+                        $("#gvs_tutar").val(satir_gvs_tutar.toFixed(4));
+                        var btu_matrah = satir_tutar - (parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()));
+                        var satir_btu_tutar = btu_matrah * (btu_orani / 100);
+                        $("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                        var vergi = parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()) + parseFloat($("#btu_tutar").val());
+                        fiyat = parseFloat(satir_tutar) - parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                    if (this.id == "sgk_orani") {
+                        debugger;
+                        var satir_sgk_tutar = parseFloat(satir_tutar * (sgk_orani / 100));
+                        $("#sgk_tutar").val(satir_sgk_tutar.toFixed(4));
+                        var btu_matrah = satir_tutar - (parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()));
+                        var satir_btu_tutar = btu_matrah * (btu_orani / 100);
+                        $("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                        var vergi = parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()) + parseFloat($("#btu_tutar").val());
+                        fiyat = parseFloat(satir_tutar) - parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                    if (this.id == "mfv_orani") {
+                        debugger;
+                        var satir_mfv_tutar = parseFloat(satir_tutar * (mfv_orani / 100));
+                        $("#mfv_tutar").val(satir_mfv_tutar.toFixed(4));
+                        var btu_matrah = satir_tutar - (parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()));
+                        var satir_btu_tutar = btu_matrah * (btu_orani / 100);
+                        $("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                        var vergi = parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()) + parseFloat($("#btu_tutar").val());
+                        fiyat = parseFloat(satir_tutar) - parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                    if (this.id == "btu_orani") {
+                        debugger;
+                        var btu_matrah = satir_tutar - (parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()));
+                        //var btu_o = $("#btu_orani").val();
+                        //var btu = parseFloat($("#btu_orani").val());
+                        var satir_btu_tutar = btu_matrah * (btu_orani / 100);
+                        $("#btu_tutar").val(satir_btu_tutar.toFixed(4));
+                        var vergi = parseFloat($("#gvs_tutar").val()) + parseFloat($("#sgk_tutar").val()) + parseFloat($("#mfv_tutar").val()) + parseFloat($("#btu_tutar").val());
+                        fiyat = parseFloat(satir_tutar) - parseFloat(vergi);
+                        $("#fiyat").val(fiyat.toFixed(4));
+                    }
+                }
+            }
+        });
+        $(".stokBul").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var searchString = $("#stok_adi").val();
+            var fatura_tipi = $("#fatura_tipi").val();
+            var options = { "backdrop": "static", keyboard: true };
+            //if (stok_adi.trim().length > 2) {
+            $.ajax({
+                type: "POST",
+                url: "/Fatura/StokBul",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "searchString": searchString, "fatura_tipi": fatura_tipi }),
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    //$('#doviz_kuru').val(data[0].kur_carpani);
+                    $('#myModal1Content').html(data);
+                    $('#myModal1').modal(options);
+                    $('#myModal1').modal('show');
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. CariFormu");
+                }
+            });
+        });
+    })
+    function StokBul(stok_adi, fatura_tipi) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Fatura/StokBulBir",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ "stok_adi": stok_adi, "fatura_tipi": fatura_tipi }),
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                if (data[0] != null && data[0].id != null && data[0].id != '') {
+                    $('#stok_id').val(data[0].id);
+                    $("#vkn_tckn").val(data[0].vkn_tckn);
+                    $("#stok_adi").val(data[0].adi);
+                    $("#birim_id").val(data[0].birim_id_son);
+                    $("#doviz_id1").val(data[0].doviz_id_son);
+                    //alert("fat:>" + $("#doviz_id").val() + "sat:>" + $("#doviz_id1").val());
+                    DovizKuruGetir("doviz_id1", $("#doviz_id1").val());
+                    $("#birim_fiyati").val(data[0].fiyat_son);
+                    if ($("#fatura_tipi").val() == 5) //müstahsil ise
+                    {
+                        $("#gvs_orani").val(data[0].gvs_son.toFixed(2));
+                        $("#sgk_orani").val(data[0].sgk_son.toFixed(2));
+                        $("#mfv_orani").val(data[0].mfv_son.toFixed(2));
+                        $("#btu_orani").val(data[0].btu_son.toFixed(2));
+                    } else if ($("#fatura_tipi").val() == 7) //ihracat ise
+                    {
+                        $("#gtip").val(data[0].gtip_no);
+                    }
+                    else {
+                        $("#kdv_orani").val(data[0].kdv_son.toFixed(2));
+                        $("#otv_orani").val(data[0].otv_son.toFixed(2));
+                        $("#oiv_orani").val(data[0].oiv_son.toFixed(2));
+                    }
+                    var iskonto_orani = $("#iskonto_1").val();
+                    var iskontosuz_tutar = 0;
+                    //if ($("#doviz_kuru").val() != $("#doviz_kuru1").val()) //satır bazında farklı doviz kuru olursa fat doviz kuruna cevirmek icin
+                    //    iskontosuz_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * ($("#doviz_kuru1").val() / $("#doviz_kuru").val())).toFixed(8);
+                    //else
+                    iskontosuz_tutar = (parseFloat($("#miktari").val() * $("#birim_fiyati").val())).toFixed(8);
+                    if (iskonto_orani > 0) {
+                        iskonto_tutar = (parseFloat(iskontosuz_tutar * (iskonto_orani / 100))).toFixed(8);
+                    }
+                    var satir_tutar = (iskontosuz_tutar - iskonto_tutar).toFixed(8);
+                    //var iskonto_tutar = ($("#miktari").val() * $("#birim_fiyati").val() * (iskonto_orani / 100)).toFixed(8);
+                    //var satir_tutar = (($("#miktari").val() * $("#birim_fiyati").val()) - iskonto_tutar).toFixed(8);
+                    var satir_kdv_tutar = parseFloat(satir_tutar * ($("#kdv_orani").val() / 100));
+                    var satir_otv_tutar = parseFloat(satir_tutar * ($("#otv_orani").val() / 100));
+                    var satir_oiv_tutar = parseFloat(satir_tutar * ($("#oiv_orani").val() / 100));
+                    $("#kdv_tutar").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#kdv_tutar1").val(satir_kdv_tutar.toFixed(4).toLocaleString());
+                    $("#otv_tutar").val(satir_otv_tutar.toFixed(4));
+                    $("#oiv_tutar").val(satir_oiv_tutar.toFixed(4));
+                    var satir_tevkifat_tutar = parseFloat(satir_kdv_tutar * ($("#tevkifat_orani").val() / 100));
+                    $("#tevkifat").val(satir_tevkifat_tutar.toFixed(4));
+                    debugger;
+                    var net_kdv = (satir_kdv_tutar - satir_tevkifat_tutar).toFixed(8);
+                    //var fiyat = (parseFloat(satir_tutar) + parseFloat(net_kdv) + parseFloat(satir_otv_tutar) + parseFloat(satir_oiv_tutar)).toFixed(8);
+                    var fiyat = parseFloat(satir_tutar).toFixed(4);
+                    $("#fiyat").val(fiyat);
+                }
+                else {
+                    $(".stokBul").trigger("click");
+                }
+                if ($('#birim_fiyati') > 0)
+                    $('#miktari').focus();
+                else
+                    $('#birim_fiyati').focus();
+            },
+            error: function () {
+                alert("Beklenmedik hata oluştu. FaturaFormu");
+            }
+        });
+    }
+</script>
+

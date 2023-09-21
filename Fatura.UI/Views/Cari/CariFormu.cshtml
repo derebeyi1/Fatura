@@ -1,0 +1,326 @@
+﻿@model Fatura.Entity.cari
+@using PagedList
+@using PagedList.Mvc
+@using Fatura.BLL
+@{
+    ViewBag.Title = "Kaydet";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+<br>
+<br>
+<br>
+<br>
+<h2>@ViewBag.IslemTipi</h2>
+<div class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+    @using (Html.BeginForm("Kaydet", "Cari", FormMethod.Post, new { @enctype = "multipart/form-data", id = "cariForm" }))
+    {
+        <input type="hidden" id="SayfaNo" name="SayfaNo" value="@ViewBag.SayfaNo" />
+        <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString" />
+        <input type="hidden" id="SortOrder" name="SortOrder" value="@ViewBag.SortOrder" />
+        <input type="hidden" id="id" name="id" value="@Model.id" />
+        <table class="table table-bordered" width="100%" cellspacing="0">
+            @*@Html.HiddenFor(m => m.id)*@
+            <tr>
+                <td>Müşteri Adı *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.ad, new { @class = "form-control", placeholder = "Müşteri Adı" })
+                    @Html.ValidationMessageFor(m => m.ad)
+                </td>
+                <td>Müşteri Soyadı *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.soyad, new { @class = "form-control", placeholder = "Müşteri Soyadı" })
+                    @Html.ValidationMessageFor(m => m.soyad)
+                </td>
+                <td>VKN/TCKN *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.vergi_numarasi, new { @class = "form-control", placeholder = "VKN/TCKN" })
+                    @Html.ValidationMessageFor(m => m.vergi_numarasi)
+                </td>
+                <td>Vergi Dairesi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.vergi_dairesi, new { @class = "form-control", style = "width:200px", placeholder = "Vergi Dairesi" })
+                    @Html.ValidationMessageFor(m => m.vergi_dairesi)
+                </td>
+                <td>Cari Tipi</td>
+                <td>
+                    @Html.DropDownListFor(m => m.tip, Model.DropDownListForCariTipi, new { @class = "form-control ", style = "width:140px" })
+                    @Html.ValidationMessageFor(m => m.tip)
+                </td>
+            </tr>
+            <tr>
+                <td>E-Mail Adresi *</td>
+                <td>
+                    @Html.TextBoxFor(m => m.cari_mail, new { @class = "form-control", placeholder = "E-Mail Adresi" })
+                    @Html.ValidationMessageFor(m => m.cari_mail)
+                </td>
+                <td>Web Adresi</td>
+                <td>
+                    @Html.TextBoxFor(m => m.webadresi, new { @class = "form-control", placeholder = "Web Adresi" })
+                    @Html.ValidationMessageFor(m => m.webadresi)
+                </td>
+                <td>Cep No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.cep_no, new { @class = "form-control", style = "width:120px;", placeholder = "Cep No" })
+                    @Html.ValidationMessageFor(m => m.cep_no)
+                </td>
+                <td>Tel No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.telefon_no, new { @class = "form-control", style = "width:120px;", placeholder = "Tel No" })
+                    @Html.ValidationMessageFor(m => m.telefon_no)
+                </td>
+            </tr>
+            <tr>
+                <td>Ticaret Sicil No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.ticaret_sicil_no, new { @class = "form-control", style = "width:140px;", placeholder = "Ticaret Sicil No" })
+                    @Html.ValidationMessageFor(m => m.ticaret_sicil_no)
+                </td>
+                <td>SGK No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.sgk_no, new { @class = "form-control", style = "width:120px;", placeholder = "SGK No" })
+                    @Html.ValidationMessageFor(m => m.sgk_no)
+                </td>
+                <td>Bağkur No</td>
+                <td>
+                    @Html.TextBoxFor(m => m.bagkur_no, new { @class = "form-control", style = "width:120px;", placeholder = "Bağkur No" })
+                    @Html.ValidationMessageFor(m => m.bagkur_no)
+                </td>
+            </tr>
+            <tr>
+                <td>Cari Kilitli mi?</td>
+                <td>
+                    @Html.DropDownListFor(m => m.kilitlimi, Model.DropDownList)
+                    @Html.ValidationMessageFor(m => m.kilitlimi)
+                </td>
+                <td>Cari Açık Hesap mı?</td>
+                <td>
+                    @Html.DropDownListFor(m => m.acikhesapmi, Model.DropDownList)
+                    @Html.ValidationMessageFor(m => m.acikhesapmi)
+                </td>
+                <td>E-Mükellef mi?</td>
+                <td>
+                    @Html.DropDownListFor(m => m.mukellefmi, Model.DropDownList)
+                    @Html.ValidationMessageFor(m => m.mukellefmi)
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="cariKaydet btn btn-info">Kaydet / Güncelle</button>
+        @Html.ActionLink("Geri", "CariListesi", "Cari", new { SayfaNo = ViewBag.SayfaNo, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-primary mx-4" });
+        <br />
+        @ViewBag.Mesaj
+        <p style="color: red; font-size: 15px;">* ile işaretli alanların doldurulması zorunludur</p>
+    }
+
+    <h3>Adres Listesi</h3>
+    <div id="dvCariAdresListesi" class="table-responsive border border-dark w-80 p-3 background-color: #eee;">
+        @if (Model.id > 0)
+        {
+            <table>
+                <tr>
+                    <td width="30%">
+                        <a href="javascript:void(0);" class="anchorDetail btn btn-success mx-3" data-id="0">Yeni Adres Ekle</a>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered table-striped table-hover table-condensed" id="dataTable">
+                <thead>
+                    <tr>
+                        <th style="color:Highlight">Adres</th>
+                        <th style="color:Highlight">Ülke/İl/İlçe</th>
+                        <th style="color:Highlight">Cep No</th>
+                        <th style="color:Highlight">Tel No</th>
+                        <th style="color:Highlight">Fax</th>
+                        <th style="color:Highlight">E-Posta</th>
+                        <th style="color:Highlight">Fatura Adresi mi?</th>
+                        <th style="color:Highlight">Sevk Adresi mi?</th>
+                        @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                        {
+                            <th style="color:Highlight">Silinmiş mi?</th>
+                        }
+                        <th style="color:Highlight">İşlemler</th>
+                        <th style="visibility: hidden;width: 1px">Stok ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cari_adres in Model.cari_adresler)
+                    {
+                        <tr id="row_@cari_adres.id">
+                            <td>@cari_adres.adres</td>
+                            <td>
+                                @{
+                                    string yer = (cari_adres.ulke_adi + " " + cari_adres.il_adi + " " + cari_adres.ilce_adi).Trim();
+                                }
+                                @yer
+                            </td>
+                            @*<td>@cari_adres.ulke_adi / @cari_adres.il_adi / @cari_adres.ilce_adi</td>*@
+                            <td>@cari_adres.cep_no</td>
+                            <td>@cari_adres.telefon_no</td>
+                            <td>@cari_adres.fax</td>
+                            <td>@cari_adres.email</td>
+                            <td>
+                                @if (cari_adres.faturaadresimi == true)
+                                {
+                                    @:<label style="color:green">Evet</label>
+                                }
+                                else
+                                {
+                                    @:Hayır
+                                }
+                            </td>
+                            <td>
+                                @if (cari_adres.sevkadresimi == true)
+                                {
+                                    @:<label style="color:green">Evet</label>
+                                }
+                                else
+                                {
+                                    @:Hayır
+                                }
+                            </td>
+                            @if (((long)Session["vkn_tckn"]) == Utilities.vknAdmin)
+                            {
+                                <td>
+                                    @if (cari_adres.isdeleted == true)
+                                    {
+                                        @:<label style="color:red">Evet</label>
+                                    }
+                                    else
+                                    {
+                                        @:Hayır
+                                    }
+                                </td>
+                            }
+                            <td>
+                                <div class="row" style="width:200px;">
+                                    <div class="col-md-6">
+                                        <a href="javascript:void(0);" class="anchorDetail btn btn-success mx-3" data-id="@cari_adres.id">Güncelle</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Sil_@cari_adres.id">
+                                            Sil
+                                        </button>
+                                        <div class="modal" id="Sil_@cari_adres.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Cari Adresi Sil</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h4>Cari adresi silmek istiyor musunuz?</h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary mx-4" data-dismiss="modal">Vazgeç</button>
+                                                        @Html.ActionLink("Sil", "AdresSil", new { id = cari_adres.id, SayfaNo = ViewBag.SayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }, new { @class = "btn btn-info mx-4" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table><div class="row">
+                <div class="col-sm-12 col-md-6">
+                    @Html.PagedListPager(Model.cari_adresler, _sayfaNo => Url.Action("Guncelle", "Cari", new { Model.id, SayfaNo = _sayfaNo, searchString = ViewBag.SearchString, sayfaKayitSayisi = ViewBag.SayfaKayitSayisi }))
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <BR>
+                    Toplam <label id="kayitsayisi" style="font-size:large; color:Highlight">@ViewBag.KayitSayisi</label> kayıt gösteriliyor.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Baslik</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id='myModalContent' class="modal-body">
+                ---
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var TeamDetailPostBackURL = '/Cari/AdresGuncelle';
+    $(document).ready(function () {
+        debugger;
+        var mesaj = "@ViewBag.Mesaj";
+        if (mesaj != null && mesaj != "")
+            toastr_mesaj(mesaj, "success", 2000);
+        var hatamesaj = "@ViewBag.HataMesaj";
+        if (hatamesaj != null && hatamesaj != "")
+            toastr_mesaj(hatamesaj, "error", 3000);
+        $(".anchorDetail").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var cari_id = $("#id").val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id, "cari_id": cari_id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    alert("Beklenmedik hata oluştu. CariFormu");
+                }
+            });
+        });
+        //$("#closebtn").on('click',function(){
+        //    $('#myModal').modal('hide');
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+        $(".cariKaydet").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            $buttonClicked.attr('disabled', true);
+            event.preventDefault();
+            var ad = $("#ad").val();
+            var soyad = $("#soyad").val();
+            var vergi_numarasi = $("#vergi_numarasi").val();
+            var email = $("#cari_mail").val();
+            debugger;
+            //var adiParcala = ad.trim().split(" ");
+            if (ad != "" && soyad != "") {
+                if (vergi_numarasi != "" && vergi_numarasi != "" && vergi_numarasi.trim().length > 9 && vergi_numarasi.trim().length < 12) {
+                    if (email != "" && validateEmail(email)) {
+                        $('#cariForm').submit();
+                        debugger;
+                    } else
+                        toastr_mesaj('Lütfen geçerli bir e-posta adresi giriniz.', "error", 3000);
+                } else
+                    toastr_mesaj('Lütfen VKN/TCKN giriniz.', "error", 3000);
+            } else
+                toastr_mesaj('Lütfen carinin adını ve soyadını tam olarak giriniz.', "error", 3000);
+            $buttonClicked.attr('disabled', false);
+            return false;
+        });
+    });
+</script>

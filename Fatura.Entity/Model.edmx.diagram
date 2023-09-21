@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3f2d1e416cff4a828a5a96dcfa9f1ce3" Name="Diagram1">
+        <EntityTypeShape EntityType="faturaModel.barkodlar" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.birimler" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.cari" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.cari_adres" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="faturaModel.depolar" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.dil_cevirileri" Width="1.5" PointX="6.75" PointY="4.75" />
+        <EntityTypeShape EntityType="faturaModel.diller" Width="1.5" PointX="6.75" PointY="7.75" />
+        <EntityTypeShape EntityType="faturaModel.dovizler" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.fatura" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="faturaModel.fatura_ayarlari" Width="1.5" PointX="8.75" PointY="4.75" />
+        <EntityTypeShape EntityType="faturaModel.fatura_gelen" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="faturaModel.fatura_gelen_satir" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.fatura_satir" Width="1.5" PointX="4.75" PointY="10.75" />
+        <EntityTypeShape EntityType="faturaModel.firma" Width="1.5" PointX="10.75" PointY="7.75" />
+        <EntityTypeShape EntityType="faturaModel.fiyat_tipleri" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.kodlar" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="faturaModel.kullanici" Width="1.5" PointX="12.75" PointY="7.75" />
+        <EntityTypeShape EntityType="faturaModel.log" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="faturaModel.stok" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.stok_barkod" Width="1.5" PointX="14.75" PointY="6.75" />
+        <EntityTypeShape EntityType="faturaModel.stok_birim" Width="1.5" PointX="14.75" PointY="10.75" />
+        <EntityTypeShape EntityType="faturaModel.stok_fiyat" Width="1.5" PointX="14.75" PointY="14.75" />
+        <EntityTypeShape EntityType="faturaModel.ticaret_ayarlari" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="faturaModel.ulke_il_ilce" Width="1.5" PointX="16.75" PointY="4.75" />
+        <EntityTypeShape EntityType="faturaModel.vergi" Width="1.5" PointX="16.75" PointY="7.75" />
+        <EntityTypeShape EntityType="faturaModel.mukellef" Width="1.5" PointX="16.75" PointY="10.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
